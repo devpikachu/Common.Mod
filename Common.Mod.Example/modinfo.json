@@ -1,0 +1,15 @@
+﻿{
+  "type": "code",
+  "name": "Example",
+  "modid": "example",
+  "version": "12.34.56",
+  "description": "Example mod.",
+  "website": "https://git.omni.ms/vintage-story-mods/common-mod",
+  "authors": [
+    "DetPikachu"
+  ],
+  "contributors": [],
+  "dependencies": {
+    "game": "*"
+  }
+}

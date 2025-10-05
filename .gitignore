@@ -1,4 +1,5 @@
 bin/
 obj/
 out/
+run/
 *.sln.DotSettings.user
