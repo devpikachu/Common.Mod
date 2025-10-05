@@ -1,4 +1,4 @@
-﻿# Common Mod
+# Common Mod
 
 ![release](https://img.shields.io/gitea/v/release/vintage-story-mods/common-mod?gitea_url=https%3A%2F%2Fgit.omni.ms&sort=semver&display_name=release&style=flat) [![ci](https://ci.omni.ms/api/badges/2/status.svg)](https://ci.omni.ms/repos/2) ![dotnet](https://img.shields.io/badge/dotnet-8.0-%236F419A)
 

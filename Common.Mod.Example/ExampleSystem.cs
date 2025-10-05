@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Vintagestory.API.Common;
 
 namespace Common.Mod.Example;

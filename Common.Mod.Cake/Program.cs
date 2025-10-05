@@ -1,4 +1,4 @@
-﻿using Cake.Frosting;
+using Cake.Frosting;
 using Common.Build;
 
 namespace Common.Mod.Cake;
