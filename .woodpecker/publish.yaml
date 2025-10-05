@@ -1,0 +1,26 @@
+﻿when:
+  - event: tag
+
+matrix:
+  PROJECT:
+    - Common.Mod
+    - Common.Mod.Generator
+
+steps:
+  - name: package
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    commands:
+      - bash build.sh -t Package --project ${PROJECT}
+
+  - name: publish
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    environment:
+      NUGET_REGISTRY_URL:
+        from_secret: nuget_registry_url
+      NUGET_REGISTRY_USERNAME:
+        from_secret: nuget_registry_username
+      NUGET_REGISTRY_PASSWORD:
+        from_secret: nuget_registry_password
+    commands:
+      - dotnet nuget add source --name forgejo --username $${NUGET_REGISTRY_USERNAME} --password $${NUGET_REGISTRY_PASSWORD} --store-password-in-clear-text $${NUGET_REGISTRY_URL}
+      - dotnet nuget push --source forgejo out/*.nupkg

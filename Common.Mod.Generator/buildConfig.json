@@ -1,0 +1,7 @@
+﻿{
+  "name": "Generator",
+  "outputSubdir": null,
+  "substitute": [
+    "Common.Mod.Generator.csproj"
+  ]
+}

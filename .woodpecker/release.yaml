@@ -1,0 +1,22 @@
+﻿when:
+  - event: tag
+
+matrix:
+  PROJECT:
+    - Common.Mod
+    - Common.Mod.Generator
+
+steps:
+  - name: archive
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    commands:
+      - bash build.sh -t Archive --project ${PROJECT}
+
+  - name: release
+    image: woodpeckerci/plugin-release:latest
+    settings:
+      api-key:
+        from_secret: forgejo_release_key
+      files:
+        - out/*.zip
+      draft: true
