@@ -9,15 +9,12 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <!-- Game Dependencies -->
   <ItemGroup>
-    <!-- Direct -->
     <Reference Include="VintagestoryAPI">
       <HintPath>$(VINTAGE_STORY)/VintagestoryAPI.dll</HintPath>
       <Private>false</Private>
     </Reference>
 
-    <!-- Libraries -->
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(VINTAGE_STORY)/Lib/Newtonsoft.Json.dll</HintPath>
       <Private>false</Private>
@@ -28,14 +25,12 @@
     </Reference>
   </ItemGroup>
 
-  <!-- NuGet Dependencies -->
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.2">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
 
-  <!-- Project Dependencies -->
   <ItemGroup>
     <ProjectReference Include="../Common.Mod/Common.Mod.csproj"/>
     <ProjectReference Include="../Common.Mod.Generator/Common.Mod.Generator.csproj">
