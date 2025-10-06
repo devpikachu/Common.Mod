@@ -15,13 +15,13 @@ steps:
       COPYPARTY_PASSWORD:
         from_secret: copyparty_password
     commands:
-      - bash .woodpecker/fetch-deps.sh $${COPYPARTY_USER} $${COPYPARTY_PASSWORD}
-      - bash bootstrap.sh
+      - bash scripts/fetch-game.sh $${COPYPARTY_USER} $${COPYPARTY_PASSWORD}
+      - bash scripts/bootstrap.sh
 
   - name: archive
     image: mcr.microsoft.com/dotnet/sdk:9.0
     commands:
-      - bash build.sh -t Archive --project ${PROJECT}
+      - bash build.sh --target Archive --oproject ${PROJECT} --oversion ${CI_COMMIT_TAG}
 
   - name: release
     image: woodpeckerci/plugin-release:latest
