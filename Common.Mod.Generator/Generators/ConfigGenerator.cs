@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Common.Mod.Common.Config;
+using Common.Mod.Generator.Specs;
 using Common.Mod.Generator.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
@@ -125,7 +125,7 @@ public class ConfigGenerator : IIncrementalGenerator
             );
         }
 
-        var declarationBuilder = new StringBuilder("internal class ");
+        var declarationBuilder = new StringBuilder("public class ");
         declarationBuilder.Append(spec.ClassName);
         if (inheritFrom is not null)
         {
@@ -204,6 +204,10 @@ public class ConfigGenerator : IIncrementalGenerator
             if (spec.Type is not ConfigEntryTypeSpec.Nested && (spec.DefaultValue is not null || nullable))
             {
                 defaultValueBuilder.Append(JsonSerializer.Serialize(spec.DefaultValue, JsonOptions));
+            }
+            else if (spec.Type is ConfigEntryTypeSpec.Nested)
+            {
+                defaultValueBuilder.Append("new()");
             }
             else
             {

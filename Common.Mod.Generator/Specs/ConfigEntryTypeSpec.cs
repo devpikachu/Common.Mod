@@ -1,4 +1,4 @@
-namespace Common.Mod.Common.Config;
+namespace Common.Mod.Generator.Specs;
 
 public enum ConfigEntryTypeSpec
 {

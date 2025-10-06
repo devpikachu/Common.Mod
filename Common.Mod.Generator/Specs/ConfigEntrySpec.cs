@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace Common.Mod.Common.Config;
+namespace Common.Mod.Generator.Specs;
 
 public sealed record ConfigEntrySpec
 {

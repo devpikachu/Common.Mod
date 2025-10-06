@@ -16,6 +16,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="VintagestoryAPI">
+      <HintPath>$(VINTAGE_STORY)/VintagestoryAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="protobuf-net">
+      <HintPath>$(VINTAGE_STORY)/Lib/protobuf-net.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="configlib">
       <HintPath>../vendor/configlib.dll</HintPath>
       <Private>false</Private>
@@ -31,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DryIoc.dll" Version="5.4.3"/>
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.2">
       <PrivateAssets>all</PrivateAssets>
       <ExcludeAssets>runtime</ExcludeAssets>
