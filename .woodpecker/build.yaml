@@ -9,7 +9,7 @@ matrix:
 
 steps:
   - name: bootstrap
-    image: demisto/unzip:1.0.0.4855875
+    image: git.omni.ms/omnilium/toolbox:latest
     environment:
       VINTAGE_STORY: ./game
       COPYPARTY_USER:

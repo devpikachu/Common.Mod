@@ -8,7 +8,7 @@ matrix:
 
 steps:
   - name: bootstrap
-    image: demisto/unzip:1.0.0.4855875
+    image: git.omni.ms/omnilium/toolbox:latest
     environment:
       VINTAGE_STORY: ./game
       COPYPARTY_USER:
@@ -27,12 +27,11 @@ steps:
   - name: publish
     image: mcr.microsoft.com/dotnet/sdk:9.0
     environment:
-      NUGET_REGISTRY_URL:
-        from_secret: nuget_registry_url
+      NUGET_REGISTRY_URL: https://git.omni.ms/api/packages/vintage-story-mods/nuget/index.json
       NUGET_REGISTRY_USERNAME:
         from_secret: nuget_registry_username
       NUGET_REGISTRY_PASSWORD:
         from_secret: nuget_registry_password
     commands:
-      - dotnet nuget add source --name forgejo --username $${NUGET_REGISTRY_USERNAME} --password $${NUGET_REGISTRY_PASSWORD} --store-password-in-clear-text $${NUGET_REGISTRY_URL}
+      - dotnet nuget add source --name forgejo --username $${NUGET_REGISTRY_USERNAME} --password $${NUGET_REGISTRY_PASSWORD} --store-password-in-clear-text ${NUGET_REGISTRY_URL}
       - dotnet nuget push --source forgejo out/*.nupkg
