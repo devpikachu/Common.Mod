@@ -1,3 +1,6 @@
+$ErrorActionPreference = 'Stop'
+$PSNativeCommandUseErrorActionPreference = $true
+
 $ImGuiVersion = "1.1.14"
 $ConfigLibVersion = "1.10.5"
 
