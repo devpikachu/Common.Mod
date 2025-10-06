@@ -1,5 +1,5 @@
 using Cake.Frosting;
-using Common.Build;
+using Common.Build.Core;
 
 namespace Common.Mod.Cake;
 
