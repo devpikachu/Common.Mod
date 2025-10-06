@@ -24,10 +24,10 @@ if [[ ! -f "vendor/vsimgui_${ImGuiVersion}" ]]; then
     cp "vendor/vsimgui_${ImGuiVersion}.zip" "Common.Mod.Example/run/Mods/vsimgui_${ImGuiVersion}.zip"
 
     tempDir=$(mktemp)
-    unzip "vendor/vsimgui_${ImGuiVersion}.zip" -d "${tempDir}/"
+    unzip "vendor/vsimgui_${ImGuiVersion}.zip" -d "${tempDir}/extract"
 
-    cp "${tempDir}/ImGui.NET.dll" "vendor/ImGui.NET.dll"
-    cp "${tempDir}/VSImGui.dll" "vendor/VSImGui.dll"
+    cp "${tempDir}/extract/ImGui.NET.dll" "vendor/ImGui.NET.dll"
+    cp "${tempDir}/extract/VSImGui.dll" "vendor/VSImGui.dll"
 
     rm -rf "$tempDir"
 fi
@@ -38,9 +38,9 @@ if [[ ! -f "vendor/configlib_${ConfigLibVersion}" ]]; then
     cp "vendor/configlib_${ConfigLibVersion}.zip" "Common.Mod.Example/run/Mods/configlib_${ConfigLibVersion}.zip"
 
     tempDir=$(mktemp)
-    unzip "vendor/configlib_${ConfigLibVersion}.zip" -d "${tempDir}/"
+    unzip "vendor/configlib_${ConfigLibVersion}.zip" -d "${tempDir}/extract"
 
-    cp "${tempDir}/configlib.dll" "vendor/configlib.dll"
+    cp "${tempDir}/extract/configlib.dll" "vendor/configlib.dll"
 
     rm -rf "$tempDir"
 fi
