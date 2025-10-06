@@ -1,0 +1,457 @@
+{
+  "className": "ExampleConfig",
+  "classNamespace": "Common.Mod.Config",
+  "description": "This is Example's configuration",
+  "version": "21.1.0",
+  "entries": [
+    {
+      "name": "BoolEntry",
+      "type": "Bool"
+    },
+    {
+      "name": "IntEntry",
+      "type": "Int"
+    },
+    {
+      "name": "UIntEntry",
+      "type": "UInt"
+    },
+    {
+      "name": "FloatEntry",
+      "type": "Float"
+    },
+    {
+      "name": "StringEntry",
+      "type": "String"
+    },
+    {
+      "name": "NestedEntry",
+      "type": "Nested",
+      "nested": "FirstNestedExampleConfig"
+    },
+    {
+      "name": "NullableBoolEntry",
+      "type": "Bool",
+      "nullable": true
+    },
+    {
+      "name": "NullableIntEntry",
+      "type": "Int",
+      "nullable": true
+    },
+    {
+      "name": "NullableUIntEntry",
+      "type": "UInt",
+      "nullable": true
+    },
+    {
+      "name": "NullableFloatEntry",
+      "type": "Float",
+      "nullable": true
+    },
+    {
+      "name": "NullableStringEntry",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "NullableNestedEntry",
+      "type": "Nested",
+      "nullable": true,
+      "nested": "FirstNestedExampleConfig"
+    },
+    {
+      "name": "DefaultedBoolEntry",
+      "type": "Bool",
+      "defaultValue": true
+    },
+    {
+      "name": "DefaultedIntEntry",
+      "type": "Int",
+      "defaultValue": -67890
+    },
+    {
+      "name": "DefaultedUIntEntry",
+      "type": "UInt",
+      "defaultValue": 12345
+    },
+    {
+      "name": "DefaultedFloatEntry",
+      "type": "Float",
+      "defaultValue": 12345.67890
+    },
+    {
+      "name": "DefaultedStringEntry",
+      "type": "String",
+      "defaultValue": "My cool string"
+    },
+    {
+      "name": "DefaultedNestedEntry",
+      "type": "Nested",
+      "nested": "FirstNestedExampleConfig",
+      "defaultValue": "This is ignored"
+    },
+    {
+      "name": "DefaultedNullableBoolEntry",
+      "type": "Bool",
+      "nullable":true,
+      "defaultValue": null
+    },
+    {
+      "name": "DefaultedNullableIntEntry",
+      "type": "Int",
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "name": "DefaultedNullableUIntEntry",
+      "type": "UInt",
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "name": "DefaultedNullableFloatEntry",
+      "type": "Float",
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "name": "DefaultedNullableStringEntry",
+      "type": "String",
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "name": "DefaultedNullableNestedEntry",
+      "type": "Nested",
+      "nullable": true,
+      "nested": "FirstNestedExampleConfig",
+      "defaultValue": null
+    },
+    {
+      "name": "DescribedBoolEntry",
+      "type": "Bool",
+      "description": "My cool boolean"
+    },
+    {
+      "name": "DescribedIntEntry",
+      "type": "Int",
+      "description": "My cool integer"
+    },
+    {
+      "name": "DescribedUIntEntry",
+      "type": "UInt",
+      "description": "My cool unsigned integer"
+    },
+    {
+      "name": "DescribedFloatEntry",
+      "type": "Float",
+      "description": "My cool float"
+    },
+    {
+      "name": "DescribedStringEntry",
+      "type": "String",
+      "description": "My cool string"
+    },
+    {
+      "name": "DescribedNestedEntry",
+      "type": "Nested",
+      "nested": "FirstNestedExampleConfig",
+      "description": "My cool nested config"
+    }
+  ],
+  "nestable": [
+    {
+      "className": "FirstNestedExampleConfig",
+      "description": "This is Example's first nested mod config",
+      "entries": [
+        {
+          "name": "BoolEntry",
+          "type": "Bool"
+        },
+        {
+          "name": "IntEntry",
+          "type": "Int"
+        },
+        {
+          "name": "UIntEntry",
+          "type": "UInt"
+        },
+        {
+          "name": "FloatEntry",
+          "type": "Float"
+        },
+        {
+          "name": "StringEntry",
+          "type": "String"
+        },
+        {
+          "name": "NestedEntry",
+          "type": "Nested",
+          "nested": "SecondNestedExampleConfig"
+        },
+        {
+          "name": "NullableBoolEntry",
+          "type": "Bool",
+          "nullable": true
+        },
+        {
+          "name": "NullableIntEntry",
+          "type": "Int",
+          "nullable": true
+        },
+        {
+          "name": "NullableUIntEntry",
+          "type": "UInt",
+          "nullable": true
+        },
+        {
+          "name": "NullableFloatEntry",
+          "type": "Float",
+          "nullable": true
+        },
+        {
+          "name": "NullableStringEntry",
+          "type": "String",
+          "nullable": true
+        },
+        {
+          "name": "NullableNestedEntry",
+          "type": "Nested",
+          "nullable": true,
+          "nested": "SecondNestedExampleConfig"
+        },
+        {
+          "name": "DefaultedBoolEntry",
+          "type": "Bool",
+          "defaultValue": true
+        },
+        {
+          "name": "DefaultedIntEntry",
+          "type": "Int",
+          "defaultValue": -67890
+        },
+        {
+          "name": "DefaultedUIntEntry",
+          "type": "UInt",
+          "defaultValue": 12345
+        },
+        {
+          "name": "DefaultedFloatEntry",
+          "type": "Float",
+          "defaultValue": 12345.67890
+        },
+        {
+          "name": "DefaultedStringEntry",
+          "type": "String",
+          "defaultValue": "My cool string"
+        },
+        {
+          "name": "DefaultedNestedEntry",
+          "type": "Nested",
+          "nested": "SecondNestedExampleConfig",
+          "defaultValue": "This is ignored"
+        },
+        {
+          "name": "DefaultedNullableBoolEntry",
+          "type": "Bool",
+          "nullable":true,
+          "defaultValue": null
+        },
+        {
+          "name": "DefaultedNullableIntEntry",
+          "type": "Int",
+          "nullable": true,
+          "defaultValue": null
+        },
+        {
+          "name": "DefaultedNullableUIntEntry",
+          "type": "UInt",
+          "nullable": true,
+          "defaultValue": null
+        },
+        {
+          "name": "DefaultedNullableFloatEntry",
+          "type": "Float",
+          "nullable": true,
+          "defaultValue": null
+        },
+        {
+          "name": "DefaultedNullableStringEntry",
+          "type": "String",
+          "nullable": true,
+          "defaultValue": null
+        },
+        {
+          "name": "DefaultedNullableNestedEntry",
+          "type": "Nested",
+          "nullable": true,
+          "nested": "SecondNestedExampleConfig",
+          "defaultValue": null
+        },
+        {
+          "name": "DescribedBoolEntry",
+          "type": "Bool",
+          "description": "My cool boolean"
+        },
+        {
+          "name": "DescribedIntEntry",
+          "type": "Int",
+          "description": "My cool integer"
+        },
+        {
+          "name": "DescribedUIntEntry",
+          "type": "UInt",
+          "description": "My cool unsigned integer"
+        },
+        {
+          "name": "DescribedFloatEntry",
+          "type": "Float",
+          "description": "My cool float"
+        },
+        {
+          "name": "DescribedStringEntry",
+          "type": "String",
+          "description": "My cool string"
+        },
+        {
+          "name": "DescribedNestedEntry",
+          "type": "Nested",
+          "nested": "SecondNestedExampleConfig",
+          "description": "My cool nested config"
+        }
+      ]
+    },
+    {
+      "className": "SecondNestedExampleConfig",
+      "description": "This is Example's second nested mod config",
+      "entries": [
+        {
+          "name": "BoolEntry",
+          "type": "Bool"
+        },
+        {
+          "name": "IntEntry",
+          "type": "Int"
+        },
+        {
+          "name": "UIntEntry",
+          "type": "UInt"
+        },
+        {
+          "name": "FloatEntry",
+          "type": "Float"
+        },
+        {
+          "name": "StringEntry",
+          "type": "String"
+        },
+        {
+          "name": "NullableBoolEntry",
+          "type": "Bool",
+          "nullable": true
+        },
+        {
+          "name": "NullableIntEntry",
+          "type": "Int",
+          "nullable": true
+        },
+        {
+          "name": "NullableUIntEntry",
+          "type": "UInt",
+          "nullable": true
+        },
+        {
+          "name": "NullableFloatEntry",
+          "type": "Float",
+          "nullable": true
+        },
+        {
+          "name": "NullableStringEntry",
+          "type": "String",
+          "nullable": true
+        },
+        {
+          "name": "DefaultedBoolEntry",
+          "type": "Bool",
+          "defaultValue": true
+        },
+        {
+          "name": "DefaultedIntEntry",
+          "type": "Int",
+          "defaultValue": -67890
+        },
+        {
+          "name": "DefaultedUIntEntry",
+          "type": "UInt",
+          "defaultValue": 12345
+        },
+        {
+          "name": "DefaultedFloatEntry",
+          "type": "Float",
+          "defaultValue": 12345.67890
+        },
+        {
+          "name": "DefaultedStringEntry",
+          "type": "String",
+          "defaultValue": "My cool string"
+        },
+        {
+          "name": "DefaultedNullableBoolEntry",
+          "type": "Bool",
+          "nullable":true,
+          "defaultValue": null
+        },
+        {
+          "name": "DefaultedNullableIntEntry",
+          "type": "Int",
+          "nullable": true,
+          "defaultValue": null
+        },
+        {
+          "name": "DefaultedNullableUIntEntry",
+          "type": "UInt",
+          "nullable": true,
+          "defaultValue": null
+        },
+        {
+          "name": "DefaultedNullableFloatEntry",
+          "type": "Float",
+          "nullable": true,
+          "defaultValue": null
+        },
+        {
+          "name": "DefaultedNullableStringEntry",
+          "type": "String",
+          "nullable": true,
+          "defaultValue": null
+        },
+        {
+          "name": "DescribedBoolEntry",
+          "type": "Bool",
+          "description": "My cool boolean"
+        },
+        {
+          "name": "DescribedIntEntry",
+          "type": "Int",
+          "description": "My cool integer"
+        },
+        {
+          "name": "DescribedUIntEntry",
+          "type": "UInt",
+          "description": "My cool unsigned integer"
+        },
+        {
+          "name": "DescribedFloatEntry",
+          "type": "Float",
+          "description": "My cool float"
+        },
+        {
+          "name": "DescribedStringEntry",
+          "type": "String",
+          "description": "My cool string"
+        }
+      ]
+    }
+  ]
+}

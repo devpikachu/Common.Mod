@@ -32,8 +32,13 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.2">
+      <PrivateAssets>all</PrivateAssets>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Common.Mod.Common/Common.Mod.Common.csproj"/>
   </ItemGroup>
 
   <ItemGroup>

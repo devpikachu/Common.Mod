@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Mod.Cake", "Common.M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Mod.Example", "Common.Mod.Example\Common.Mod.Example.csproj", "{FFD7B6F9-BF49-4536-86A5-A25BE09F6753}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Mod.Common", "Common.Mod.Common\Common.Mod.Common.csproj", "{4E76028D-D8C9-48E4-B560-E2416EF46745}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{FFD7B6F9-BF49-4536-86A5-A25BE09F6753}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFD7B6F9-BF49-4536-86A5-A25BE09F6753}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFD7B6F9-BF49-4536-86A5-A25BE09F6753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E76028D-D8C9-48E4-B560-E2416EF46745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E76028D-D8C9-48E4-B560-E2416EF46745}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E76028D-D8C9-48E4-B560-E2416EF46745}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E76028D-D8C9-48E4-B560-E2416EF46745}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

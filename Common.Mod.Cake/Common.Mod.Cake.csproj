@@ -11,17 +11,22 @@
   <ItemGroup>
     <PackageReference Include="Cake.Frosting" Version="5.0.0"/>
     <PackageReference Include="Cake.Json" Version="7.0.1"/>
-    <PackageReference Include="Common.Build" Version="0.2.2"/>
-    <PackageReference Include="Common.Build.Generator" Version="0.2.2"/>
+    <PackageReference Include="Common.Build" Version="0.2.6"/>
+    <PackageReference Include="Common.Build.Generator" Version="0.2.6"/>
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.2">
+      <PrivateAssets>all</PrivateAssets>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
-  
+
   <ItemGroup>
+    <None Include="../.editorconfig"/>
+    <None Include="../.gitignore"/>
     <None Include="../build.ps1"/>
     <None Include="../build.sh"/>
     <None Include="../buildConfig.json"/>
+    <None Include="../CHANGELOG.md"/>
+    <None Include="../README.md"/>
   </ItemGroup>
 
 </Project>
