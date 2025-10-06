@@ -9,7 +9,7 @@ matrix:
 
 steps:
   - name: bootstrap
-    image: mcr.microsoft.com/dotnet/sdk:9.0
+    image: demisto/unzip:1.0.0.4855875
     environment:
       VINTAGE_STORY: ./game
       COPYPARTY_USER:
