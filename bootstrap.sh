@@ -23,11 +23,11 @@ if [[ ! -f "vendor/vsimgui_${ImGuiVersion}" ]]; then
     curl -L "https://mods.vintagestory.at/download/58527/vsimgui_${ImGuiVersion}.zip" -o "vendor/vsimgui_${ImGuiVersion}.zip"
     cp "vendor/vsimgui_${ImGuiVersion}.zip" "Common.Mod.Example/run/Mods/vsimgui_${ImGuiVersion}.zip"
 
-    tempDir=$(mktemp)
-    unzip "vendor/vsimgui_${ImGuiVersion}.zip" -d "${tempDir}/extract"
+    tempDir=$(mktemp -d)
+    unzip "vendor/vsimgui_${ImGuiVersion}.zip" -d "$tempDir"
 
-    cp "${tempDir}/extract/ImGui.NET.dll" "vendor/ImGui.NET.dll"
-    cp "${tempDir}/extract/VSImGui.dll" "vendor/VSImGui.dll"
+    cp "${tempDir}/ImGui.NET.dll" "vendor/ImGui.NET.dll"
+    cp "${tempDir}/VSImGui.dll" "vendor/VSImGui.dll"
 
     rm -rf "$tempDir"
 fi
@@ -37,10 +37,10 @@ if [[ ! -f "vendor/configlib_${ConfigLibVersion}" ]]; then
     curl -L "https://mods.vintagestory.at/download/57734/configlib_${ConfigLibVersion}.zip" -o "vendor/configlib_${ConfigLibVersion}.zip"
     cp "vendor/configlib_${ConfigLibVersion}.zip" "Common.Mod.Example/run/Mods/configlib_${ConfigLibVersion}.zip"
 
-    tempDir=$(mktemp)
-    unzip "vendor/configlib_${ConfigLibVersion}.zip" -d "${tempDir}/extract"
+    tempDir=$(mktemp -d)
+    unzip "vendor/configlib_${ConfigLibVersion}.zip" -d "$tempDir"
 
-    cp "${tempDir}/extract/configlib.dll" "vendor/configlib.dll"
+    cp "${tempDir}/configlib.dll" "vendor/configlib.dll"
 
     rm -rf "$tempDir"
 fi
