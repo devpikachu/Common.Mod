@@ -10,7 +10,6 @@ steps:
   - name: bootstrap
     image: git.omni.ms/omnilium/toolbox:latest
     environment:
-      VINTAGE_STORY: ./game
       COPYPARTY_USER:
         from_secret: copyparty_user
       COPYPARTY_PASSWORD:
