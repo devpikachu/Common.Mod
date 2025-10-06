@@ -14,8 +14,8 @@ if [[ ! -d Common.Mod.Example/run/Mods ]]; then
 fi
 
 # Vintage Story files
-cp "${VINTAGE_STORY}/VintagestoryAPI.dll" vendor/VintagestoryAPI.dll
 cp "${VINTAGE_STORY}/Lib/protobuf-net.dll" vendor/protobuf-net.dll
+cp "${VINTAGE_STORY}/VintagestoryAPI.dll" vendor/VintagestoryAPI.dll
 
 # 3rd party mods
 ## ImGui

@@ -17,8 +17,8 @@ if (-Not (Test-Path Common.Mod.Example/run/Mods))
 }
 
 # Vintage Story files
-Copy-Item -Path "$Env:VINTAGE_STORY/VintagestoryAPI.dll" -Destination vendor/VintagestoryAPI.dll
 Copy-Item -Path "$Env:VINTAGE_STORY/Lib/protobuf-net.dll" -Destination vendor/protobuf-net.dll
+Copy-Item -Path "$Env:VINTAGE_STORY/VintagestoryAPI.dll" -Destination vendor/VintagestoryAPI.dll
 
 # 3rd party mods
 ## ImGui

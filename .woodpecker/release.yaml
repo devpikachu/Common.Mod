@@ -9,7 +9,14 @@ matrix:
 steps:
   - name: bootstrap
     image: mcr.microsoft.com/dotnet/sdk:9.0
+    environment:
+      VINTAGE_STORY: .
+      COPYPARTY_USER:
+        from_secret: copyparty_user
+      COPYPARTY_PASSWORD:
+        from_secret: copyparty_password
     commands:
+      - bash .woodpecker/fetch-deps.sh $${COPYPARTY_USER} $${COPYPARTY_PASSWORD}
       - bash bootstrap.sh
 
   - name: archive
