@@ -11,7 +11,7 @@ steps:
   - name: bootstrap
     image: mcr.microsoft.com/dotnet/sdk:9.0
     environment:
-      VINTAGE_STORY: .
+      VINTAGE_STORY: ./game
       COPYPARTY_USER:
         from_secret: copyparty_user
       COPYPARTY_PASSWORD:
