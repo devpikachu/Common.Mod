@@ -1,3 +1,4 @@
 {
-  "name": "CommonMod"
+  "name": "CommonMod",
+  "defaultProject": "Common.Mod"
 }

@@ -7,9 +7,9 @@ using JetBrains.Annotations;
 namespace Common.Mod.Config;
 
 public class ConfigSystem<TCommonConfig, TServerConfig, TClientConfig> : IConfigSystem<TCommonConfig, TServerConfig, TClientConfig>
-    where TCommonConfig : IRootConfig, new()
-    where TServerConfig : IRootConfig, new()
-    where TClientConfig : IRootConfig, new()
+    where TCommonConfig : IConfig, IRootConfig, new()
+    where TServerConfig : IConfig, IRootConfig, new()
+    where TClientConfig : IConfig, IRootConfig, new()
 {
     private const string CommonFileName = "common.json";
     private const string ServerFileName = "server.json";
@@ -154,7 +154,7 @@ public class ConfigSystem<TCommonConfig, TServerConfig, TClientConfig> : IConfig
 
 [UsedImplicitly]
 public class ConfigSystem<TCommonConfig> : ConfigSystem<TCommonConfig, DummyConfig, DummyConfig>
-    where TCommonConfig : IRootConfig, new()
+    where TCommonConfig : IConfig, IRootConfig, new()
 {
     public ConfigSystem(ILogger logger, IFileSystem fileSystem) : base(logger, fileSystem)
     {

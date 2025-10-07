@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Common.Mod.Generator.Specs;
 using Common.Mod.Generator.Utils;
 using Microsoft.CodeAnalysis;
@@ -12,39 +9,23 @@ using Microsoft.CodeAnalysis.Text;
 namespace Common.Mod.Generator.Generators;
 
 [Generator]
-public class ConfigGenerator : IIncrementalGenerator
+public class ConfigGenerator : Generator, IIncrementalGenerator
 {
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter() }
-    };
-
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var pipeline = context.AdditionalTextsProvider
             .Where(static text => text.Path.EndsWith(".json"))
-            .Select(static (text, cancellationToken) =>
-            {
-                var name = Path.GetFileNameWithoutExtension(text.Path);
-                var spec = JsonSerializer.Deserialize<RootConfigSpec>(
-                    json: text.GetText(cancellationToken)?.ToString() ?? throw new InvalidOperationException(),
-                    options: JsonOptions
-                );
-
-                return new KeyValuePair<string, RootConfigSpec?>(name, spec);
-            });
+            .Select(static (text, cancellationToken) => JsonSerializer.Deserialize<RootConfigSpec>(
+                json: text.GetText(cancellationToken)?.ToString() ?? throw new InvalidOperationException(),
+                options: JsonOptions
+            ));
 
         context.RegisterSourceOutput(pipeline, Execute);
     }
 
-    private static void Execute(SourceProductionContext context, KeyValuePair<string, RootConfigSpec?> pair)
+    private static void Execute(SourceProductionContext context, RootConfigSpec? spec)
     {
-        ValidateSpec(pair.Value);
-
-        var name = pair.Key;
-        var spec = pair.Value!;
+        ValidateSpec(spec);
 
         var sourceBuilder = new IndentedStringBuilder();
         sourceBuilder.Append($"""
@@ -52,67 +33,48 @@ public class ConfigGenerator : IIncrementalGenerator
 
                               #nullable enable
 
-                              namespace {spec.ClassNamespace};
+                              namespace {spec!.ClassNamespace};
 
                               """);
 
         // Nestable configs
         foreach (var nestableSpec in spec.Nestable)
         {
-            AppendConfig(sourceBuilder, nestableSpec);
+            AppendConfig(sourceBuilder, spec, nestableSpec);
         }
 
         // Root config
         AppendConfig(
             sourceBuilder: sourceBuilder,
+            rootSpec: spec,
             spec: spec,
             inheritFrom: "Common.Config.IRootConfig",
             additionalData: innerSourceBuilder =>
             {
                 // IRootConfig implementation
-                innerSourceBuilder.AppendLine("");
-                innerSourceBuilder.AppendLine("#region IRootConfig");
-                innerSourceBuilder.AppendLine("");
-                innerSourceBuilder.AppendLine($"public string Version() => \"{spec.Version}\";");
-                innerSourceBuilder.AppendLine("");
-                innerSourceBuilder.AppendLine("#endregion IRootConfig");
+                {
+                    innerSourceBuilder.AppendLine("");
+                    innerSourceBuilder.AppendLine("#region IRootConfig");
+                    innerSourceBuilder.AppendLine("");
+                    innerSourceBuilder.AppendLine($"public string Version() => \"{spec.Version}\";");
+                    innerSourceBuilder.AppendLine("");
+                    innerSourceBuilder.AppendLine("#endregion IRootConfig");
+                }
             }
         );
 
-        context.AddSource($"{name}.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
-    }
-
-    private static void ValidateSpec(RootConfigSpec? spec)
-    {
-        ThrowIf(() => spec is null);
-
-        ThrowIf(() => string.IsNullOrWhiteSpace(spec!.ClassName));
-        ThrowIf(() => string.IsNullOrWhiteSpace(spec!.ClassNamespace));
-        ThrowIf(() => string.IsNullOrWhiteSpace(spec!.Version));
-
-        ThrowIf(() => spec!.Entries.IsDefaultOrEmpty);
-        foreach (var entrySpec in spec!.Entries)
-        {
-            ThrowIf(() => string.IsNullOrWhiteSpace(entrySpec.Name));
-            ThrowIf(() => entrySpec.Type == ConfigEntryTypeSpec.Nested && string.IsNullOrWhiteSpace(entrySpec.Nested));
-        }
-    }
-
-    private static void ThrowIf(Func<bool> predicate)
-    {
-        if (predicate.Invoke())
-        {
-            throw new InvalidOperationException();
-        }
+        context.AddSource($"{spec.ClassName}.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
     }
 
     private static void AppendConfig(
         IndentedStringBuilder sourceBuilder,
+        RootConfigSpec rootSpec,
         ConfigSpec spec,
         string? inheritFrom = null,
         Action<IndentedStringBuilder>? additionalData = null
     )
     {
+        // Class description
         if (!string.IsNullOrWhiteSpace(spec.Description))
         {
             sourceBuilder.AppendLines(
@@ -125,16 +87,26 @@ public class ConfigGenerator : IIncrementalGenerator
             );
         }
 
+        // Class declaration
         var declarationBuilder = new StringBuilder("public class ");
         declarationBuilder.Append(spec.ClassName);
+        declarationBuilder.Append(" : Common.Config.IConfig");
+
+        if (rootSpec.Synchronize)
+        {
+            declarationBuilder.Append("<");
+            declarationBuilder.Append(spec.ClassName);
+            declarationBuilder.Append("Packet>");
+        }
+
         if (inheritFrom is not null)
         {
-            declarationBuilder.Append(" : ");
+            declarationBuilder.Append(", ");
             declarationBuilder.Append(inheritFrom);
         }
 
         sourceBuilder.AppendLines(declarationBuilder.ToString());
-        sourceBuilder.AppendLines("{");
+        sourceBuilder.AppendLine("{");
         sourceBuilder.IncrementIndent();
 
         // Entries
@@ -144,96 +116,138 @@ public class ConfigGenerator : IIncrementalGenerator
 
             foreach (var entrySpec in spec.Entries)
             {
-                AppendEntry(sourceBuilder, entrySpec);
+                AppendConfigEntry(sourceBuilder, entrySpec);
             }
 
             sourceBuilder.AppendLine("");
             sourceBuilder.AppendLine("#endregion Entries");
         }
 
+        // IConfig implementation
+        AppendIConfig(sourceBuilder, rootSpec, spec);
+
         // Additional data
         additionalData?.Invoke(sourceBuilder);
 
+        // Close class body
         sourceBuilder.DecrementIndent();
         sourceBuilder.AppendLine("}");
     }
 
-    private static void AppendEntry(IndentedStringBuilder sourceBuilder, ConfigEntrySpec spec)
+    private static void AppendIConfig(
+        IndentedStringBuilder sourceBuilder,
+        RootConfigSpec rootSpec,
+        ConfigSpec spec
+    )
     {
-        string type;
-        var nullable = spec.Nullable;
-        var defaultValueBuilder = new StringBuilder(" = ");
+        sourceBuilder.AppendLine("");
+        sourceBuilder.AppendLine("#region IConfig");
+        sourceBuilder.AppendLine("");
 
-        // Type
+        // IsSynchronized
+        sourceBuilder.AppendLine($"public bool IsSynchronized() => {rootSpec.Synchronize.ToString().ToLowerInvariant()};");
+
+        // ApplyPacket
         {
-            switch (spec.Type)
+            sourceBuilder.AppendLine("");
+
+            if (rootSpec.Synchronize)
             {
-                case ConfigEntryTypeSpec.Bool:
-                    type = nullable ? "bool?" : "bool";
-                    break;
-
-                case ConfigEntryTypeSpec.Int:
-                    type = nullable ? "int?" : "int";
-                    break;
-
-                case ConfigEntryTypeSpec.UInt:
-                    type = nullable ? "uint?" : "uint";
-                    break;
-
-                case ConfigEntryTypeSpec.Float:
-                    type = nullable ? "float?" : "float";
-                    break;
-
-                case ConfigEntryTypeSpec.String:
-                    type = "string?";
-                    nullable = true;
-                    break;
-
-                case ConfigEntryTypeSpec.Nested:
-                    type = $"{spec.Nested!}?";
-                    nullable = true;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        // Default value
-        {
-            if (spec.Type is not ConfigEntryTypeSpec.Nested && (spec.DefaultValue is not null || nullable))
-            {
-                defaultValueBuilder.Append(JsonSerializer.Serialize(spec.DefaultValue, JsonOptions));
-            }
-            else if (spec.Type is ConfigEntryTypeSpec.Nested)
-            {
-                defaultValueBuilder.Append("new()");
+                sourceBuilder.AppendLine($"public void ApplyPacket({spec.ClassName}Packet packet)");
             }
             else
             {
-                defaultValueBuilder.Append("default");
+                sourceBuilder.AppendLine("public void ApplyPacket(object packet)");
             }
 
-            if (spec is { DefaultValue: not null, Type: ConfigEntryTypeSpec.Float })
+            sourceBuilder.AppendLine("{");
+            sourceBuilder.IncrementIndent();
+
+            if (rootSpec.Synchronize)
             {
-                defaultValueBuilder.Append('f');
+                foreach (var entrySpec in spec.Entries)
+                {
+                    if (entrySpec.Type == ConfigEntryTypeSpec.Nested)
+                    {
+                        sourceBuilder.AppendLine("");
+                        sourceBuilder.AppendLine($"if (packet.{entrySpec.Name} is not null)");
+                        sourceBuilder.AppendLine("{");
+                        sourceBuilder.IncrementIndent();
+
+                        sourceBuilder.AppendLine($"{entrySpec.Name}?.ApplyPacket(packet.{entrySpec.Name});");
+
+                        sourceBuilder.DecrementIndent();
+                        sourceBuilder.AppendLine("}");
+                        sourceBuilder.AppendLine("else");
+                        sourceBuilder.AppendLine("{");
+                        sourceBuilder.IncrementIndent();
+
+                        sourceBuilder.AppendLine($"{entrySpec.Name} = null;");
+
+                        sourceBuilder.DecrementIndent();
+                        sourceBuilder.AppendLine("}");
+                        sourceBuilder.AppendLine("");
+                        continue;
+                    }
+
+                    sourceBuilder.AppendLine($"{entrySpec.Name} = packet.{entrySpec.Name};");
+                }
+            }
+            else
+            {
+                sourceBuilder.AppendLine("throw new NotImplementedException();");
             }
 
-            defaultValueBuilder.Append(';');
+            sourceBuilder.DecrementIndent();
+            sourceBuilder.AppendLine("}");
         }
 
-        if (!string.IsNullOrWhiteSpace(spec.Description))
+        // CreatePacket
         {
-            sourceBuilder.AppendLines(
-                $"""
+            sourceBuilder.AppendLine("");
 
-                 /// <summary>
-                 /// {spec.Description}
-                 /// </summary>
-                 """
-            );
+            if (rootSpec.Synchronize)
+            {
+                sourceBuilder.AppendLine($"public {spec.ClassName}Packet CreatePacket()");
+            }
+            else
+            {
+                sourceBuilder.AppendLine($"public object CreatePacket()");
+            }
+
+            sourceBuilder.AppendLine("{");
+            sourceBuilder.IncrementIndent();
+
+            if (rootSpec.Synchronize)
+            {
+                sourceBuilder.AppendLine($"return new {spec.ClassName}Packet");
+                sourceBuilder.AppendLine("{");
+                sourceBuilder.IncrementIndent();
+
+                foreach (var entrySpec in spec.Entries)
+                {
+                    if (entrySpec.Type == ConfigEntryTypeSpec.Nested)
+                    {
+                        sourceBuilder.AppendLine($"{entrySpec.Name} = {entrySpec.Name}?.CreatePacket(),");
+                        continue;
+                    }
+
+                    sourceBuilder.AppendLine($"{entrySpec.Name} = {entrySpec.Name},");
+                }
+
+                sourceBuilder.DecrementIndent();
+                sourceBuilder.AppendLine("};");
+            }
+            else
+            {
+                sourceBuilder.AppendLine("throw new NotImplementedException();");
+            }
+
+            sourceBuilder.DecrementIndent();
+            sourceBuilder.AppendLine("}");
         }
 
-        sourceBuilder.AppendLine($"public {type} {spec.Name} {{ get; set; }}{defaultValueBuilder}");
+        sourceBuilder.AppendLine("");
+        sourceBuilder.AppendLine("#endregion IConfig");
     }
 }

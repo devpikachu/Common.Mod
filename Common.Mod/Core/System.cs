@@ -11,9 +11,9 @@ using ILogger = Common.Mod.Common.Core.ILogger;
 namespace Common.Mod.Core;
 
 public abstract class System<TCommonConfig, TServerConfig, TClientConfig> : ModSystem, ISystem
-    where TCommonConfig : IRootConfig, new()
-    where TServerConfig : IRootConfig, new()
-    where TClientConfig : IRootConfig, new()
+    where TCommonConfig : IConfig, IRootConfig, new()
+    where TServerConfig : IConfig, IRootConfig, new()
+    where TClientConfig : IConfig, IRootConfig, new()
 {
     [UsedImplicitly] protected readonly Container Container = new();
 
@@ -58,4 +58,4 @@ public abstract class System<TCommonConfig, TServerConfig, TClientConfig> : ModS
 
 [UsedImplicitly]
 public abstract class System<TCommonConfig> : System<TCommonConfig, DummyConfig, DummyConfig>
-    where TCommonConfig : IRootConfig, new();
+    where TCommonConfig : IConfig, IRootConfig, new();

@@ -3,6 +3,7 @@
   "classNamespace": "Common.Mod.Config",
   "description": "This is Example's configuration",
   "version": "21.1.0",
+  "synchronize": false,
   "entries": [
     {
       "name": "BoolEntry",
