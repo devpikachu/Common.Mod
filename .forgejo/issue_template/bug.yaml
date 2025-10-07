@@ -18,6 +18,14 @@ body:
       placeholder: Help! This isn't working!
     validations:
       required: false
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The version of the library used
+      placeholder: 0.3.0
+    validations:
+      required: true
   - type: textarea
     id: description
     attributes:
@@ -41,12 +49,3 @@ body:
       render: shell
     validations:
       required: false
-  - type: dropdown
-    id: version
-    attributes:
-      label: Version
-      description: The version of the library used
-      options:
-        - 0.0.0
-    validations:
-      required: true

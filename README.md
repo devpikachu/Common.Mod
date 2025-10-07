@@ -1,27 +1,27 @@
 # Common Mod
 
-![release](https://img.shields.io/gitea/v/release/vintage-story-mods/common-mod?gitea_url=https%3A%2F%2Fgit.omni.ms&sort=semver&display_name=release&style=flat) [![ci](https://ci.omni.ms/api/badges/2/status.svg)](https://ci.omni.ms/repos/2) ![dotnet](https://img.shields.io/badge/dotnet-8.0-%236F419A)
+[![GNU GPLv3](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) ![.NET Version](https://img.shields.io/badge/dotnet-8.0-%236F419A) [![CI Status](https://ci.omni.ms/api/badges/2/status.svg)](https://ci.omni.ms/repos/2) ![Latest Release](https://img.shields.io/gitea/v/release/vintage-story-mods/common-mod?gitea_url=https%3A%2F%2Fgit.omni.ms&sort=semver&display_name=release&style=flat)
 
-Common library used in the mods.
+Common library used to simplify mod creation across various projects.
 
-## Supported Versions
-
-| Version | Status             |
-|---------|--------------------|
-| 0.1.x   | :white_check_mark: |
 
 ## License
 
-Copyright © 2025 Andrei "DetPikachu" Hava.
+`SPDX-License-Identifier: GPL-3.0-or-later`
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+The contents of this repository are licensed under the [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
 
-https://www.apache.org/licenses/LICENSE-2.0
+Copyright (C) 2025  Andrei "DetPikachu" Hava.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
