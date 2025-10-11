@@ -20,7 +20,7 @@ steps:
   - name: package
     image: mcr.microsoft.com/dotnet/sdk:9.0
     commands:
-      - bash build.sh --target Package --oproject ${PROJECT} --oversion ${CI_COMMIT_TAG}
+      - bash build.sh --target Package --general-project ${PROJECT} --general-version ${CI_COMMIT_TAG}
 
   - name: publish
     image: mcr.microsoft.com/dotnet/sdk:9.0
