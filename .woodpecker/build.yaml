@@ -21,4 +21,4 @@ steps:
   - name: build
     image: mcr.microsoft.com/dotnet/sdk:9.0
     commands:
-      - bash build.sh -target Build --general-project ${PROJECT}
+      - bash build.sh --target Build --general-project ${PROJECT}
