@@ -64,12 +64,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="modConfig.json"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="run\ModConfig\"/>
-    <Folder Include="run\Mods\"/>
+    <AdditionalFiles Include="config.json"/>
   </ItemGroup>
 
 </Project>

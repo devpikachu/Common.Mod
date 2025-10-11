@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
-using JetBrains.Annotations;
 
 namespace Common.Mod.Generator.Specs;
 
 public record ConfigSpec
 {
-    public string ClassName { get; set; } = string.Empty;
-    public string? Description { get; set; }
+    public string ClassName { get; set; } = null!;
+    public string ClassNamespace { get; set; } = null!;
+    public string? Description { get; set; } = null;
     public ImmutableArray<ConfigEntrySpec> Entries { get; set; }
 }

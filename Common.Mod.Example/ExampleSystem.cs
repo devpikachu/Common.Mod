@@ -15,8 +15,12 @@ public class ExampleSystem : Core.System
 
     protected override void RegisterConfigs(IConfigSystem configSystem)
     {
-        configSystem.Register<ExampleCommonConfig>();
-        configSystem.Register<ExampleServerConfig>();
-        configSystem.Register<ExampleClientConfig>();
+        // configSystem.Register<ExampleCommonConfig>();
+        // configSystem.Register<ExampleServerConfig>();
+        // configSystem.Register<ExampleClientConfig>();
+
+        configSystem.Register<ExampleCommonConfigGen>();
+        configSystem.Register<ExampleServerConfigGen>();
+        configSystem.Register<ExampleClientConfigGen>();
     }
 }

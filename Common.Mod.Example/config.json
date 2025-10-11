@@ -1,0 +1,279 @@
+{
+  "rootConfigs": [
+    {
+      "className": "ExampleCommonConfigGen",
+      "classNamespace": "Common.Mod.Example",
+      "version": "0.0.0",
+      "type": "Common",
+      "description": "This is a description",
+      "entries": [
+        {
+          "name": "BoolValue",
+          "type": "Bool",
+          "label": "Bool",
+          "description": "This is a boolean"
+        },
+        {
+          "name": "Int32Value",
+          "type": "Int32",
+          "defaultValue": -123,
+          "label": "Int32",
+          "description": "This is a 32-bit integer"
+        },
+        {
+          "name": "Int64Value",
+          "type": "Int64",
+          "defaultValue": -123,
+          "label": "Int64",
+          "description": "This is a 64-bit integer"
+        },
+        {
+          "name": "UInt32Value",
+          "type": "UInt32",
+          "defaultValue": 456,
+          "label": "UInt32",
+          "description": "This is an unsigned 32-bit integer"
+        },
+        {
+          "name": "UInt64Value",
+          "type": "UInt64",
+          "defaultValue": 456,
+          "label": "UInt64",
+          "description": "This is an unsigned 64-bit integer"
+        },
+        {
+          "name": "FloatValue",
+          "type": "Float",
+          "defaultValue": 78.9,
+          "label": "Float",
+          "description": "This is a float"
+        },
+        {
+          "name": "DoubleValue",
+          "type": "Double",
+          "defaultValue": 78.9,
+          "label": "Double",
+          "description": "This is a double"
+        },
+        {
+          "name": "StringValue",
+          "type": "String",
+          "defaultValue": "string",
+          "label": "String",
+          "description": "This is a string"
+        },
+        {
+          "name": "NestedValue",
+          "type": "Nested",
+          "nested": "ExampleNestedConfigGen",
+          "label": "Nested"
+        }
+      ]
+    },
+    {
+      "className": "ExampleServerConfigGen",
+      "classNamespace": "Common.Mod.Example",
+      "version": "0.0.0",
+      "type": "Server",
+      "description": "This is a description",
+      "entries": [
+        {
+          "name": "BoolValue",
+          "type": "Bool",
+          "label": "Bool",
+          "description": "This is a boolean"
+        },
+        {
+          "name": "Int32Value",
+          "type": "Int32",
+          "defaultValue": -123,
+          "label": "Int32",
+          "description": "This is a 32-bit integer"
+        },
+        {
+          "name": "Int64Value",
+          "type": "Int64",
+          "defaultValue": -123,
+          "label": "Int64",
+          "description": "This is a 64-bit integer"
+        },
+        {
+          "name": "UInt32Value",
+          "type": "UInt32",
+          "defaultValue": 456,
+          "label": "UInt32",
+          "description": "This is an unsigned 32-bit integer"
+        },
+        {
+          "name": "UInt64Value",
+          "type": "UInt64",
+          "defaultValue": 456,
+          "label": "UInt64",
+          "description": "This is an unsigned 64-bit integer"
+        },
+        {
+          "name": "FloatValue",
+          "type": "Float",
+          "defaultValue": 78.9,
+          "label": "Float",
+          "description": "This is a float"
+        },
+        {
+          "name": "DoubleValue",
+          "type": "Double",
+          "defaultValue": 78.9,
+          "label": "Double",
+          "description": "This is a double"
+        },
+        {
+          "name": "StringValue",
+          "type": "String",
+          "defaultValue": "string",
+          "label": "String",
+          "description": "This is a string"
+        },
+        {
+          "name": "NestedValue",
+          "type": "Nested",
+          "nested": "ExampleNestedConfigGen",
+          "label": "Nested"
+        }
+      ]
+    },
+    {
+      "className": "ExampleClientConfigGen",
+      "classNamespace": "Common.Mod.Example",
+      "version": "0.0.0",
+      "type": "Client",
+      "description": "This is a description",
+      "entries": [
+        {
+          "name": "BoolValue",
+          "type": "Bool",
+          "label": "Bool",
+          "description": "This is a boolean"
+        },
+        {
+          "name": "Int32Value",
+          "type": "Int32",
+          "defaultValue": -123,
+          "label": "Int32",
+          "description": "This is a 32-bit integer"
+        },
+        {
+          "name": "Int64Value",
+          "type": "Int64",
+          "defaultValue": -123,
+          "label": "Int64",
+          "description": "This is a 64-bit integer"
+        },
+        {
+          "name": "UInt32Value",
+          "type": "UInt32",
+          "defaultValue": 456,
+          "label": "UInt32",
+          "description": "This is an unsigned 32-bit integer"
+        },
+        {
+          "name": "UInt64Value",
+          "type": "UInt64",
+          "defaultValue": 456,
+          "label": "UInt64",
+          "description": "This is an unsigned 64-bit integer"
+        },
+        {
+          "name": "FloatValue",
+          "type": "Float",
+          "defaultValue": 78.9,
+          "label": "Float",
+          "description": "This is a float"
+        },
+        {
+          "name": "DoubleValue",
+          "type": "Double",
+          "defaultValue": 78.9,
+          "label": "Double",
+          "description": "This is a double"
+        },
+        {
+          "name": "StringValue",
+          "type": "String",
+          "defaultValue": "string",
+          "label": "String",
+          "description": "This is a string"
+        },
+        {
+          "name": "NestedValue",
+          "type": "Nested",
+          "nested": "ExampleNestedConfigGen",
+          "label": "Nested"
+        }
+      ]
+    }
+  ],
+  "configs": [
+    {
+      "className": "ExampleNestedConfigGen",
+      "classNamespace": "Common.Mod.Example",
+      "version": "0.0.0",
+      "description": "This, too, is a description",
+      "entries": [
+        {
+          "name": "BoolValue",
+          "type": "Bool",
+          "label": "Bool",
+          "description": "This is a boolean"
+        },
+        {
+          "name": "Int32Value",
+          "type": "Int32",
+          "defaultValue": -123,
+          "label": "Int32",
+          "description": "This is a 32-bit integer"
+        },
+        {
+          "name": "Int64Value",
+          "type": "Int64",
+          "defaultValue": -123,
+          "label": "Int64",
+          "description": "This is a 64-bit integer"
+        },
+        {
+          "name": "UInt32Value",
+          "type": "UInt32",
+          "defaultValue": 456,
+          "label": "UInt32",
+          "description": "This is an unsigned 32-bit integer"
+        },
+        {
+          "name": "UInt64Value",
+          "type": "UInt64",
+          "defaultValue": 456,
+          "label": "UInt64",
+          "description": "This is an unsigned 64-bit integer"
+        },
+        {
+          "name": "FloatValue",
+          "type": "Float",
+          "defaultValue": 78.9,
+          "label": "Float",
+          "description": "This is a float"
+        },
+        {
+          "name": "DoubleValue",
+          "type": "Double",
+          "defaultValue": 78.9,
+          "label": "Double",
+          "description": "This is a double"
+        },
+        {
+          "name": "StringValue",
+          "type": "String",
+          "defaultValue": "string",
+          "label": "String",
+          "description": "This is a string"
+        }
+      ]
+    }
+  ]
+}
