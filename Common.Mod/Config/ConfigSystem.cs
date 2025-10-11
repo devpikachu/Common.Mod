@@ -206,27 +206,27 @@ public class ConfigSystem : IConfigSystem
 
         if (_configs.ContainsKey(RootConfigType.Common))
         {
-            _logger.Debug("Registering ConfigLib {0} renderer", nameof(RootConfigType.Common));
+            _logger.Debug("Registering ConfigLib common renderer");
             _configLibSystem!.RegisterCustomConfig(
-                domain: $"{_system.ModName()} ({nameof(RootConfigType.Common)})",
+                domain: $"{_system.ModName()} (Common)",
                 drawDelegate: (_, controlButtons) => RenderCommon(controlButtons)
             );
         }
 
         if (_configs.ContainsKey(RootConfigType.Server))
         {
-            _logger.Debug("Registering ConfigLib {0} renderer", nameof(RootConfigType.Server));
+            _logger.Debug("Registering ConfigLib server renderer");
             _configLibSystem!.RegisterCustomConfig(
-                domain: $"{_system.ModName()} ({nameof(RootConfigType.Server)})",
+                domain: $"{_system.ModName()} (Server)",
                 drawDelegate: (_, controlButtons) => RenderServer(controlButtons)
             );
         }
 
         if (_configs.ContainsKey(RootConfigType.Client))
         {
-            _logger.Debug("Registering ConfigLib {0} renderer", nameof(RootConfigType.Client));
+            _logger.Debug("Registering ConfigLib client renderer");
             _configLibSystem!.RegisterCustomConfig(
-                domain: $"{_system.ModName()} ({nameof(RootConfigType.Client)})",
+                domain: $"{_system.ModName()} (Client)",
                 drawDelegate: (_, controlButtons) => RenderClient(controlButtons)
             );
         }
@@ -290,43 +290,86 @@ public class ConfigSystem : IConfigSystem
 
     private ControlButtons RenderCommon(ControlButtons controlButtons)
     {
+        ConfigUI.Label($"{_system.ModName()} Common Configuration");
+        ImGui.Separator();
+        ImGui.NewLine();
+
+        ImGui.BeginDisabled(!_canEditServerConfig);
+
+        if (!_canEditServerConfig)
+        {
+            ConfigUI.Label("You don't have permission to edit the common configuration.");
+            ImGui.NewLine();
+        }
+
+        _configs[RootConfigType.Common].Render();
+
+        ImGui.EndDisabled();
+
+        if (controlButtons.Defaults && _canEditServerConfig)
+        {
+            _configs[RootConfigType.Common].Reset();
+        }
+
         return new ControlButtons
         {
-            Save = false,
-            Restore = false,
-            Defaults = false,
+            Save = _canEditServerConfig,
+            Restore = _canEditServerConfig,
+            Defaults = _canEditServerConfig,
             Reload = false
         };
     }
 
     private ControlButtons RenderServer(ControlButtons controlButtons)
     {
+        ConfigUI.Label($"{_system.ModName()} Server Configuration");
+        ImGui.Separator();
+        ImGui.NewLine();
+
         ImGui.BeginDisabled(!_canEditServerConfig);
 
         if (!_canEditServerConfig)
         {
-            ImGui.Text("You don't have permission to edit the server's configuration.");
+            ConfigUI.Label("You don't have permission to edit the server configuration.");
             ImGui.NewLine();
         }
 
+        _configs[RootConfigType.Server].Render();
+
         ImGui.EndDisabled();
+
+        if (controlButtons.Defaults && _canEditServerConfig)
+        {
+            _configs[RootConfigType.Server].Reset();
+        }
 
         return new ControlButtons
         {
-            Save = false,
-            Restore = false,
-            Defaults = false,
+            Save = _canEditServerConfig,
+            Restore = _canEditServerConfig,
+            Defaults = _canEditServerConfig,
             Reload = false
         };
     }
 
     private ControlButtons RenderClient(ControlButtons controlButtons)
     {
+        ConfigUI.Label($"{_system.ModName()} Client Configuration");
+        ImGui.Separator();
+        ImGui.NewLine();
+
+        _configs[RootConfigType.Client].Render();
+
+        if (controlButtons.Defaults)
+        {
+            _configs[RootConfigType.Client].Reset();
+        }
+
         return new ControlButtons
         {
-            Save = false,
-            Restore = false,
-            Defaults = false,
+            Save = true,
+            Restore = true,
+            Defaults = true,
             Reload = false
         };
     }
