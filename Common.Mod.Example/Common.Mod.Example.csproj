@@ -19,6 +19,19 @@
       <HintPath>../vendor/protobuf-net.dll</HintPath>
       <Private>false</Private>
     </Reference>
+
+    <Reference Include="configlib">
+      <HintPath>../vendor/configlib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="ImGui.NET">
+      <HintPath>../vendor/ImGui.NET.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="VSImGui">
+      <HintPath>../vendor/VSImGui.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -55,8 +68,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="run\ModConfig\" />
-    <Folder Include="run\Mods\" />
+    <Folder Include="run\ModConfig\"/>
+    <Folder Include="run\Mods\"/>
   </ItemGroup>
 
 </Project>

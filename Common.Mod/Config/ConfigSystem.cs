@@ -2,6 +2,11 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Common.Mod.Common.Config;
 using Common.Mod.Common.Core;
+using ConfigLib;
+using ImGuiNET;
+using Vintagestory.API.Client;
+using Vintagestory.API.Server;
+using ILogger = Common.Mod.Common.Core.ILogger;
 
 namespace Common.Mod.Config;
 
@@ -13,17 +18,29 @@ public class ConfigSystem : IConfigSystem
 
     private readonly SystemSide _side;
     private readonly ILogger _logger;
+    private readonly ISystem _system;
     private readonly IFileSystem _fileSystem;
+    private readonly ConfigLibModSystem? _configLibSystem;
 
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly Dictionary<RootConfigType, Type> _configTypes;
     private readonly Dictionary<RootConfigType, IRootConfig> _configs;
 
-    public ConfigSystem(SystemSide side, ILogger logger, IFileSystem fileSystem)
+    private bool _canEditServerConfig = false;
+
+    public ConfigSystem(
+        SystemSide side,
+        ILogger logger,
+        ISystem system,
+        IFileSystem fileSystem,
+        ConfigLibModSystem? configLibSystem
+    )
     {
         _side = side;
         _logger = logger.Named("ConfigSystem");
+        _system = system;
         _fileSystem = fileSystem;
+        _configLibSystem = configLibSystem;
 
         _jsonOptions = new JsonSerializerOptions
         {
@@ -34,6 +51,10 @@ public class ConfigSystem : IConfigSystem
         };
         _configTypes = new Dictionary<RootConfigType, Type>();
         _configs = new Dictionary<RootConfigType, IRootConfig>();
+
+        _system.ServerRegisterMessageTypes += OnServerRegisterMessageTypes;
+        _system.ClientRegisterMessageTypes += OnClientRegisterMessageTypes;
+        _system.ClientPlayerJoined += OnClientPlayerJoined;
     }
 
     public void Register<TRootConfig>()
@@ -97,6 +118,19 @@ public class ConfigSystem : IConfigSystem
         }
     }
 
+    public void Synchronize<TConfigPacket>(IServerPlayer player, TConfigPacket packet) where TConfigPacket : class, new()
+    {
+        if (!player.HasPrivilege(Privilege.controlserver))
+        {
+            _logger.Warning(
+                "Player {0} (ID {1}, IP {2}) attempted to remotely change server config, but lacks permissions. This likely indicates that the player sent a manually crafted synchronization packet to the server.",
+                player.PlayerName, player.PlayerUID, player.IpAddress);
+            return;
+        }
+
+        Synchronize(packet);
+    }
+
     public TConfigPacket Synchronize<TConfigPacket>() where TConfigPacket : class, new()
     {
         _logger.Debug("Received configuration synchronization request");
@@ -109,8 +143,11 @@ public class ConfigSystem : IConfigSystem
 
         try
         {
-            var json = JsonSerializer.Serialize(_configs[RootConfigType.Common], _configTypes[RootConfigType.Common], _jsonOptions);
-            configPacket.Data = json;
+            var commonJson = JsonSerializer.Serialize(_configs[RootConfigType.Common], _configTypes[RootConfigType.Common], _jsonOptions);
+            configPacket.Common = commonJson;
+
+            var serverJson = JsonSerializer.Serialize(_configs[RootConfigType.Server], _configTypes[RootConfigType.Server], _jsonOptions);
+            configPacket.Server = serverJson;
         }
         catch (Exception ex)
         {
@@ -132,9 +169,19 @@ public class ConfigSystem : IConfigSystem
 
         try
         {
-            _configs[RootConfigType.Common] =
-                JsonSerializer.Deserialize(configPacket.Data, _configTypes[RootConfigType.Common], _jsonOptions) as IRootConfig ??
-                throw new NullReferenceException();
+            if (configPacket.Common is not null)
+            {
+                _configs[RootConfigType.Common] =
+                    JsonSerializer.Deserialize(configPacket.Common, _configTypes[RootConfigType.Common], _jsonOptions) as IRootConfig ??
+                    throw new NullReferenceException();
+            }
+
+            if (configPacket.Server is not null)
+            {
+                _configs[RootConfigType.Server] =
+                    JsonSerializer.Deserialize(configPacket.Server, _configTypes[RootConfigType.Server], _jsonOptions) as IRootConfig ??
+                    throw new NullReferenceException();
+            }
 
             Synchronized?.Invoke();
         }
@@ -144,6 +191,66 @@ public class ConfigSystem : IConfigSystem
         }
     }
 
+    public void Render()
+    {
+        if (_side == SystemSide.Server)
+        {
+            return;
+        }
+
+        if (_configLibSystem is null)
+        {
+            _logger.Debug("ConfigLib not found, skipping config UI rendering");
+            return;
+        }
+
+        if (_configs.ContainsKey(RootConfigType.Common))
+        {
+            _logger.Debug("Registering ConfigLib {0} renderer", nameof(RootConfigType.Common));
+            _configLibSystem!.RegisterCustomConfig(
+                domain: $"{_system.ModName()} ({nameof(RootConfigType.Common)})",
+                drawDelegate: (_, controlButtons) => RenderCommon(controlButtons)
+            );
+        }
+
+        if (_configs.ContainsKey(RootConfigType.Server))
+        {
+            _logger.Debug("Registering ConfigLib {0} renderer", nameof(RootConfigType.Server));
+            _configLibSystem!.RegisterCustomConfig(
+                domain: $"{_system.ModName()} ({nameof(RootConfigType.Server)})",
+                drawDelegate: (_, controlButtons) => RenderServer(controlButtons)
+            );
+        }
+
+        if (_configs.ContainsKey(RootConfigType.Client))
+        {
+            _logger.Debug("Registering ConfigLib {0} renderer", nameof(RootConfigType.Client));
+            _configLibSystem!.RegisterCustomConfig(
+                domain: $"{_system.ModName()} ({nameof(RootConfigType.Client)})",
+                drawDelegate: (_, controlButtons) => RenderClient(controlButtons)
+            );
+        }
+    }
+
+    private void OnServerRegisterMessageTypes(IServerNetworkChannel channel)
+    {
+        channel
+            .RegisterMessageType<ConfigPacket>()
+            .SetMessageHandler<ConfigPacket>(Synchronize);
+    }
+
+    private void OnClientRegisterMessageTypes(IClientNetworkChannel channel)
+    {
+        channel
+            .RegisterMessageType<ConfigPacket>()
+            .SetMessageHandler<ConfigPacket>(Synchronize);
+    }
+
+    private void OnClientPlayerJoined(IClientPlayer player)
+    {
+        _canEditServerConfig = player.HasPrivilege(Privilege.controlserver);
+    }
+
     private void Load(RootConfigType type)
     {
         _logger.Debug("Loading {0} configuration", type);
@@ -151,7 +258,7 @@ public class ConfigSystem : IConfigSystem
         var fileName = GetFileName(type);
         if (!_fileSystem.ConfigFileExists(fileName))
         {
-            _logger.Error("Failed to load {0} configuration: file {1} does not exist", type, fileName);
+            _logger.Debug("Failed to load {0} configuration: file {1} does not exist", type, fileName);
             return;
         }
 
@@ -179,6 +286,49 @@ public class ConfigSystem : IConfigSystem
         {
             _logger.Error(ex, "Failed to save {0} configuration", type);
         }
+    }
+
+    private ControlButtons RenderCommon(ControlButtons controlButtons)
+    {
+        return new ControlButtons
+        {
+            Save = false,
+            Restore = false,
+            Defaults = false,
+            Reload = false
+        };
+    }
+
+    private ControlButtons RenderServer(ControlButtons controlButtons)
+    {
+        ImGui.BeginDisabled(!_canEditServerConfig);
+
+        if (!_canEditServerConfig)
+        {
+            ImGui.Text("You don't have permission to edit the server's configuration.");
+            ImGui.NewLine();
+        }
+
+        ImGui.EndDisabled();
+
+        return new ControlButtons
+        {
+            Save = false,
+            Restore = false,
+            Defaults = false,
+            Reload = false
+        };
+    }
+
+    private ControlButtons RenderClient(ControlButtons controlButtons)
+    {
+        return new ControlButtons
+        {
+            Save = false,
+            Restore = false,
+            Defaults = false,
+            Reload = false
+        };
     }
 
     private static string GetFileName(RootConfigType type)

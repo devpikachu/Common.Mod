@@ -5,6 +5,7 @@ set -e
 vsVersion="1.21.4"
 vsImGuiVersion="1.1.14"
 configLibVersion="1.10.6"
+autoConfigLibVersion="2.0.9"
 
 # Create directories
 directories=(
@@ -40,7 +41,15 @@ vsImGuiFiles=("ImGui.NET.dll" "VSImGui.dll")
 configLibName="57734/configlib_${configLibVersion}.zip"
 configLibFiles=("configlib.dll")
 
-mods=("vsImGui" "configLib")
+autoConfigLibName="54531/autoconfiglib_${autoConfigLibVersion}.zip"
+autoConfigLibFiles=()
+
+mods=(
+    "vsImGui"
+    "configLib"
+    "autoConfigLib"
+)
+
 for mod in "${mods[@]}"; do
     declare -n modName="${mod}Name"
     declare -n modFiles="${mod}Files"

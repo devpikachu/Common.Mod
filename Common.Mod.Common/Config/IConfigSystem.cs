@@ -1,3 +1,5 @@
+using Vintagestory.API.Server;
+
 namespace Common.Mod.Common.Config;
 
 public interface IConfigSystem
@@ -20,9 +22,14 @@ public interface IConfigSystem
     public void Load();
     public void Save();
 
-    public TConfigPacket Synchronize<TConfigPacket>()
+    public void Synchronize<TConfigPacket>(IServerPlayer player, TConfigPacket packet)
         where TConfigPacket : class, new();
 
     public void Synchronize<TConfigPacket>(TConfigPacket packet)
         where TConfigPacket : class, new();
+
+    public TConfigPacket Synchronize<TConfigPacket>()
+        where TConfigPacket : class, new();
+
+    public void Render();
 }

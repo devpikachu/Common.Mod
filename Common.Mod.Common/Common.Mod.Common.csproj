@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="VintagestoryAPI">
+      <HintPath>../vendor/VintagestoryAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.2">
       <PrivateAssets>all</PrivateAssets>
       <ExcludeAssets>runtime</ExcludeAssets>

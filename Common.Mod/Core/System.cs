@@ -1,21 +1,31 @@
 using Common.Mod.Common.Config;
 using Common.Mod.Common.Core;
 using Common.Mod.Config;
+using ConfigLib;
 using DryIoc;
 using JetBrains.Annotations;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 using ILogger = Common.Mod.Common.Core.ILogger;
+using IServerPlayer = Vintagestory.API.Server.IServerPlayer;
 
 namespace Common.Mod.Core;
 
 public abstract class System : ModSystem, ISystem
 {
+    public event ISystem.ServerRegisterMessageTypesHandler? ServerRegisterMessageTypes;
+    public event ISystem.ClientRegisterMessageTypesHandler? ClientRegisterMessageTypes;
+    public event ISystem.ServerPlayerJoinedHandler? ServerPlayerJoined;
+    public event ISystem.ClientPlayerJoinedHandler? ClientPlayerJoined;
+
+    private const string ConfigLibModId = "configlib";
+
     [UsedImplicitly] protected readonly Container Container = new();
 
     public abstract string ModId();
     public abstract string ModVersion();
+    public abstract string ModName();
 
     protected abstract void RegisterConfigs(IConfigSystem configSystem);
 
@@ -39,6 +49,15 @@ public abstract class System : ModSystem, ISystem
         Container.RegisterInstance<ISystem>(this);
         Container.Register<IFileSystem, FileSystem>();
 
+        // ConfigLib
+        {
+            if (api.ModLoader.IsModEnabled(ConfigLibModId))
+            {
+                var configLibSystem = api.ModLoader.GetModSystem<ConfigLibModSystem>();
+                Container.RegisterInstance(configLibSystem);
+            }
+        }
+
         // Config
         {
             Container.Register<IConfigSystem, ConfigSystem>(Reuse.Singleton);
@@ -48,18 +67,7 @@ public abstract class System : ModSystem, ISystem
 
             configSystem.Load();
             configSystem.Save();
-        }
-    }
-
-    public override void StartClientSide(ICoreClientAPI api)
-    {
-        // Networking
-        {
-            var channel = api.Network.RegisterChannel(ModId())
-                .RegisterMessageType<ConfigPacket>()
-                .SetMessageHandler<ConfigPacket>(packet => { Container.Resolve<IConfigSystem>().Synchronize(packet); });
-
-            Container.RegisterInstance(channel);
+            configSystem.Render();
         }
     }
 
@@ -67,31 +75,49 @@ public abstract class System : ModSystem, ISystem
     {
         // Networking
         {
-            var channel = api.Network.RegisterChannel(ModId())
-                .RegisterMessageType<ConfigPacket>()
-                .SetMessageHandler<ConfigPacket>((_, _) => { });
-
+            var channel = api.Network.RegisterChannel(ModId());
+            ServerRegisterMessageTypes?.Invoke(channel);
             Container.RegisterInstance(channel);
         }
 
         // Events
         {
-            api.Event.PlayerJoin += OnPlayerJoin;
+            api.Event.PlayerJoin += OnServerPlayerJoined;
+        }
+    }
+
+    public override void StartClientSide(ICoreClientAPI api)
+    {
+        // Networking
+        {
+            var channel = api.Network.RegisterChannel(ModId());
+            ClientRegisterMessageTypes?.Invoke(channel);
+            Container.RegisterInstance(channel);
+        }
+
+        // Events
+        {
+            api.Event.PlayerJoin += OnClientPlayerJoined;
         }
     }
 
     public override void Dispose()
     {
         var api = Container.Resolve<ICoreAPI>();
-        if (api is not ICoreServerAPI serverApi)
+
+        if (api is ICoreServerAPI serverApi)
         {
+            serverApi.Event.PlayerJoin -= OnServerPlayerJoined;
             return;
         }
 
-        serverApi.Event.PlayerJoin -= OnPlayerJoin;
+        if (api is ICoreClientAPI clientApi)
+        {
+            clientApi.Event.PlayerJoin -= OnClientPlayerJoined;
+        }
     }
 
-    protected void OnPlayerJoin(IServerPlayer player)
+    private void OnServerPlayerJoined(IServerPlayer player)
     {
         // Config synchronization
         {
@@ -99,5 +125,12 @@ public abstract class System : ModSystem, ISystem
             var channel = Container.Resolve<IServerNetworkChannel>();
             channel.SendPacket(configSystem.Synchronize<ConfigPacket>(), player);
         }
+
+        ServerPlayerJoined?.Invoke(player);
+    }
+
+    private void OnClientPlayerJoined(IClientPlayer player)
+    {
+        ClientPlayerJoined?.Invoke(player);
     }
 }
