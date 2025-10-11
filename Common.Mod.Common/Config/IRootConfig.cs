@@ -1,9 +1,7 @@
-using JetBrains.Annotations;
-
 namespace Common.Mod.Common.Config;
 
-public interface IRootConfig
+public interface IRootConfig : IConfig
 {
-    [UsedImplicitly]
     public string Version();
+    public RootConfigType Type();
 }

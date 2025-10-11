@@ -10,52 +10,94 @@ using ILogger = Common.Mod.Common.Core.ILogger;
 
 namespace Common.Mod.Core;
 
-public abstract class System<TCommonConfig, TServerConfig, TClientConfig> : ModSystem, ISystem
-    where TCommonConfig : IConfig, IRootConfig, new()
-    where TServerConfig : IConfig, IRootConfig, new()
-    where TClientConfig : IConfig, IRootConfig, new()
+public abstract class System : ModSystem, ISystem
 {
     [UsedImplicitly] protected readonly Container Container = new();
 
     public abstract string ModId();
     public abstract string ModVersion();
 
+    protected abstract void RegisterConfigs(IConfigSystem configSystem);
+
     public override void StartPre(ICoreAPI api)
     {
+        // Core API & side
+        {
+            Container.RegisterInstance(api);
+            Container.RegisterInstance(api is ICoreServerAPI ? SystemSide.Server : SystemSide.Client);
+        }
+
         // Logging
         {
             Container.Register<ILogger, Logger>(Reuse.Singleton);
             var logger = Container.Resolve<ILogger>();
 
-            var consoleSink = new ConsoleLogSink(api.Logger);
+            var consoleSink = new ConsoleLogSink(ModId(), api.Logger);
             logger.AddSink(ConsoleLogSink.Key, consoleSink);
         }
 
-        Container.RegisterInstance(api);
         Container.RegisterInstance<ISystem>(this);
         Container.Register<IFileSystem, FileSystem>();
 
         // Config
         {
-            Container.Register<IConfigSystem<TCommonConfig, TServerConfig, TClientConfig>, ConfigSystem<TCommonConfig, TServerConfig, TClientConfig>>();
-            var configSystem = Container.Resolve<IConfigSystem<TCommonConfig, TServerConfig, TClientConfig>>();
+            Container.Register<IConfigSystem, ConfigSystem>(Reuse.Singleton);
+            var configSystem = Container.Resolve<IConfigSystem>();
+
+            RegisterConfigs(configSystem);
+
             configSystem.Load();
+            configSystem.Save();
+        }
+    }
+
+    public override void StartClientSide(ICoreClientAPI api)
+    {
+        // Networking
+        {
+            var channel = api.Network.RegisterChannel(ModId())
+                .RegisterMessageType<ConfigPacket>()
+                .SetMessageHandler<ConfigPacket>(packet => { Container.Resolve<IConfigSystem>().Synchronize(packet); });
+
+            Container.RegisterInstance(channel);
+        }
+    }
+
+    public override void StartServerSide(ICoreServerAPI api)
+    {
+        // Networking
+        {
+            var channel = api.Network.RegisterChannel(ModId())
+                .RegisterMessageType<ConfigPacket>()
+                .SetMessageHandler<ConfigPacket>((_, _) => { });
+
+            Container.RegisterInstance(channel);
         }
 
-        // Server-specific
-        if (api is ICoreServerAPI serverApi)
+        // Events
         {
-            Container.RegisterInstance(serverApi);
+            api.Event.PlayerJoin += OnPlayerJoin;
+        }
+    }
+
+    public override void Dispose()
+    {
+        var api = Container.Resolve<ICoreAPI>();
+        if (api is not ICoreServerAPI serverApi)
+        {
+            return;
         }
 
-        // Client-specific
-        if (api is ICoreClientAPI clientApi)
+        serverApi.Event.PlayerJoin -= OnPlayerJoin;
+    }
+
+    protected void OnPlayerJoin(IServerPlayer player)
+    {
+        // Config synchronization
         {
-            Container.RegisterInstance(clientApi);
+            var configSystem = Container.Resolve<IConfigSystem>();
+            var channel = Container.Resolve<IServerNetworkChannel>();
+            channel.SendPacket(configSystem.Synchronize<ConfigPacket>(), player);
         }
     }
 }
-
-[UsedImplicitly]
-public abstract class System<TCommonConfig> : System<TCommonConfig, DummyConfig, DummyConfig>
-    where TCommonConfig : IConfig, IRootConfig, new();

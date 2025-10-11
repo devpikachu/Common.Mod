@@ -2,35 +2,27 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Common.Mod.Common.Config;
 using Common.Mod.Common.Core;
-using JetBrains.Annotations;
 
 namespace Common.Mod.Config;
 
-public class ConfigSystem<TCommonConfig, TServerConfig, TClientConfig> : IConfigSystem<TCommonConfig, TServerConfig, TClientConfig>
-    where TCommonConfig : IConfig, IRootConfig, new()
-    where TServerConfig : IConfig, IRootConfig, new()
-    where TClientConfig : IConfig, IRootConfig, new()
+public class ConfigSystem : IConfigSystem
 {
-    private const string CommonFileName = "common.json";
-    private const string ServerFileName = "server.json";
-    private const string ClientFileName = "client.json";
+    public delegate void SynchronizedHandler();
 
+    public event SynchronizedHandler? Synchronized;
+
+    private readonly SystemSide _side;
     private readonly ILogger _logger;
     private readonly IFileSystem _fileSystem;
 
     private readonly JsonSerializerOptions _jsonOptions;
+    private readonly Dictionary<RootConfigType, Type> _configTypes;
+    private readonly Dictionary<RootConfigType, IRootConfig> _configs;
 
-    private TCommonConfig? _common;
-    private TServerConfig? _server;
-    private TClientConfig? _client;
-
-    public TCommonConfig? Common() => _common;
-    public TServerConfig? Server() => _server;
-    public TClientConfig? Client() => _client;
-
-    public ConfigSystem(ILogger logger, IFileSystem fileSystem)
+    public ConfigSystem(SystemSide side, ILogger logger, IFileSystem fileSystem)
     {
-        _logger = logger.Named("Config");
+        _side = side;
+        _logger = logger.Named("ConfigSystem");
         _fileSystem = fileSystem;
 
         _jsonOptions = new JsonSerializerOptions
@@ -40,123 +32,163 @@ public class ConfigSystem<TCommonConfig, TServerConfig, TClientConfig> : IConfig
             Converters = { new JsonStringEnumConverter() },
             WriteIndented = true
         };
+        _configTypes = new Dictionary<RootConfigType, Type>();
+        _configs = new Dictionary<RootConfigType, IRootConfig>();
     }
+
+    public void Register<TRootConfig>()
+        where TRootConfig : class, IRootConfig, new()
+    {
+        var config = new TRootConfig();
+        var type = config.Type();
+
+        _configTypes.Add(type, typeof(TRootConfig));
+        _configs.Add(type, config);
+    }
+
+    public TRootConfig Get<TRootConfig>(RootConfigType type)
+        where TRootConfig : class, IRootConfig, new()
+    {
+        return _configs[type] as TRootConfig ?? throw new NullReferenceException();
+    }
+
+    public TRootConfig GetCommon<TRootConfig>()
+        where TRootConfig : class, IRootConfig, new() => Get<TRootConfig>(RootConfigType.Common);
+
+    public TRootConfig GetServer<TRootConfig>()
+        where TRootConfig : class, IRootConfig, new() => Get<TRootConfig>(RootConfigType.Server);
+
+    public TRootConfig GetClient<TRootConfig>()
+        where TRootConfig : class, IRootConfig, new() => Get<TRootConfig>(RootConfigType.Client);
 
     public void Load()
     {
-        if (typeof(TCommonConfig) == typeof(DummyConfig)
-            && typeof(TClientConfig) == typeof(DummyConfig)
-            && typeof(TServerConfig) == typeof(DummyConfig))
+        if (_configs.ContainsKey(RootConfigType.Common))
         {
-            _logger.Verbose("All config types are set to a dummy value, skipping config loading");
-            return;
+            Load(RootConfigType.Common);
         }
 
-        if (typeof(TCommonConfig) != typeof(DummyConfig))
+        if (_configs.ContainsKey(RootConfigType.Server) && _side == SystemSide.Server)
         {
-            _logger.Debug("Loading common config");
-            _common = Load<TCommonConfig>(CommonFileName);
-            if (_common is null)
-            {
-                _logger.Debug("Couldn't load common config from file, setting defaults");
-                _common = new TCommonConfig();
-            }
+            Load(RootConfigType.Server);
         }
 
-        if (typeof(TServerConfig) != typeof(DummyConfig))
+        if (_configs.ContainsKey(RootConfigType.Client) && _side == SystemSide.Client)
         {
-            _logger.Debug("Loading server config");
-            _server = Load<TServerConfig>(ServerFileName);
-            if (_server is null)
-            {
-                _logger.Debug("Couldn't load server config from file, setting defaults");
-                _server = new TServerConfig();
-            }
+            Load(RootConfigType.Client);
         }
-
-        if (typeof(TClientConfig) != typeof(DummyConfig))
-        {
-            _logger.Debug("Loading client config");
-            _client = Load<TClientConfig>(ClientFileName);
-            if (_client is null)
-            {
-                _logger.Debug("Couldn't load client config from file, setting defaults");
-                _client = new TClientConfig();
-            }
-        }
-
-        Save();
     }
 
     public void Save()
     {
-        if (typeof(TCommonConfig) == typeof(DummyConfig)
-            && typeof(TClientConfig) == typeof(DummyConfig)
-            && typeof(TServerConfig) == typeof(DummyConfig))
+        if (_configs.ContainsKey(RootConfigType.Common))
         {
-            _logger.Verbose("All config types are set to a dummy value, skipping config saving");
-            return;
+            Save(RootConfigType.Common);
         }
 
-        if (typeof(TCommonConfig) != typeof(DummyConfig) && _common is not null)
+        if (_configs.ContainsKey(RootConfigType.Server) && _side == SystemSide.Server)
         {
-            _logger.Debug("Saving common config");
-            Save(CommonFileName, _common);
+            Save(RootConfigType.Server);
         }
 
-        if (typeof(TServerConfig) != typeof(DummyConfig) && _server is not null)
+        if (_configs.ContainsKey(RootConfigType.Client) && _side == SystemSide.Client)
         {
-            _logger.Debug("Saving server config");
-            Save(ServerFileName, _server);
-        }
-
-        if (typeof(TClientConfig) != typeof(DummyConfig) && _client is not null)
-        {
-            _logger.Debug("Saving client config");
-            Save(ClientFileName, _client);
+            Save(RootConfigType.Client);
         }
     }
 
-    private TConfig? Load<TConfig>(string fileName)
-        where TConfig : IRootConfig, new()
+    public TConfigPacket Synchronize<TConfigPacket>() where TConfigPacket : class, new()
     {
+        _logger.Debug("Received configuration synchronization request");
+
+        var packet = new TConfigPacket();
+        if (packet is not ConfigPacket configPacket)
+        {
+            throw new InvalidCastException($"Requested packet type does not match {nameof(ConfigPacket)}");
+        }
+
+        try
+        {
+            var json = JsonSerializer.Serialize(_configs[RootConfigType.Common], _configTypes[RootConfigType.Common], _jsonOptions);
+            configPacket.Data = json;
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Failed to construct synchronization packet");
+        }
+
+        return packet;
+    }
+
+    public void Synchronize<TConfigPacket>(TConfigPacket packet)
+        where TConfigPacket : class, new()
+    {
+        _logger.Debug("Received configuration synchronization packet");
+
+        if (packet is not ConfigPacket configPacket)
+        {
+            throw new InvalidCastException($"Received packet type does not match {nameof(ConfigPacket)}");
+        }
+
+        try
+        {
+            _configs[RootConfigType.Common] =
+                JsonSerializer.Deserialize(configPacket.Data, _configTypes[RootConfigType.Common], _jsonOptions) as IRootConfig ??
+                throw new NullReferenceException();
+
+            Synchronized?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Failed to deconstruct synchronization packet");
+        }
+    }
+
+    private void Load(RootConfigType type)
+    {
+        _logger.Debug("Loading {0} configuration", type);
+
+        var fileName = GetFileName(type);
         if (!_fileSystem.ConfigFileExists(fileName))
         {
-            return default;
+            _logger.Error("Failed to load {0} configuration: file {1} does not exist", type, fileName);
+            return;
         }
 
         try
         {
             var json = _fileSystem.ReadConfigFile(fileName);
-            return JsonSerializer.Deserialize<TConfig>(json, _jsonOptions);
+            _configs[type] = JsonSerializer.Deserialize(json, _configTypes[type], _jsonOptions) as IRootConfig ?? throw new NullReferenceException();
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Failed to load config from {0}", fileName);
-            return default;
+            _logger.Error(ex, "Failed to load {0} configuration", type);
         }
     }
 
-    private void Save<TConfig>(string fileName, TConfig value)
-        where TConfig : IRootConfig, new()
+    private void Save(RootConfigType type)
     {
+        _logger.Debug("Saving {0} configuration", type);
+
         try
         {
-            var json = JsonSerializer.Serialize(value, _jsonOptions);
-            _fileSystem.WriteConfigFile(fileName, json);
+            var json = JsonSerializer.Serialize(_configs[type], _configTypes[type], _jsonOptions);
+            _fileSystem.WriteConfigFile(GetFileName(type), json);
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Failed to save config to {0}", fileName);
+            _logger.Error(ex, "Failed to save {0} configuration", type);
         }
     }
-}
 
-[UsedImplicitly]
-public class ConfigSystem<TCommonConfig> : ConfigSystem<TCommonConfig, DummyConfig, DummyConfig>
-    where TCommonConfig : IConfig, IRootConfig, new()
-{
-    public ConfigSystem(ILogger logger, IFileSystem fileSystem) : base(logger, fileSystem)
+    private static string GetFileName(RootConfigType type)
     {
+        return type switch
+        {
+            RootConfigType.Common => "common.json",
+            RootConfigType.Server => "server.json",
+            RootConfigType.Client => "client.json",
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
     }
 }

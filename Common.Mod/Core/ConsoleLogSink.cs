@@ -7,10 +7,12 @@ public class ConsoleLogSink : ILogSink
 {
     public const string Key = "CONSOLE";
 
+    private readonly string _modId;
     private readonly ICoreLogger _logger;
 
-    public ConsoleLogSink(ICoreLogger logger)
+    public ConsoleLogSink(string modId, ICoreLogger logger)
     {
+        _modId = modId;
         _logger = logger;
     }
 
@@ -18,7 +20,7 @@ public class ConsoleLogSink : ILogSink
     {
         var message = string.IsNullOrWhiteSpace(entry.Emitter)
             ? entry.Message
-            : string.Format("[{0}] {1}", entry.Emitter, entry.Message);
+            : string.Format("[{0}] [{1}] {2}", _modId, entry.Emitter, entry.Message);
 
         switch (entry.Severity)
         {

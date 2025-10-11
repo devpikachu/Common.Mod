@@ -54,4 +54,9 @@
     <AdditionalFiles Include="modConfig.json"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="run\ModConfig\" />
+    <Folder Include="run\Mods\" />
+  </ItemGroup>
+
 </Project>

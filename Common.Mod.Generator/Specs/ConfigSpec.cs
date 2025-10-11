@@ -5,7 +5,7 @@ namespace Common.Mod.Generator.Specs;
 
 public record ConfigSpec
 {
-    public string ClassName { get; [UsedImplicitly] set; } = string.Empty;
-    public string? Description { get; [UsedImplicitly] set; }
-    public ImmutableArray<ConfigEntrySpec> Entries { get; [UsedImplicitly] set; }
+    public string ClassName { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public ImmutableArray<ConfigEntrySpec> Entries { get; set; }
 }

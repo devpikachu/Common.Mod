@@ -10,13 +10,12 @@ steps:
   - name: bootstrap
     image: git.omni.ms/omnilium/toolbox:latest
     environment:
-      COPYPARTY_USER:
+      REMOTE_USERNAME:
         from_secret: copyparty_user
-      COPYPARTY_PASSWORD:
+      REMOTE_PASSWORD:
         from_secret: copyparty_password
     commands:
-      - bash scripts/fetch-game.sh $${COPYPARTY_USER} $${COPYPARTY_PASSWORD}
-      - bash scripts/bootstrap.sh
+      - bash bootstrap.sh remote
 
   - name: package
     image: mcr.microsoft.com/dotnet/sdk:9.0
