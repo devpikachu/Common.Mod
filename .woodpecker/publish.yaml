@@ -31,5 +31,5 @@ steps:
       NUGET_REGISTRY_PASSWORD:
         from_secret: nuget_registry_password
     commands:
-      - dotnet nuget add source --name forgejo --username $${NUGET_REGISTRY_USERNAME} --password $${NUGET_REGISTRY_PASSWORD} --store-password-in-clear-text $${NUGET_REGISTRY_URL}
+      - dotnet nuget list source | grep forgejo || dotnet nuget add source --name forgejo --username $${NUGET_REGISTRY_USERNAME} --password $${NUGET_REGISTRY_PASSWORD} --store-password-in-clear-text $${NUGET_REGISTRY_URL}
       - dotnet nuget push --source forgejo out/*.nupkg
