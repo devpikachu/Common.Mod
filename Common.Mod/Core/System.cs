@@ -122,8 +122,7 @@ public abstract class System : ModSystem, ISystem
         // Config synchronization
         {
             var configSystem = Container.Resolve<IConfigSystem>();
-            var channel = Container.Resolve<IServerNetworkChannel>();
-            channel.SendPacket(configSystem.Synchronize<ConfigPacket>(), player);
+            configSystem.Synchronize(player);
         }
 
         ServerPlayerJoined?.Invoke(player);

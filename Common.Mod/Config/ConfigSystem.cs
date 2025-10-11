@@ -26,7 +26,9 @@ public class ConfigSystem : IConfigSystem
     private readonly Dictionary<RootConfigType, Type> _configTypes;
     private readonly Dictionary<RootConfigType, IRootConfig> _configs;
 
-    private bool _canEditServerConfig = false;
+    private bool _canEditServerConfig;
+    private IServerNetworkChannel? _serverChannel;
+    private IClientNetworkChannel? _clientChannel;
 
     public ConfigSystem(
         SystemSide side,
@@ -118,7 +120,8 @@ public class ConfigSystem : IConfigSystem
         }
     }
 
-    public void Synchronize<TConfigPacket>(IServerPlayer player, TConfigPacket packet) where TConfigPacket : class, new()
+    public void Synchronize<TConfigPacket>(IServerPlayer player, TConfigPacket packet)
+        where TConfigPacket : class, new()
     {
         if (!player.HasPrivilege(Privilege.controlserver))
         {
@@ -131,65 +134,124 @@ public class ConfigSystem : IConfigSystem
         Synchronize(packet);
     }
 
-    public TConfigPacket Synchronize<TConfigPacket>() where TConfigPacket : class, new()
-    {
-        _logger.Debug("Received configuration synchronization request");
-
-        var packet = new TConfigPacket();
-        if (packet is not ConfigPacket configPacket)
-        {
-            throw new InvalidCastException($"Requested packet type does not match {nameof(ConfigPacket)}");
-        }
-
-        try
-        {
-            var commonJson = JsonSerializer.Serialize(_configs[RootConfigType.Common], _configTypes[RootConfigType.Common], _jsonOptions);
-            configPacket.Common = commonJson;
-
-            var serverJson = JsonSerializer.Serialize(_configs[RootConfigType.Server], _configTypes[RootConfigType.Server], _jsonOptions);
-            configPacket.Server = serverJson;
-        }
-        catch (Exception ex)
-        {
-            _logger.Error(ex, "Failed to construct synchronization packet");
-        }
-
-        return packet;
-    }
-
     public void Synchronize<TConfigPacket>(TConfigPacket packet)
         where TConfigPacket : class, new()
     {
-        _logger.Debug("Received configuration synchronization packet");
+        _logger.Debug("Received configuration packet");
 
         if (packet is not ConfigPacket configPacket)
         {
             throw new InvalidCastException($"Received packet type does not match {nameof(ConfigPacket)}");
         }
 
-        try
+        switch (configPacket.Operation)
         {
-            if (configPacket.Common is not null)
+            case ConfigPacketOperation.ServerClientSync:
             {
-                _configs[RootConfigType.Common] =
-                    JsonSerializer.Deserialize(configPacket.Common, _configTypes[RootConfigType.Common], _jsonOptions) as IRootConfig ??
-                    throw new NullReferenceException();
+                _logger.Debug("Processing server-to-client synchronization packet");
+
+                if (_side is not SystemSide.Client)
+                {
+                    throw new InvalidOperationException("The server-to-client synchronization operation can only be received on the client");
+                }
+
+                if (configPacket.Common is not null)
+                {
+                    Load(RootConfigType.Common, configPacket.Common);
+                }
+
+                if (configPacket.Server is not null)
+                {
+                    Load(RootConfigType.Server, configPacket.Server);
+                }
+
+                break;
             }
 
-            if (configPacket.Server is not null)
+            case ConfigPacketOperation.ClientServerSync:
             {
-                _configs[RootConfigType.Server] =
-                    JsonSerializer.Deserialize(configPacket.Server, _configTypes[RootConfigType.Server], _jsonOptions) as IRootConfig ??
-                    throw new NullReferenceException();
+                _logger.Debug("Processing client-to-server synchronization packet");
+
+                if (_side is not SystemSide.Server)
+                {
+                    throw new InvalidOperationException("The client-to-server synchronization operation can only be received on the server");
+                }
+
+                if (configPacket.Common is not null)
+                {
+                    Load(RootConfigType.Common, configPacket.Common);
+                    Save(RootConfigType.Common);
+                }
+
+                if (configPacket.Server is not null)
+                {
+                    Load(RootConfigType.Server, configPacket.Server);
+                    Save(RootConfigType.Server);
+                }
+
+                SendServerClientSync();
+
+                break;
             }
 
-            Synchronized?.Invoke();
+            case ConfigPacketOperation.ServerRestore:
+            {
+                _logger.Debug("Processing server restore packet");
+
+                if (_side is not SystemSide.Server)
+                {
+                    throw new InvalidOperationException("The server restore operation can only be received on the server");
+                }
+
+                if (_configs.ContainsKey(RootConfigType.Common))
+                {
+                    Load(RootConfigType.Common);
+                }
+
+                if (_configs.ContainsKey(RootConfigType.Server) && _side == SystemSide.Server)
+                {
+                    Load(RootConfigType.Server);
+                }
+
+                SendServerClientSync();
+
+                break;
+            }
+
+            case ConfigPacketOperation.ServerReset:
+            {
+                _logger.Debug("Processing server reset packet");
+
+                if (_side is not SystemSide.Server)
+                {
+                    throw new InvalidOperationException("The server reset operation can only be received on the server");
+                }
+
+                if (_configs.TryGetValue(RootConfigType.Common, out var commonConfig))
+                {
+                    commonConfig.Reset();
+                    Save(RootConfigType.Common);
+                }
+
+                if (_configs.TryGetValue(RootConfigType.Server, out var serverConfig) && _side == SystemSide.Server)
+                {
+                    serverConfig.Reset();
+                    Save(RootConfigType.Server);
+                }
+
+                SendServerClientSync();
+
+                break;
+            }
+
+            default:
+                throw new ArgumentOutOfRangeException();
         }
-        catch (Exception ex)
-        {
-            _logger.Error(ex, "Failed to deconstruct synchronization packet");
-        }
+
+        Synchronized?.Invoke();
     }
+
+    public void Synchronize(IServerPlayer player) => SendServerClientSync(player);
 
     public void Render()
     {
@@ -234,6 +296,7 @@ public class ConfigSystem : IConfigSystem
 
     private void OnServerRegisterMessageTypes(IServerNetworkChannel channel)
     {
+        _serverChannel = channel;
         channel
             .RegisterMessageType<ConfigPacket>()
             .SetMessageHandler<ConfigPacket>(Synchronize);
@@ -241,6 +304,7 @@ public class ConfigSystem : IConfigSystem
 
     private void OnClientRegisterMessageTypes(IClientNetworkChannel channel)
     {
+        _clientChannel = channel;
         channel
             .RegisterMessageType<ConfigPacket>()
             .SetMessageHandler<ConfigPacket>(Synchronize);
@@ -265,6 +329,18 @@ public class ConfigSystem : IConfigSystem
         try
         {
             var json = _fileSystem.ReadConfigFile(fileName);
+            Load(type, json);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Failed to load {0} configuration", type);
+        }
+    }
+
+    private void Load(RootConfigType type, string json)
+    {
+        try
+        {
             _configs[type] = JsonSerializer.Deserialize(json, _configTypes[type], _jsonOptions) as IRootConfig ?? throw new NullReferenceException();
         }
         catch (Exception ex)
@@ -288,6 +364,87 @@ public class ConfigSystem : IConfigSystem
         }
     }
 
+    private void SendServerClientSync(IServerPlayer? player = null)
+    {
+        _logger.Debug("Sending server-to-client synchronization request");
+
+        var packet = new ConfigPacket
+        {
+            Operation = ConfigPacketOperation.ServerClientSync
+        };
+
+        try
+        {
+            var commonJson = JsonSerializer.Serialize(_configs[RootConfigType.Common], _configTypes[RootConfigType.Common], _jsonOptions);
+            packet.Common = commonJson;
+
+            var serverJson = JsonSerializer.Serialize(_configs[RootConfigType.Server], _configTypes[RootConfigType.Server], _jsonOptions);
+            packet.Server = serverJson;
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Failed to construct synchronization packet");
+        }
+
+        if (player is not null)
+        {
+            _serverChannel!.SendPacket(packet, player);
+        }
+        else
+        {
+            _serverChannel!.BroadcastPacket(packet);
+        }
+    }
+
+    private void SendClientServerSync()
+    {
+        _logger.Debug("Sending client-to-server synchronization request");
+
+        var packet = new ConfigPacket
+        {
+            Operation = ConfigPacketOperation.ClientServerSync
+        };
+
+        try
+        {
+            var commonJson = JsonSerializer.Serialize(_configs[RootConfigType.Common], _configTypes[RootConfigType.Common], _jsonOptions);
+            packet.Common = commonJson;
+
+            var serverJson = JsonSerializer.Serialize(_configs[RootConfigType.Server], _configTypes[RootConfigType.Server], _jsonOptions);
+            packet.Server = serverJson;
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Failed to construct synchronization packet");
+        }
+
+        _clientChannel!.SendPacket(packet);
+    }
+
+    private void SendServerRestore()
+    {
+        _logger.Debug("Sending server restore request");
+
+        var packet = new ConfigPacket
+        {
+            Operation = ConfigPacketOperation.ServerRestore
+        };
+
+        _clientChannel!.SendPacket(packet);
+    }
+
+    private void SendServerReset()
+    {
+        _logger.Debug("Sending server reset request");
+
+        var packet = new ConfigPacket
+        {
+            Operation = ConfigPacketOperation.ServerReset
+        };
+
+        _clientChannel!.SendPacket(packet);
+    }
+
     private ControlButtons RenderCommon(ControlButtons controlButtons)
     {
         ConfigUI.Label($"{_system.ModName()} Common Configuration");
@@ -306,9 +463,19 @@ public class ConfigSystem : IConfigSystem
 
         ImGui.EndDisabled();
 
+        if (controlButtons.Save && _canEditServerConfig)
+        {
+            SendClientServerSync();
+        }
+
+        if (controlButtons.Restore && _canEditServerConfig)
+        {
+            SendServerRestore();
+        }
+
         if (controlButtons.Defaults && _canEditServerConfig)
         {
-            _configs[RootConfigType.Common].Reset();
+            SendServerReset();
         }
 
         return new ControlButtons
@@ -338,9 +505,19 @@ public class ConfigSystem : IConfigSystem
 
         ImGui.EndDisabled();
 
+        if (controlButtons.Save && _canEditServerConfig)
+        {
+            SendClientServerSync();
+        }
+
+        if (controlButtons.Restore && _canEditServerConfig)
+        {
+            SendServerRestore();
+        }
+
         if (controlButtons.Defaults && _canEditServerConfig)
         {
-            _configs[RootConfigType.Server].Reset();
+            SendServerReset();
         }
 
         return new ControlButtons
@@ -360,9 +537,20 @@ public class ConfigSystem : IConfigSystem
 
         _configs[RootConfigType.Client].Render();
 
+        if (controlButtons.Save)
+        {
+            Save(RootConfigType.Client);
+        }
+
+        if (controlButtons.Restore)
+        {
+            Load(RootConfigType.Client);
+        }
+
         if (controlButtons.Defaults)
         {
             _configs[RootConfigType.Client].Reset();
+            Save(RootConfigType.Client);
         }
 
         return new ControlButtons

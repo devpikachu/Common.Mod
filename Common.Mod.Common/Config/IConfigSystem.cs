@@ -28,8 +28,7 @@ public interface IConfigSystem
     public void Synchronize<TConfigPacket>(TConfigPacket packet)
         where TConfigPacket : class, new();
 
-    public TConfigPacket Synchronize<TConfigPacket>()
-        where TConfigPacket : class, new();
+    public void Synchronize(IServerPlayer player);
 
     public void Render();
 }
