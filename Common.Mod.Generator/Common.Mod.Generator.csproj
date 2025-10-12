@@ -8,6 +8,7 @@
     <IsRoslynComponent>true</IsRoslynComponent>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -56,6 +57,22 @@
 
   <ItemGroup>
     <None Include="$(OutputPath)/$(AssemblyName).dll">
+      <Pack>true</Pack>
+      <PackagePath>analyzers/dotnet/cs</PackagePath>
+      <Visible>false</Visible>
+    </None>
+
+    <None Include="$(PKGCaseConverter)/lib/netstandard2.0/CaseConverter.dll">
+      <Pack>true</Pack>
+      <PackagePath>analyzers/dotnet/cs</PackagePath>
+      <Visible>false</Visible>
+    </None>
+    <None Include="$(PKGSystem_Collections_Immutable)/lib/netstandard2.0/System.Collections.Immutable.dll">
+      <Pack>true</Pack>
+      <PackagePath>analyzers/dotnet/cs</PackagePath>
+      <Visible>false</Visible>
+    </None>
+    <None Include="$(PKGSystem_Text_Json)/lib/netstandard2.0/System.Text.Json.dll">
       <Pack>true</Pack>
       <PackagePath>analyzers/dotnet/cs</PackagePath>
       <Visible>false</Visible>

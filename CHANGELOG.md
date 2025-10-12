@@ -1,3 +1,7 @@
+## 0.1.4
+**:question: Other**
+- Correctly publish `Common.Mod.Generator`
+
 ## 0.1.3
 **:question: Other**
 - Add cross project substitution to fix NuGet reference

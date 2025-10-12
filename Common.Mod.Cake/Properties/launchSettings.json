@@ -3,7 +3,7 @@
     "Library": {
       "commandName": "Project",
       "executablePath": "dotnet",
-      "commandLineArgs": "-t Build --project \"Common.Mod\" --skip-substitution true",
+      "commandLineArgs": "--target Build --general-project \"Common.Mod\" --general-skipSubstitution true",
       "workingDirectory": "$(ProjectDir)"
     }
   }
