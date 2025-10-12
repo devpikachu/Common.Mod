@@ -1,11 +1,10 @@
-## 0.2.2
-**:question: Other**
-- Remove unnecessary empty space in configuration UI
-- Wrap long text in configuration UI
-
 ## 0.2.1
 **:bug: Bug Fixes**
 - Fixed trying to (de)serialize common or server config without checking for its existence
+
+**:question: Other**
+- Remove unnecessary empty space in configuration UI
+- Wrap long text in configuration UI
 
 ## 0.2.0
 **:sparkles: Features**
