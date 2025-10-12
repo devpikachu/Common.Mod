@@ -1,5 +1,5 @@
 {
-  "name": null,
+  "name": "Common",
   "outputSubdir": null,
   "substitute": [
     "Common.Mod.Common.csproj"
