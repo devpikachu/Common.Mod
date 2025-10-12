@@ -5,7 +5,7 @@ namespace Common.Mod.Common.Core;
 
 public interface ISystem
 {
-    #region Event Delegates
+    #region Event delegates
 
     public delegate void ServerStartHandler(ICoreServerAPI api);
 
@@ -19,7 +19,7 @@ public interface ISystem
 
     public delegate void ClientPlayerJoinedHandler(IClientPlayer player);
 
-    #endregion Event Delegates
+    #endregion Event delegates
 
     public event ServerStartHandler? ServerStart;
     public event ClientStartHandler? ClientStart;

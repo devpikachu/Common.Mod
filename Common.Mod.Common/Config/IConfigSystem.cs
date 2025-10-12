@@ -4,6 +4,14 @@ namespace Common.Mod.Common.Config;
 
 public interface IConfigSystem
 {
+    #region Event delegates
+
+    public delegate void SynchronizedHandler();
+
+    #endregion Event delegates
+
+    public event SynchronizedHandler? Synchronized;
+
     public void Register<TRootConfig>()
         where TRootConfig : class, IRootConfig, new();
 

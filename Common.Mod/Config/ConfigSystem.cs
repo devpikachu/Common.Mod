@@ -12,9 +12,7 @@ namespace Common.Mod.Config;
 
 public class ConfigSystem : IConfigSystem
 {
-    public delegate void SynchronizedHandler();
-
-    public event SynchronizedHandler? Synchronized;
+    public event IConfigSystem.SynchronizedHandler? Synchronized;
 
     private readonly SystemSide _side;
     private readonly ILogger _logger;

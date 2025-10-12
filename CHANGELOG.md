@@ -1,3 +1,7 @@
+## 0.2.3
+**:bug: Bug Fixes**
+- Fixed `IConfigSystem.Synchronized` not being in the interface, making it unusable without direct coupling
+
 ## 0.2.2
 **:question: Other**
 - Shrink input width to accomodate long labels
