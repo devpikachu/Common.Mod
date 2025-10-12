@@ -21,7 +21,7 @@ public abstract class System : ModSystem, ISystem
 
     private const string ConfigLibModId = "configlib";
 
-    [UsedImplicitly] protected readonly Container Container = new();
+    [UsedImplicitly] public readonly Container Container = new();
 
     public abstract string ModId();
     public abstract string ModVersion();
