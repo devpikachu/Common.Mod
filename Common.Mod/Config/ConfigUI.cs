@@ -57,6 +57,7 @@ public static class ConfigUI
         fixed (int* valuePtr = &value, stepPtr = &_int32Step, stepFastPtr = &_int32StepFast)
         {
             ImGui.PushID(identifier);
+            ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
             ImGui.BeginGroup();
 
             ResetButton(ref value, defaultValue);
@@ -64,6 +65,7 @@ public static class ConfigUI
             Description(description);
 
             ImGui.EndGroup();
+            ImGui.PopItemWidth();
             ImGui.PopID();
         }
     }
@@ -73,6 +75,7 @@ public static class ConfigUI
         fixed (long* valuePtr = &value, stepPtr = &_int64Step, stepFastPtr = &_int64StepFast)
         {
             ImGui.PushID(identifier);
+            ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
             ImGui.BeginGroup();
 
             ResetButton(ref value, defaultValue);
@@ -80,6 +83,7 @@ public static class ConfigUI
             Description(description);
 
             ImGui.EndGroup();
+            ImGui.PopItemWidth();
             ImGui.PopID();
         }
     }
@@ -89,6 +93,7 @@ public static class ConfigUI
         fixed (uint* valuePtr = &value, stepPtr = &_uint32Step, stepFastPtr = &_uint32StepFast)
         {
             ImGui.PushID(identifier);
+            ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
             ImGui.BeginGroup();
 
             ResetButton(ref value, defaultValue);
@@ -96,6 +101,7 @@ public static class ConfigUI
             Description(description);
 
             ImGui.EndGroup();
+            ImGui.PopItemWidth();
             ImGui.PopID();
         }
     }
@@ -105,6 +111,7 @@ public static class ConfigUI
         fixed (ulong* valuePtr = &value, stepPtr = &_uint64Step, stepFastPtr = &_uint64StepFast)
         {
             ImGui.PushID(identifier);
+            ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
             ImGui.BeginGroup();
 
             ResetButton(ref value, defaultValue);
@@ -112,6 +119,7 @@ public static class ConfigUI
             Description(description);
 
             ImGui.EndGroup();
+            ImGui.PopItemWidth();
             ImGui.PopID();
         }
     }
@@ -119,6 +127,7 @@ public static class ConfigUI
     public static void Float(ref float value, float defaultValue, string identifier, string label, string? description = null)
     {
         ImGui.PushID(identifier);
+        ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
         ImGui.BeginGroup();
 
         ResetButton(ref value, defaultValue);
@@ -126,12 +135,14 @@ public static class ConfigUI
         Description(description);
 
         ImGui.EndGroup();
+        ImGui.PopItemWidth();
         ImGui.PopID();
     }
 
     public static void Double(ref double value, double defaultValue, string identifier, string label, string? description = null)
     {
         ImGui.PushID(identifier);
+        ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
         ImGui.BeginGroup();
 
         ResetButton(ref value, defaultValue);
@@ -139,12 +150,14 @@ public static class ConfigUI
         Description(description);
 
         ImGui.EndGroup();
+        ImGui.PopItemWidth();
         ImGui.PopID();
     }
 
     public static void String(ref string value, string defaultValue, string identifier, string label, string? description = null)
     {
         ImGui.PushID(identifier);
+        ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
         ImGui.BeginGroup();
 
         ResetButton(ref value, defaultValue);
@@ -152,6 +165,7 @@ public static class ConfigUI
         Description(description);
 
         ImGui.EndGroup();
+        ImGui.PopItemWidth();
         ImGui.PopID();
     }
 
@@ -164,6 +178,7 @@ public static class ConfigUI
         var newIndex = currentIndex;
 
         ImGui.PushID(identifier);
+        ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
         ImGui.BeginGroup();
 
         var reset = ResetButton(ref value, defaultValue);
@@ -191,6 +206,7 @@ public static class ConfigUI
         Description(description);
 
         ImGui.EndGroup();
+        ImGui.PopItemWidth();
         ImGui.PopID();
 
         if (reset)

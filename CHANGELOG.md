@@ -1,3 +1,7 @@
+## 0.2.2
+**:question: Other**
+- Shrink input width to accomodate long labels
+
 ## 0.2.1
 **:bug: Bug Fixes**
 - Fixed trying to (de)serialize common or server config without checking for its existence
