@@ -63,6 +63,14 @@
           "description": "This is a string"
         },
         {
+          "name": "EnumValue",
+          "type": "Enum",
+          "enum": "ExampleEnumGen",
+          "defaultValue": "Value1",
+          "label": "Enum",
+          "description": "This is an enum"
+        },
+        {
           "name": "NestedValue",
           "type": "Nested",
           "nested": "ExampleNestedConfigGen",
@@ -131,6 +139,14 @@
           "defaultValue": "string",
           "label": "String",
           "description": "This is a string"
+        },
+        {
+          "name": "EnumValue",
+          "type": "Enum",
+          "enum": "ExampleEnumGen",
+          "defaultValue": "Value1",
+          "label": "Enum",
+          "description": "This is an enum"
         },
         {
           "name": "NestedValue",
@@ -203,6 +219,14 @@
           "description": "This is a string"
         },
         {
+          "name": "EnumValue",
+          "type": "Enum",
+          "enum": "ExampleEnumGen",
+          "defaultValue": "Value1",
+          "label": "Enum",
+          "description": "This is an enum"
+        },
+        {
           "name": "NestedValue",
           "type": "Nested",
           "nested": "ExampleNestedConfigGen",
@@ -272,7 +296,27 @@
           "defaultValue": "string",
           "label": "String",
           "description": "This is a string"
+        },
+        {
+          "name": "EnumValue",
+          "type": "Enum",
+          "enum": "ExampleEnumGen",
+          "defaultValue": "Value1",
+          "label": "Enum",
+          "description": "This is an enum"
         }
+      ]
+    }
+  ],
+  "enums": [
+    {
+      "enumName": "ExampleEnumGen",
+      "enumNamespace": "Common.Mod.Example",
+      "description": "This, too, is a description",
+      "values": [
+        "Value1",
+        "Value2",
+        "Value3"
       ]
     }
   ]

@@ -6,4 +6,5 @@ public record ConfigDefinitionSpec
 {
     public ImmutableArray<RootConfigSpec> RootConfigs { get; set; }
     public ImmutableArray<ConfigSpec>? Configs { get; set; }
+    public ImmutableArray<ConfigEnumSpec>? Enums { get; set; }
 }

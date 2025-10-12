@@ -7,6 +7,10 @@ public interface ISystem
 {
     #region Event Delegates
 
+    public delegate void ServerStartHandler(ICoreServerAPI api);
+
+    public delegate void ClientStartHandler(ICoreClientAPI api);
+
     public delegate void ServerRegisterMessageTypesHandler(IServerNetworkChannel channel);
 
     public delegate void ClientRegisterMessageTypesHandler(IClientNetworkChannel channel);
@@ -17,6 +21,8 @@ public interface ISystem
 
     #endregion Event Delegates
 
+    public event ServerStartHandler? ServerStart;
+    public event ClientStartHandler? ClientStart;
     public event ServerRegisterMessageTypesHandler? ServerRegisterMessageTypes;
     public event ClientRegisterMessageTypesHandler? ClientRegisterMessageTypes;
     public event ServerPlayerJoinedHandler? ServerPlayerJoined;

@@ -26,6 +26,7 @@ public class ConfigSystem : IConfigSystem
     private readonly Dictionary<RootConfigType, Type> _configTypes;
     private readonly Dictionary<RootConfigType, IRootConfig> _configs;
 
+    private bool _isSinglePlayer;
     private bool _canEditServerConfig;
     private IServerNetworkChannel? _serverChannel;
     private IClientNetworkChannel? _clientChannel;
@@ -54,6 +55,7 @@ public class ConfigSystem : IConfigSystem
         _configTypes = new Dictionary<RootConfigType, Type>();
         _configs = new Dictionary<RootConfigType, IRootConfig>();
 
+        _system.ClientStart += OnClientStart;
         _system.ServerRegisterMessageTypes += OnServerRegisterMessageTypes;
         _system.ClientRegisterMessageTypes += OnClientRegisterMessageTypes;
         _system.ClientPlayerJoined += OnClientPlayerJoined;
@@ -294,6 +296,11 @@ public class ConfigSystem : IConfigSystem
         }
     }
 
+    private void OnClientStart(ICoreClientAPI api)
+    {
+        _isSinglePlayer = api.IsSinglePlayer;
+    }
+
     private void OnServerRegisterMessageTypes(IServerNetworkChannel channel)
     {
         _serverChannel = channel;
@@ -465,17 +472,39 @@ public class ConfigSystem : IConfigSystem
 
         if (controlButtons.Save && _canEditServerConfig)
         {
-            SendClientServerSync();
+            if (_isSinglePlayer)
+            {
+                Save(RootConfigType.Common);
+            }
+            else
+            {
+                SendClientServerSync();
+            }
         }
 
         if (controlButtons.Restore && _canEditServerConfig)
         {
-            SendServerRestore();
+            if (_isSinglePlayer)
+            {
+                Load(RootConfigType.Common);
+            }
+            else
+            {
+                SendServerRestore();
+            }
         }
 
         if (controlButtons.Defaults && _canEditServerConfig)
         {
-            SendServerReset();
+            if (_isSinglePlayer)
+            {
+                _configs[RootConfigType.Common].Reset();
+                Save(RootConfigType.Common);
+            }
+            else
+            {
+                SendServerReset();
+            }
         }
 
         return new ControlButtons
@@ -507,17 +536,39 @@ public class ConfigSystem : IConfigSystem
 
         if (controlButtons.Save && _canEditServerConfig)
         {
-            SendClientServerSync();
+            if (_isSinglePlayer)
+            {
+                Save(RootConfigType.Server);
+            }
+            else
+            {
+                SendClientServerSync();
+            }
         }
 
         if (controlButtons.Restore && _canEditServerConfig)
         {
-            SendServerRestore();
+            if (_isSinglePlayer)
+            {
+                Load(RootConfigType.Server);
+            }
+            else
+            {
+                SendServerRestore();
+            }
         }
 
         if (controlButtons.Defaults && _canEditServerConfig)
         {
-            SendServerReset();
+            if (_isSinglePlayer)
+            {
+                _configs[RootConfigType.Server].Reset();
+                Save(RootConfigType.Server);
+            }
+            else
+            {
+                SendServerReset();
+            }
         }
 
         return new ControlButtons

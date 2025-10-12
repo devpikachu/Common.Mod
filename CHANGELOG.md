@@ -1,3 +1,10 @@
+## 0.2.0
+**:sparkles: Features**
+- Added `Enum` config entry type
+
+**:bug: Bug Fixes**
+- Fixed inability to save `Common` and `Server` configs in single player
+
 ## 0.1.5
 **:recycle: Refactors**
 - Made `Common.Mod.System.Container` public

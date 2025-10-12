@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Common.Mod.Common.Config;
+using DryIoc.ImTools;
 using ImGuiNET;
 
 namespace Common.Mod.Config;
@@ -150,6 +151,54 @@ public static class ConfigUI
         ImGui.PopID();
     }
 
+    public static void Enum<TEnumConfig>(ref TEnumConfig value, TEnumConfig defaultValue, string identifier, string label, string? description = null)
+        where TEnumConfig : struct, Enum
+    {
+        var values = System.Enum.GetNames<TEnumConfig>();
+        var currentValue = value.ToString();
+        var currentIndex = values.IndexOf(v => v == currentValue);
+        var newIndex = currentIndex;
+
+        ImGui.PushID(identifier);
+        ImGui.BeginGroup();
+
+        var reset = ResetButton(ref value, defaultValue);
+
+        if (ImGui.BeginCombo(label, currentValue))
+        {
+            for (var i = 0; i < values.Length; i++)
+            {
+                var selected = currentIndex == i;
+
+                if (ImGui.Selectable(values[i], selected))
+                {
+                    newIndex = i;
+                }
+
+                if (selected)
+                {
+                    ImGui.SetItemDefaultFocus();
+                }
+            }
+
+            ImGui.EndCombo();
+        }
+
+        Description(description);
+
+        ImGui.EndGroup();
+        ImGui.PopID();
+
+        if (reset)
+        {
+            value = defaultValue;
+            return;
+        }
+
+        var newValue = values[newIndex];
+        value = System.Enum.Parse<TEnumConfig>(newValue);
+    }
+
     public static void Nested<TNestedConfig>(TNestedConfig config, string identifier, string label)
         where TNestedConfig : IConfig
     {
@@ -160,15 +209,20 @@ public static class ConfigUI
         ImGui.PopID();
     }
 
-    private static void ResetButton<TValue>(ref TValue value, TValue defaultValue)
+    private static bool ResetButton<TValue>(ref TValue value, TValue defaultValue)
     {
+        var result = false;
+
         if (ImGui.Button($"~"))
         {
             value = defaultValue;
+            result = true;
         }
 
         ImGui.SetItemTooltip($"Reset to default: {defaultValue}");
         ImGui.SameLine();
+
+        return result;
     }
 
     private static void Description(string? description)

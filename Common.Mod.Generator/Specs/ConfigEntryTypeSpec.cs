@@ -10,5 +10,6 @@ public enum ConfigEntryTypeSpec
     Float,
     Double,
     String,
+    Enum,
     Nested
 }

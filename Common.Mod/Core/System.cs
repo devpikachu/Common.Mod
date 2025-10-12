@@ -14,6 +14,8 @@ namespace Common.Mod.Core;
 
 public abstract class System : ModSystem, ISystem
 {
+    public event ISystem.ServerStartHandler? ServerStart;
+    public event ISystem.ClientStartHandler? ClientStart;
     public event ISystem.ServerRegisterMessageTypesHandler? ServerRegisterMessageTypes;
     public event ISystem.ClientRegisterMessageTypesHandler? ClientRegisterMessageTypes;
     public event ISystem.ServerPlayerJoinedHandler? ServerPlayerJoined;
@@ -84,6 +86,8 @@ public abstract class System : ModSystem, ISystem
         {
             api.Event.PlayerJoin += OnServerPlayerJoined;
         }
+
+        ServerStart?.Invoke(api);
     }
 
     public override void StartClientSide(ICoreClientAPI api)
@@ -99,6 +103,8 @@ public abstract class System : ModSystem, ISystem
         {
             api.Event.PlayerJoin += OnClientPlayerJoined;
         }
+
+        ClientStart?.Invoke(api);
     }
 
     public override void Dispose()

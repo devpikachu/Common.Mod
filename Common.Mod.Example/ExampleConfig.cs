@@ -4,6 +4,13 @@ using ImGuiNET;
 
 namespace Common.Mod.Example;
 
+public enum ExampleEnumConfig
+{
+    Value1,
+    Value2,
+    Value3
+}
+
 public class ExampleNestedConfig : IConfig
 {
     private static readonly ExampleNestedConfig Defaults = new();
@@ -16,6 +23,7 @@ public class ExampleNestedConfig : IConfig
     private float _floatValue = 78.9f;
     private double _doubleValue = 78.9d;
     private string _stringValue = "string";
+    private ExampleEnumConfig _enumValue = ExampleEnumConfig.Value1;
 
     public bool BoolValue
     {
@@ -65,6 +73,12 @@ public class ExampleNestedConfig : IConfig
         set => _stringValue = value ?? throw new ArgumentNullException(nameof(value));
     }
 
+    public ExampleEnumConfig EnumValue
+    {
+        get => _enumValue;
+        set => _enumValue = value;
+    }
+
     public void Reset()
     {
         BoolValue = Defaults.BoolValue;
@@ -75,6 +89,7 @@ public class ExampleNestedConfig : IConfig
         FloatValue = Defaults.FloatValue;
         DoubleValue = Defaults.DoubleValue;
         StringValue = Defaults.StringValue;
+        EnumValue = Defaults.EnumValue;
     }
 
     public void Render()
@@ -87,6 +102,7 @@ public class ExampleNestedConfig : IConfig
         ConfigUI.Float(ref _floatValue, Defaults._floatValue, "float", "Float", "This is a float");
         ConfigUI.Double(ref _doubleValue, Defaults._doubleValue, "double", "Double", "This is a double");
         ConfigUI.String(ref _stringValue, Defaults._stringValue, "string", "String", "This is a string");
+        ConfigUI.Enum(ref _enumValue, Defaults._enumValue, "enum", "Enum", "This is an enum");
     }
 }
 
@@ -102,6 +118,7 @@ public class ExampleConfig : IRootConfig
     private float _floatValue = 78.9f;
     private double _doubleValue = 78.9d;
     private string _stringValue = "string";
+    private ExampleEnumConfig _enumValue = ExampleEnumConfig.Value1;
     private ExampleNestedConfig _nestedValue = new();
 
     public bool BoolValue
@@ -152,6 +169,12 @@ public class ExampleConfig : IRootConfig
         set => _stringValue = value ?? throw new ArgumentNullException(nameof(value));
     }
 
+    public ExampleEnumConfig EnumValue
+    {
+        get => _enumValue;
+        set => _enumValue = value;
+    }
+
     public ExampleNestedConfig NestedValue
     {
         get => _nestedValue;
@@ -172,6 +195,7 @@ public class ExampleConfig : IRootConfig
         DoubleValue = Defaults.DoubleValue;
         StringValue = Defaults.StringValue;
         NestedValue = Defaults.NestedValue;
+        EnumValue = Defaults.EnumValue;
     }
 
     public void Render()
@@ -184,7 +208,7 @@ public class ExampleConfig : IRootConfig
         ConfigUI.Float(ref _floatValue, Defaults._floatValue, "float", "Float", "This is a float");
         ConfigUI.Double(ref _doubleValue, Defaults._doubleValue, "double", "Double", "This is a double");
         ConfigUI.String(ref _stringValue, Defaults._stringValue, "string", "String", "This is a string");
-
+        ConfigUI.Enum(ref _enumValue, Defaults._enumValue, "enum", "Enum", "This is an enum");
         ConfigUI.Nested(_nestedValue, "nested", "Nested");
     }
 }
