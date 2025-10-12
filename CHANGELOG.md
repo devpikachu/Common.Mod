@@ -1,3 +1,7 @@
+## 0.2.4
+**:question: Other**
+- Add explicit tags to packet contract
+
 ## 0.2.3
 **:bug: Bug Fixes**
 - Fixed `IConfigSystem.Synchronized` not being in the interface, making it unusable without direct coupling
