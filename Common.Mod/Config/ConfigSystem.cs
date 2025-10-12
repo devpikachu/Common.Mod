@@ -468,7 +468,6 @@ public class ConfigSystem : IConfigSystem
     {
         ConfigUI.Label($"{_system.ModName()} Common Configuration");
         ImGui.Separator();
-        ImGui.NewLine();
 
         ImGui.BeginDisabled(!_canEditServerConfig);
 
@@ -532,7 +531,6 @@ public class ConfigSystem : IConfigSystem
     {
         ConfigUI.Label($"{_system.ModName()} Server Configuration");
         ImGui.Separator();
-        ImGui.NewLine();
 
         ImGui.BeginDisabled(!_canEditServerConfig);
 
@@ -596,7 +594,6 @@ public class ConfigSystem : IConfigSystem
     {
         ConfigUI.Label($"{_system.ModName()} Client Configuration");
         ImGui.Separator();
-        ImGui.NewLine();
 
         _configs[RootConfigType.Client].Render();
 

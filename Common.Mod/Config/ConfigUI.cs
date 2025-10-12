@@ -25,6 +25,8 @@ public static class ConfigUI
 
     public static void Label(string value, bool muted = false)
     {
+        ImGui.PushTextWrapPos(ImGui.GetContentRegionAvail().X);
+
         if (muted)
         {
             ImGui.TextDisabled(value);
@@ -33,6 +35,8 @@ public static class ConfigUI
         {
             ImGui.Text(value);
         }
+
+        ImGui.PopTextWrapPos();
     }
 
     public static void Bool(ref bool value, bool defaultValue, string identifier, string label, string? description = null)

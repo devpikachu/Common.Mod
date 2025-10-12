@@ -64,7 +64,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="config.json"/>
+    <AdditionalFiles Include="config1.json" />
+    <AdditionalFiles Include="config2.json" />
   </ItemGroup>
 
 </Project>

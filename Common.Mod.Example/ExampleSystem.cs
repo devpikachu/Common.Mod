@@ -1,4 +1,5 @@
 using Common.Mod.Common.Config;
+using DurableBetterProspecting;
 using JetBrains.Annotations;
 using Vintagestory.API.Common;
 
@@ -19,8 +20,11 @@ public class ExampleSystem : Core.System
         // configSystem.Register<ExampleServerConfig>();
         // configSystem.Register<ExampleClientConfig>();
 
-        configSystem.Register<ExampleCommonConfigGen>();
-        configSystem.Register<ExampleServerConfigGen>();
-        configSystem.Register<ExampleClientConfigGen>();
+        // configSystem.Register<ExampleCommonConfigGen>();
+        // configSystem.Register<ExampleServerConfigGen>();
+        // configSystem.Register<ExampleClientConfigGen>();
+
+        configSystem.Register<DurableBetterProspectingCommonConfig>();
+        configSystem.Register<DurableBetterProspectingClientConfig>();
     }
 }
