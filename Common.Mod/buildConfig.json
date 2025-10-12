@@ -2,6 +2,7 @@
   "name": null,
   "outputSubdir": null,
   "substitute": [
-    "Common.Mod.csproj"
+    "Common.Mod.csproj",
+    "../Common.Mod.Common/Common.Mod.Common.csproj"
   ]
 }
