@@ -7,6 +7,14 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>Common.Mod.Common</PackageId>
+    <Version>12.34.56</Version>
+    <Authors>Andrei "DetPikachu" Hava</Authors>
+    <Company>Andrei "DetPikachu" Hava</Company>
+    <Product>Common.Mod.Common</Product>
+  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="VintagestoryAPI">
       <HintPath>../vendor/VintagestoryAPI.dll</HintPath>
@@ -19,6 +27,10 @@
       <PrivateAssets>all</PrivateAssets>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="buildConfig.json"/>
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ when:
 matrix:
   PROJECT:
     - Common.Mod
+    - Common.Mod.Common
     - Common.Mod.Generator
 
 steps:
