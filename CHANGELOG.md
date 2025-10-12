@@ -1,3 +1,7 @@
+## 0.2.1
+**:bug: Bug Fixes**
+- Fixed trying to (de)serialize common or server config without checking for its existence
+
 ## 0.2.0
 **:sparkles: Features**
 - Added `Enum` config entry type

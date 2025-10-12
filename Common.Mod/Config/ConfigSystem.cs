@@ -382,11 +382,17 @@ public class ConfigSystem : IConfigSystem
 
         try
         {
-            var commonJson = JsonSerializer.Serialize(_configs[RootConfigType.Common], _configTypes[RootConfigType.Common], _jsonOptions);
-            packet.Common = commonJson;
+            if (_configs.TryGetValue(RootConfigType.Common, out var commonConfig))
+            {
+                var commonJson = JsonSerializer.Serialize(commonConfig, _configTypes[RootConfigType.Common], _jsonOptions);
+                packet.Common = commonJson;
+            }
 
-            var serverJson = JsonSerializer.Serialize(_configs[RootConfigType.Server], _configTypes[RootConfigType.Server], _jsonOptions);
-            packet.Server = serverJson;
+            if (_configs.TryGetValue(RootConfigType.Server, out var serverConfig))
+            {
+                var serverJson = JsonSerializer.Serialize(serverConfig, _configTypes[RootConfigType.Server], _jsonOptions);
+                packet.Server = serverJson;
+            }
         }
         catch (Exception ex)
         {
@@ -414,11 +420,17 @@ public class ConfigSystem : IConfigSystem
 
         try
         {
-            var commonJson = JsonSerializer.Serialize(_configs[RootConfigType.Common], _configTypes[RootConfigType.Common], _jsonOptions);
-            packet.Common = commonJson;
+            if (_configs.TryGetValue(RootConfigType.Common, out var commonConfig))
+            {
+                var commonJson = JsonSerializer.Serialize(commonConfig, _configTypes[RootConfigType.Common], _jsonOptions);
+                packet.Common = commonJson;
+            }
 
-            var serverJson = JsonSerializer.Serialize(_configs[RootConfigType.Server], _configTypes[RootConfigType.Server], _jsonOptions);
-            packet.Server = serverJson;
+            if (_configs.TryGetValue(RootConfigType.Server, out var serverConfig))
+            {
+                var serverJson = JsonSerializer.Serialize(serverConfig, _configTypes[RootConfigType.Server], _jsonOptions);
+                packet.Server = serverJson;
+            }
         }
         catch (Exception ex)
         {
