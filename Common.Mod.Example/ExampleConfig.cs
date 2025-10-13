@@ -81,28 +81,28 @@ public class ExampleNestedConfig : IConfig
 
     public void Reset()
     {
-        BoolValue = Defaults.BoolValue;
-        Int32Value = Defaults.Int32Value;
-        Int64Value = Defaults.Int64Value;
-        UInt32Value = Defaults.UInt32Value;
-        UInt64Value = Defaults.UInt64Value;
-        FloatValue = Defaults.FloatValue;
-        DoubleValue = Defaults.DoubleValue;
-        StringValue = Defaults.StringValue;
-        EnumValue = Defaults.EnumValue;
+        _boolValue = Defaults._boolValue;
+        _int32Value = Defaults._int32Value;
+        _int64Value = Defaults._int64Value;
+        _uint32Value = Defaults._uint32Value;
+        _uint64Value = Defaults._uint64Value;
+        _floatValue = Defaults._floatValue;
+        _doubleValue = Defaults._doubleValue;
+        _stringValue = Defaults._stringValue;
+        _enumValue = Defaults._enumValue;
     }
 
-    public void Render()
+    public void Render(IConfigUi configUi)
     {
-        ConfigUI.Bool(ref _boolValue, Defaults._boolValue, "bool", "Bool", "This is a boolean");
-        ConfigUI.Int32(ref _int32Value, Defaults._int32Value, "int32", "Int32", "This is a 32-bit integer");
-        ConfigUI.Int64(ref _int64Value, Defaults._int64Value, "int64", "Int64", "This is a 64-bit integer");
-        ConfigUI.UInt32(ref _uint32Value, Defaults._uint32Value, "uint32", "UInt32", "This is an unsigned 32-bit integer");
-        ConfigUI.UInt64(ref _uint64Value, Defaults._uint64Value, "uint64", "UInt64", "This is an unsigned 64-bit integer");
-        ConfigUI.Float(ref _floatValue, Defaults._floatValue, "float", "Float", "This is a float");
-        ConfigUI.Double(ref _doubleValue, Defaults._doubleValue, "double", "Double", "This is a double");
-        ConfigUI.String(ref _stringValue, Defaults._stringValue, "string", "String", "This is a string");
-        ConfigUI.Enum(ref _enumValue, Defaults._enumValue, "enum", "Enum", "This is an enum");
+        configUi.Bool(ref _boolValue, Defaults._boolValue, "bool", "Bool", "This is a boolean");
+        configUi.Int32(ref _int32Value, Defaults._int32Value, "int32", "Int32", "This is a 32-bit integer");
+        configUi.Int64(ref _int64Value, Defaults._int64Value, "int64", "Int64", "This is a 64-bit integer");
+        configUi.UInt32(ref _uint32Value, Defaults._uint32Value, "uint32", "UInt32", "This is an unsigned 32-bit integer");
+        configUi.UInt64(ref _uint64Value, Defaults._uint64Value, "uint64", "UInt64", "This is an unsigned 64-bit integer");
+        configUi.Float(ref _floatValue, Defaults._floatValue, "float", "Float", "This is a float");
+        configUi.Double(ref _doubleValue, Defaults._doubleValue, "double", "Double", "This is a double");
+        configUi.String(ref _stringValue, Defaults._stringValue, "string", "String", "This is a string");
+        configUi.Enum(ref _enumValue, Defaults._enumValue, "enum", "Enum", "This is an enum");
     }
 }
 
@@ -186,30 +186,29 @@ public class ExampleConfig : IRootConfig
 
     public void Reset()
     {
-        BoolValue = Defaults.BoolValue;
-        Int32Value = Defaults.Int32Value;
-        Int64Value = Defaults.Int64Value;
-        UInt32Value = Defaults.UInt32Value;
-        UInt64Value = Defaults.UInt64Value;
-        FloatValue = Defaults.FloatValue;
-        DoubleValue = Defaults.DoubleValue;
-        StringValue = Defaults.StringValue;
-        NestedValue = Defaults.NestedValue;
-        EnumValue = Defaults.EnumValue;
+        _boolValue = Defaults._boolValue;
+        _int32Value = Defaults._int32Value;
+        _int64Value = Defaults._int64Value;
+        _uint32Value = Defaults._uint32Value;
+        _uint64Value = Defaults._uint64Value;
+        _floatValue = Defaults._floatValue;
+        _doubleValue = Defaults._doubleValue;
+        _stringValue = Defaults._stringValue;
+        _enumValue = Defaults._enumValue;
     }
 
-    public void Render()
+    public void Render(IConfigUi configUi)
     {
-        ConfigUI.Bool(ref _boolValue, Defaults._boolValue, "bool", "Bool", "This is a boolean");
-        ConfigUI.Int32(ref _int32Value, Defaults._int32Value, "int32", "Int32", "This is a 32-bit integer");
-        ConfigUI.Int64(ref _int64Value, Defaults._int64Value, "int64", "Int64", "This is a 64-bit integer");
-        ConfigUI.UInt32(ref _uint32Value, Defaults._uint32Value, "uint32", "UInt32", "This is an unsigned 32-bit integer");
-        ConfigUI.UInt64(ref _uint64Value, Defaults._uint64Value, "uint64", "UInt64", "This is an unsigned 64-bit integer");
-        ConfigUI.Float(ref _floatValue, Defaults._floatValue, "float", "Float", "This is a float");
-        ConfigUI.Double(ref _doubleValue, Defaults._doubleValue, "double", "Double", "This is a double");
-        ConfigUI.String(ref _stringValue, Defaults._stringValue, "string", "String", "This is a string");
-        ConfigUI.Enum(ref _enumValue, Defaults._enumValue, "enum", "Enum", "This is an enum");
-        ConfigUI.Nested(_nestedValue, "nested", "Nested");
+        configUi.Bool(ref _boolValue, Defaults._boolValue, "bool", "Bool", "This is a boolean");
+        configUi.Int32(ref _int32Value, Defaults._int32Value, "int32", "Int32", "This is a 32-bit integer");
+        configUi.Int64(ref _int64Value, Defaults._int64Value, "int64", "Int64", "This is a 64-bit integer");
+        configUi.UInt32(ref _uint32Value, Defaults._uint32Value, "uint32", "UInt32", "This is an unsigned 32-bit integer");
+        configUi.UInt64(ref _uint64Value, Defaults._uint64Value, "uint64", "UInt64", "This is an unsigned 64-bit integer");
+        configUi.Float(ref _floatValue, Defaults._floatValue, "float", "Float", "This is a float");
+        configUi.Double(ref _doubleValue, Defaults._doubleValue, "double", "Double", "This is a double");
+        configUi.String(ref _stringValue, Defaults._stringValue, "string", "String", "This is a string");
+        configUi.Enum(ref _enumValue, Defaults._enumValue, "enum", "Enum", "This is an enum");
+        configUi.Nested(_nestedValue, "nested", "Nested");
     }
 }
 

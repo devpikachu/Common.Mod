@@ -7,6 +7,7 @@ using DryIoc;
 using JetBrains.Annotations;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.Server;
 using ILogger = Common.Mod.Common.Core.ILogger;
 using IServerPlayer = Vintagestory.API.Server.IServerPlayer;
@@ -25,7 +26,8 @@ public abstract class System<TSystem> : ModSystem, ISystem
 
     private const string ConfigLibModId = "configlib";
 
-    public static TSystem Instance { get; private set; }
+    [UsedImplicitly(ImplicitUseKindFlags.Access)]
+    public static TSystem? Instance { get; private set; }
 
     private static TSystem? _serverInstance;
     private static TSystem? _clientInstance;
@@ -83,7 +85,20 @@ public abstract class System<TSystem> : ModSystem, ISystem
         }
 
         Container.RegisterInstance<ISystem>(this);
-        Container.Register<IFileSystem, FileSystem>();
+        Container.Register<IFileSystem, FileSystem>(Reuse.Singleton);
+
+        // Translations
+        {
+            if (api is ICoreServerAPI)
+            {
+                Container.RegisterInstance<ITranslations>(new Translations(ModId()));
+            }
+
+            if (api is ICoreClientAPI)
+            {
+                Container.RegisterInstance<ITranslations>(new Translations(ModId(), Lang.CurrentLocale));
+            }
+        }
 
         // ConfigLib
         {
@@ -96,6 +111,7 @@ public abstract class System<TSystem> : ModSystem, ISystem
 
         // Config
         {
+            Container.Register<IConfigUi, ConfigUi>(Reuse.Singleton);
             Container.Register<IConfigSystem, ConfigSystem>(Reuse.Singleton);
             var configSystem = Container.Resolve<IConfigSystem>();
 

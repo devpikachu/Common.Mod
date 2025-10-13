@@ -68,4 +68,8 @@
     <AdditionalFiles Include="config2.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="assets\example\" />
+  </ItemGroup>
+
 </Project>

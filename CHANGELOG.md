@@ -1,3 +1,8 @@
+## 0.4.0
+**:sparkles: Features**
+- Add `ITranslations` and `Translations`
+- Make config UI labels and descriptions translatable
+
 ## 0.3.2
 **:sparkles: Features**
 - Add static `Instance` to `System`

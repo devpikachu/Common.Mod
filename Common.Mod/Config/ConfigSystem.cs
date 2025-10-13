@@ -20,6 +20,7 @@ public class ConfigSystem : IConfigSystem
     private readonly ISystem _system;
     private readonly IFileSystem _fileSystem;
     private readonly ConfigLibModSystem? _configLibSystem;
+    private readonly IConfigUi _configUi;
 
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly Dictionary<RootConfigType, Type> _configTypes;
@@ -35,7 +36,8 @@ public class ConfigSystem : IConfigSystem
         ILogger logger,
         ISystem system,
         IFileSystem fileSystem,
-        ConfigLibModSystem? configLibSystem
+        ConfigLibModSystem? configLibSystem,
+        IConfigUi configUi
     )
     {
         _side = side;
@@ -43,6 +45,7 @@ public class ConfigSystem : IConfigSystem
         _system = system;
         _fileSystem = fileSystem;
         _configLibSystem = configLibSystem;
+        _configUi = configUi;
 
         _jsonOptions = new JsonSerializerOptions
         {
@@ -467,18 +470,18 @@ public class ConfigSystem : IConfigSystem
 
     private ControlButtons RenderCommon(ControlButtons controlButtons)
     {
-        ConfigUI.Label($"{_system.ModName()} Common Configuration");
+        _configUi.Label($"{_system.ModName()} Common Configuration");
         ImGui.Separator();
 
         ImGui.BeginDisabled(!_canEditServerConfig);
 
         if (!_canEditServerConfig)
         {
-            ConfigUI.Label("You don't have permission to edit the common configuration.");
+            _configUi.Label("You don't have permission to edit the common configuration.");
             ImGui.NewLine();
         }
 
-        _configs[RootConfigType.Common].Render();
+        _configs[RootConfigType.Common].Render(_configUi);
 
         ImGui.EndDisabled();
 
@@ -532,18 +535,18 @@ public class ConfigSystem : IConfigSystem
 
     private ControlButtons RenderServer(ControlButtons controlButtons)
     {
-        ConfigUI.Label($"{_system.ModName()} Server Configuration");
+        _configUi.Label($"{_system.ModName()} Server Configuration");
         ImGui.Separator();
 
         ImGui.BeginDisabled(!_canEditServerConfig);
 
         if (!_canEditServerConfig)
         {
-            ConfigUI.Label("You don't have permission to edit the server configuration.");
+            _configUi.Label("You don't have permission to edit the server configuration.");
             ImGui.NewLine();
         }
 
-        _configs[RootConfigType.Server].Render();
+        _configs[RootConfigType.Server].Render(_configUi);
 
         ImGui.EndDisabled();
 
@@ -597,10 +600,10 @@ public class ConfigSystem : IConfigSystem
 
     private ControlButtons RenderClient(ControlButtons controlButtons)
     {
-        ConfigUI.Label($"{_system.ModName()} Client Configuration");
+        _configUi.Label($"{_system.ModName()} Client Configuration");
         ImGui.Separator();
 
-        _configs[RootConfigType.Client].Render();
+        _configs[RootConfigType.Client].Render(_configUi);
 
         if (controlButtons.Save)
         {

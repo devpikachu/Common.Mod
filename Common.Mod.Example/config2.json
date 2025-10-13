@@ -11,7 +11,7 @@
           "name": "DensityMode",
           "type": "Nested",
           "nested": "DensityModeConfig",
-          "label": "Density Mode"
+          "label": "config--label--density-mode"
         },
         {
           "name": "NodeMode",
@@ -72,7 +72,7 @@
           "type": "Bool",
           "defaultValue": true,
           "label": "Enabled",
-          "description": "If enabled, the readings are ordered by the distance / quantity"
+          "description": "config--description--ordering-enabled"
         },
         {
           "name": "Direction",

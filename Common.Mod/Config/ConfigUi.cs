@@ -1,67 +1,73 @@
-using System.Diagnostics.CodeAnalysis;
 using Common.Mod.Common.Config;
+using Common.Mod.Common.Core;
 using DryIoc.ImTools;
 using ImGuiNET;
 
 namespace Common.Mod.Config;
 
-[SuppressMessage("ReSharper", "InconsistentNaming")]
-public static class ConfigUI
+public class ConfigUi : IConfigUi
 {
-    private const float _floatStep = 1.0f;
-    private const double _doubleStep = 1.0d;
-    private const float _floatStepFast = 10.0f;
-    private const double _doubleStepFast = 10.0d;
-    private const uint _stringMaxLength = 256;
+    private const float FloatStep = 1.0f;
+    private const double DoubleStep = 1.0d;
+    private const float FloatStepFast = 10.0f;
+    private const double DoubleStepFast = 10.0d;
+    private const uint StringMaxLength = 256;
 
-    private static readonly int _int32Step = 1;
-    private static readonly long _int64Step = 1;
-    private static readonly uint _uint32Step = 1;
-    private static readonly ulong _uint64Step = 1;
-    private static readonly int _int32StepFast = 10;
-    private static readonly long _int64StepFast = 10;
-    private static readonly uint _uint32StepFast = 10;
-    private static readonly ulong _uint64StepFast = 10;
+    private static readonly int Int32Step = 1;
+    private static readonly long Int64Step = 1;
+    private static readonly uint UInt32Step = 1;
+    private static readonly ulong UInt64Step = 1;
+    private static readonly int Int32StepFast = 10;
+    private static readonly long Int64StepFast = 10;
+    private static readonly uint UInt32StepFast = 10;
+    private static readonly ulong UInt64StepFast = 10;
 
-    public static void Label(string value, bool muted = false)
+    private readonly ITranslations _translations;
+
+    public ConfigUi(ITranslations translations)
+    {
+        _translations = translations;
+    }
+
+    public void Label(string value, bool muted = false)
     {
         ImGui.PushTextWrapPos(ImGui.GetContentRegionAvail().X);
 
         if (muted)
         {
-            ImGui.TextDisabled(value);
+            ImGui.TextDisabled(_translations.Get(value));
         }
         else
         {
-            ImGui.Text(value);
+            ImGui.Text(_translations.Get(value));
         }
 
         ImGui.PopTextWrapPos();
     }
 
-    public static void Bool(ref bool value, bool defaultValue, string identifier, string label, string? description = null)
+    public void Bool(ref bool value, bool defaultValue, string identifier, string label, string? description = null)
     {
         ImGui.PushID(identifier);
         ImGui.BeginGroup();
 
         ResetButton(ref value, defaultValue);
-        ImGui.Checkbox(label, ref value);
+        ImGui.Checkbox(_translations.Get(label), ref value);
         Description(description);
 
         ImGui.EndGroup();
         ImGui.PopID();
     }
 
-    public static unsafe void Int32(ref int value, int defaultValue, string identifier, string label, string? description = null)
+    public unsafe void Int32(ref int value, int defaultValue, string identifier, string label, string? description = null)
     {
-        fixed (int* valuePtr = &value, stepPtr = &_int32Step, stepFastPtr = &_int32StepFast)
+        fixed (int* valuePtr = &value, stepPtr = &Int32Step, stepFastPtr = &Int32StepFast)
         {
             ImGui.PushID(identifier);
             ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
             ImGui.BeginGroup();
 
             ResetButton(ref value, defaultValue);
-            ImGui.InputScalar(label, ImGuiDataType.S32, new IntPtr(valuePtr), new IntPtr(stepPtr), new IntPtr(stepFastPtr));
+            ImGui.InputScalar(_translations.Get(label), ImGuiDataType.S32, new IntPtr(valuePtr), new IntPtr(stepPtr), new IntPtr(stepFastPtr));
             Description(description);
 
             ImGui.EndGroup();
@@ -70,16 +76,16 @@ public static class ConfigUI
         }
     }
 
-    public static unsafe void Int64(ref long value, long defaultValue, string identifier, string label, string? description = null)
+    public unsafe void Int64(ref long value, long defaultValue, string identifier, string label, string? description = null)
     {
-        fixed (long* valuePtr = &value, stepPtr = &_int64Step, stepFastPtr = &_int64StepFast)
+        fixed (long* valuePtr = &value, stepPtr = &Int64Step, stepFastPtr = &Int64StepFast)
         {
             ImGui.PushID(identifier);
             ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
             ImGui.BeginGroup();
 
             ResetButton(ref value, defaultValue);
-            ImGui.InputScalar(label, ImGuiDataType.S64, new IntPtr(valuePtr), new IntPtr(stepPtr), new IntPtr(stepFastPtr));
+            ImGui.InputScalar(_translations.Get(label), ImGuiDataType.S64, new IntPtr(valuePtr), new IntPtr(stepPtr), new IntPtr(stepFastPtr));
             Description(description);
 
             ImGui.EndGroup();
@@ -88,16 +94,16 @@ public static class ConfigUI
         }
     }
 
-    public static unsafe void UInt32(ref uint value, uint defaultValue, string identifier, string label, string? description = null)
+    public unsafe void UInt32(ref uint value, uint defaultValue, string identifier, string label, string? description = null)
     {
-        fixed (uint* valuePtr = &value, stepPtr = &_uint32Step, stepFastPtr = &_uint32StepFast)
+        fixed (uint* valuePtr = &value, stepPtr = &UInt32Step, stepFastPtr = &UInt32StepFast)
         {
             ImGui.PushID(identifier);
             ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
             ImGui.BeginGroup();
 
             ResetButton(ref value, defaultValue);
-            ImGui.InputScalar(label, ImGuiDataType.U32, new IntPtr(valuePtr), new IntPtr(stepPtr), new IntPtr(stepFastPtr));
+            ImGui.InputScalar(_translations.Get(label), ImGuiDataType.U32, new IntPtr(valuePtr), new IntPtr(stepPtr), new IntPtr(stepFastPtr));
             Description(description);
 
             ImGui.EndGroup();
@@ -106,16 +112,16 @@ public static class ConfigUI
         }
     }
 
-    public static unsafe void UInt64(ref ulong value, ulong defaultValue, string identifier, string label, string? description = null)
+    public unsafe void UInt64(ref ulong value, ulong defaultValue, string identifier, string label, string? description = null)
     {
-        fixed (ulong* valuePtr = &value, stepPtr = &_uint64Step, stepFastPtr = &_uint64StepFast)
+        fixed (ulong* valuePtr = &value, stepPtr = &UInt64Step, stepFastPtr = &UInt64StepFast)
         {
             ImGui.PushID(identifier);
             ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
             ImGui.BeginGroup();
 
             ResetButton(ref value, defaultValue);
-            ImGui.InputScalar(label, ImGuiDataType.U64, new IntPtr(valuePtr), new IntPtr(stepPtr), new IntPtr(stepFastPtr));
+            ImGui.InputScalar(_translations.Get(label), ImGuiDataType.U64, new IntPtr(valuePtr), new IntPtr(stepPtr), new IntPtr(stepFastPtr));
             Description(description);
 
             ImGui.EndGroup();
@@ -124,14 +130,14 @@ public static class ConfigUI
         }
     }
 
-    public static void Float(ref float value, float defaultValue, string identifier, string label, string? description = null)
+    public void Float(ref float value, float defaultValue, string identifier, string label, string? description = null)
     {
         ImGui.PushID(identifier);
         ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
         ImGui.BeginGroup();
 
         ResetButton(ref value, defaultValue);
-        ImGui.InputFloat(label, ref value, _floatStep, _floatStepFast);
+        ImGui.InputFloat(_translations.Get(label), ref value, FloatStep, FloatStepFast);
         Description(description);
 
         ImGui.EndGroup();
@@ -139,14 +145,14 @@ public static class ConfigUI
         ImGui.PopID();
     }
 
-    public static void Double(ref double value, double defaultValue, string identifier, string label, string? description = null)
+    public void Double(ref double value, double defaultValue, string identifier, string label, string? description = null)
     {
         ImGui.PushID(identifier);
         ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
         ImGui.BeginGroup();
 
         ResetButton(ref value, defaultValue);
-        ImGui.InputDouble(label, ref value, _doubleStep, _doubleStepFast);
+        ImGui.InputDouble(_translations.Get(label), ref value, DoubleStep, DoubleStepFast);
         Description(description);
 
         ImGui.EndGroup();
@@ -154,14 +160,14 @@ public static class ConfigUI
         ImGui.PopID();
     }
 
-    public static void String(ref string value, string defaultValue, string identifier, string label, string? description = null)
+    public void String(ref string value, string defaultValue, string identifier, string label, string? description = null)
     {
         ImGui.PushID(identifier);
         ImGui.PushItemWidth(ImGui.GetWindowWidth() * 0.5f);
         ImGui.BeginGroup();
 
         ResetButton(ref value, defaultValue);
-        ImGui.InputText(label, ref value, _stringMaxLength);
+        ImGui.InputText(_translations.Get(label), ref value, StringMaxLength);
         Description(description);
 
         ImGui.EndGroup();
@@ -169,7 +175,7 @@ public static class ConfigUI
         ImGui.PopID();
     }
 
-    public static void Enum<TEnumConfig>(ref TEnumConfig value, TEnumConfig defaultValue, string identifier, string label, string? description = null)
+    public void Enum<TEnumConfig>(ref TEnumConfig value, TEnumConfig defaultValue, string identifier, string label, string? description = null)
         where TEnumConfig : struct, Enum
     {
         var values = System.Enum.GetNames<TEnumConfig>();
@@ -183,13 +189,13 @@ public static class ConfigUI
 
         var reset = ResetButton(ref value, defaultValue);
 
-        if (ImGui.BeginCombo(label, currentValue))
+        if (ImGui.BeginCombo(_translations.Get(label), _translations.Get(currentValue)))
         {
             for (var i = 0; i < values.Length; i++)
             {
                 var selected = currentIndex == i;
 
-                if (ImGui.Selectable(values[i], selected))
+                if (ImGui.Selectable(_translations.Get(values[i]), selected))
                 {
                     newIndex = i;
                 }
@@ -219,17 +225,17 @@ public static class ConfigUI
         value = System.Enum.Parse<TEnumConfig>(newValue);
     }
 
-    public static void Nested<TNestedConfig>(TNestedConfig config, string identifier, string label)
+    public void Nested<TNestedConfig>(TNestedConfig config, string identifier, string label)
         where TNestedConfig : IConfig
     {
         ImGui.NewLine();
-        ImGui.SeparatorText(label);
+        ImGui.SeparatorText(_translations.Get(label));
         ImGui.PushID(identifier);
-        config.Render();
+        config.Render(this);
         ImGui.PopID();
     }
 
-    private static bool ResetButton<TValue>(ref TValue value, TValue defaultValue)
+    private bool ResetButton<TValue>(ref TValue value, TValue defaultValue)
     {
         var result = false;
 
@@ -239,13 +245,13 @@ public static class ConfigUI
             result = true;
         }
 
-        ImGui.SetItemTooltip($"Reset to default: {defaultValue}");
+        ImGui.SetItemTooltip(_translations.Get(key: "config--button--reset", defaultValue!.ToString()!));
         ImGui.SameLine();
 
         return result;
     }
 
-    private static void Description(string? description)
+    private void Description(string? description)
     {
         if (string.IsNullOrWhiteSpace(description))
         {
