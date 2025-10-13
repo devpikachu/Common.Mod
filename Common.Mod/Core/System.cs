@@ -25,10 +25,17 @@ public abstract class System<TSystem> : ModSystem, ISystem
 
     private const string ConfigLibModId = "configlib";
 
+    public static TSystem Instance { get; private set; }
+
     private static TSystem? _serverInstance;
     private static TSystem? _clientInstance;
 
     [UsedImplicitly] public readonly IContainer Container = new Container();
+
+    protected System()
+    {
+        Instance = this as TSystem ?? throw new NullReferenceException();
+    }
 
     public abstract string ModId();
     public abstract string ModVersion();

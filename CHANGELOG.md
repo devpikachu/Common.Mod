@@ -1,3 +1,7 @@
+## 0.3.2
+**:sparkles: Features**
+- Add static `Instance` to `System`
+
 ## 0.3.1
 **:boom: Breaking Changes**
 - Remove `SystemSide`, use `EnumAppSide` instead
