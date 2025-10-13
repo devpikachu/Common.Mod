@@ -5,6 +5,7 @@ using Common.Mod.Common.Core;
 using ConfigLib;
 using ImGuiNET;
 using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 using ILogger = Common.Mod.Common.Core.ILogger;
 
@@ -14,7 +15,7 @@ public class ConfigSystem : IConfigSystem
 {
     public event IConfigSystem.UpdatedHandler? Updated;
 
-    private readonly SystemSide _side;
+    private readonly EnumAppSide _side;
     private readonly ILogger _logger;
     private readonly ISystem _system;
     private readonly IFileSystem _fileSystem;
@@ -30,7 +31,7 @@ public class ConfigSystem : IConfigSystem
     private IClientNetworkChannel? _clientChannel;
 
     public ConfigSystem(
-        SystemSide side,
+        EnumAppSide side,
         ILogger logger,
         ISystem system,
         IFileSystem fileSystem,
@@ -91,12 +92,12 @@ public class ConfigSystem : IConfigSystem
             Load(RootConfigType.Common);
         }
 
-        if (_configs.ContainsKey(RootConfigType.Server) && _side == SystemSide.Server)
+        if (_configs.ContainsKey(RootConfigType.Server) && _side == EnumAppSide.Server)
         {
             Load(RootConfigType.Server);
         }
 
-        if (_configs.ContainsKey(RootConfigType.Client) && _side == SystemSide.Client)
+        if (_configs.ContainsKey(RootConfigType.Client) && _side == EnumAppSide.Client)
         {
             Load(RootConfigType.Client);
         }
@@ -109,12 +110,12 @@ public class ConfigSystem : IConfigSystem
             Save(RootConfigType.Common);
         }
 
-        if (_configs.ContainsKey(RootConfigType.Server) && _side == SystemSide.Server)
+        if (_configs.ContainsKey(RootConfigType.Server) && _side == EnumAppSide.Server)
         {
             Save(RootConfigType.Server);
         }
 
-        if (_configs.ContainsKey(RootConfigType.Client) && _side == SystemSide.Client)
+        if (_configs.ContainsKey(RootConfigType.Client) && _side == EnumAppSide.Client)
         {
             Save(RootConfigType.Client);
         }
@@ -150,7 +151,7 @@ public class ConfigSystem : IConfigSystem
             {
                 _logger.Debug("Processing server-to-client synchronization packet");
 
-                if (_side is not SystemSide.Client)
+                if (_side is not EnumAppSide.Client)
                 {
                     throw new InvalidOperationException("The server-to-client synchronization operation can only be received on the client");
                 }
@@ -172,7 +173,7 @@ public class ConfigSystem : IConfigSystem
             {
                 _logger.Debug("Processing client-to-server synchronization packet");
 
-                if (_side is not SystemSide.Server)
+                if (_side is not EnumAppSide.Server)
                 {
                     throw new InvalidOperationException("The client-to-server synchronization operation can only be received on the server");
                 }
@@ -198,7 +199,7 @@ public class ConfigSystem : IConfigSystem
             {
                 _logger.Debug("Processing server restore packet");
 
-                if (_side is not SystemSide.Server)
+                if (_side is not EnumAppSide.Server)
                 {
                     throw new InvalidOperationException("The server restore operation can only be received on the server");
                 }
@@ -208,7 +209,7 @@ public class ConfigSystem : IConfigSystem
                     Load(RootConfigType.Common);
                 }
 
-                if (_configs.ContainsKey(RootConfigType.Server) && _side == SystemSide.Server)
+                if (_configs.ContainsKey(RootConfigType.Server) && _side == EnumAppSide.Server)
                 {
                     Load(RootConfigType.Server);
                 }
@@ -222,7 +223,7 @@ public class ConfigSystem : IConfigSystem
             {
                 _logger.Debug("Processing server reset packet");
 
-                if (_side is not SystemSide.Server)
+                if (_side is not EnumAppSide.Server)
                 {
                     throw new InvalidOperationException("The server reset operation can only be received on the server");
                 }
@@ -234,7 +235,7 @@ public class ConfigSystem : IConfigSystem
                     Updated?.Invoke(RootConfigType.Common);
                 }
 
-                if (_configs.TryGetValue(RootConfigType.Server, out var serverConfig) && _side == SystemSide.Server)
+                if (_configs.TryGetValue(RootConfigType.Server, out var serverConfig) && _side == EnumAppSide.Server)
                 {
                     serverConfig.Reset();
                     Save(RootConfigType.Server);
@@ -255,7 +256,7 @@ public class ConfigSystem : IConfigSystem
 
     public void Render()
     {
-        if (_side == SystemSide.Server)
+        if (_side == EnumAppSide.Server)
         {
             return;
         }
@@ -296,7 +297,8 @@ public class ConfigSystem : IConfigSystem
 
     private void OnClientStart(ICoreClientAPI api)
     {
-        _isSinglePlayer = api.IsSinglePlayer;
+        // _isSinglePlayer = api.IsSinglePlayer;
+        _isSinglePlayer = false;
     }
 
     private void OnServerRegisterMessageTypes(IServerNetworkChannel channel)

@@ -1,4 +1,5 @@
 using Common.Mod.Common.Core;
+using Vintagestory.API.Common;
 using ICoreLogger = Vintagestory.API.Common.ILogger;
 
 namespace Common.Mod.Core;
@@ -8,11 +9,13 @@ public class ConsoleLogSink : ILogSink
     public const string Key = "CONSOLE";
 
     private readonly string _modId;
+    private readonly string _side;
     private readonly ICoreLogger _logger;
 
-    public ConsoleLogSink(string modId, ICoreLogger logger)
+    public ConsoleLogSink(string modId, EnumAppSide side, ICoreLogger logger)
     {
         _modId = modId;
+        _side = side is EnumAppSide.Server ? "Server" : "Client";
         _logger = logger;
     }
 
@@ -20,7 +23,7 @@ public class ConsoleLogSink : ILogSink
     {
         var message = string.IsNullOrWhiteSpace(entry.Emitter)
             ? entry.Message
-            : string.Format("[{0}] [{1}] {2}", _modId, entry.Emitter, entry.Message);
+            : string.Format("[{0}] [{1}] [{2}] {3}", _modId, _side, entry.Emitter, entry.Message);
 
         switch (entry.Severity)
         {

@@ -1,3 +1,10 @@
+## 0.3.1
+**:boom: Breaking Changes**
+- Remove `SystemSide`, use `EnumAppSide` instead
+
+**:sparkles: Features**
+- Add static `Get()` to `System`
+
 ## 0.3.0
 **:boom: Breaking Changes**
 - Remove `Synchronized` event from `IConfigSystem`

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Common.Mod.Common.Config;
 using Common.Mod.Common.Core;
 using Common.Mod.Config;
@@ -12,7 +13,8 @@ using IServerPlayer = Vintagestory.API.Server.IServerPlayer;
 
 namespace Common.Mod.Core;
 
-public abstract class System : ModSystem, ISystem
+public abstract class System<TSystem> : ModSystem, ISystem
+    where TSystem : System<TSystem>
 {
     public event ISystem.ServerStartHandler? ServerStart;
     public event ISystem.ClientStartHandler? ClientStart;
@@ -23,7 +25,10 @@ public abstract class System : ModSystem, ISystem
 
     private const string ConfigLibModId = "configlib";
 
-    [UsedImplicitly] public readonly Container Container = new();
+    private static TSystem? _serverInstance;
+    private static TSystem? _clientInstance;
+
+    [UsedImplicitly] public readonly IContainer Container = new Container();
 
     public abstract string ModId();
     public abstract string ModVersion();
@@ -31,12 +36,32 @@ public abstract class System : ModSystem, ISystem
 
     protected abstract void RegisterConfigs(IConfigSystem configSystem);
 
+    [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault")]
+    public static TSystem Get(EnumAppSide side)
+    {
+        return side switch
+        {
+            EnumAppSide.Server => _serverInstance!,
+            EnumAppSide.Client => _clientInstance!,
+            _ => throw new ArgumentOutOfRangeException(nameof(side), side, null)
+        };
+    }
+
     public override void StartPre(ICoreAPI api)
     {
+        if (api is ICoreServerAPI)
+        {
+            _serverInstance = this as TSystem;
+        }
+        else
+        {
+            _clientInstance = this as TSystem;
+        }
+
         // Core API, side & network channel
         {
             Container.RegisterInstance(api);
-            Container.RegisterInstance(api is ICoreServerAPI ? SystemSide.Server : SystemSide.Client);
+            Container.RegisterInstance(api is ICoreServerAPI ? EnumAppSide.Server : EnumAppSide.Client);
             Container.RegisterInstance(api.Network.RegisterChannel(ModId()));
         }
 
@@ -44,8 +69,9 @@ public abstract class System : ModSystem, ISystem
         {
             Container.Register<ILogger, Logger>(Reuse.Singleton);
             var logger = Container.Resolve<ILogger>();
+            var side = Container.Resolve<EnumAppSide>();
 
-            var consoleSink = new ConsoleLogSink(ModId(), api.Logger);
+            var consoleSink = new ConsoleLogSink(ModId(), side, api.Logger);
             logger.AddSink(ConsoleLogSink.Key, consoleSink);
         }
 
@@ -80,7 +106,6 @@ public abstract class System : ModSystem, ISystem
         {
             var channel = Container.Resolve<INetworkChannel>() as IServerNetworkChannel ?? throw new InvalidCastException();
             ServerRegisterMessageTypes?.Invoke(channel);
-            Container.RegisterInstance(channel);
         }
 
         // Events
@@ -97,7 +122,6 @@ public abstract class System : ModSystem, ISystem
         {
             var channel = Container.Resolve<INetworkChannel>() as IClientNetworkChannel ?? throw new InvalidCastException();
             ClientRegisterMessageTypes?.Invoke(channel);
-            Container.RegisterInstance(channel);
         }
 
         // Events
