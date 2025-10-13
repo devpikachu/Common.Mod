@@ -33,10 +33,11 @@ public abstract class System : ModSystem, ISystem
 
     public override void StartPre(ICoreAPI api)
     {
-        // Core API & side
+        // Core API, side & network channel
         {
             Container.RegisterInstance(api);
             Container.RegisterInstance(api is ICoreServerAPI ? SystemSide.Server : SystemSide.Client);
+            Container.RegisterInstance(api.Network.RegisterChannel(ModId()));
         }
 
         // Logging
@@ -77,7 +78,7 @@ public abstract class System : ModSystem, ISystem
     {
         // Networking
         {
-            var channel = api.Network.RegisterChannel(ModId());
+            var channel = Container.Resolve<INetworkChannel>() as IServerNetworkChannel ?? throw new InvalidCastException();
             ServerRegisterMessageTypes?.Invoke(channel);
             Container.RegisterInstance(channel);
         }
@@ -94,7 +95,7 @@ public abstract class System : ModSystem, ISystem
     {
         // Networking
         {
-            var channel = api.Network.RegisterChannel(ModId());
+            var channel = Container.Resolve<INetworkChannel>() as IClientNetworkChannel ?? throw new InvalidCastException();
             ClientRegisterMessageTypes?.Invoke(channel);
             Container.RegisterInstance(channel);
         }

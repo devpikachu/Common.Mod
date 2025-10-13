@@ -1,3 +1,10 @@
+## 0.2.5
+**:bug: Bug Fixes**
+- Fix `ConfigPacket` tags
+
+**:question: Other**
+- Moved network channel creation to `StartPre`
+
 ## 0.2.4
 **:question: Other**
 - Add explicit tags to packet contract
