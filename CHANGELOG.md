@@ -1,3 +1,11 @@
+## 0.3.0
+**:boom: Breaking Changes**
+- Remove `Synchronized` event from `IConfigSystem`
+- Add `RootConfigType` parameter to `Updated` event in `IConfigSystem`
+
+**:sparkles: Features**
+- Overhaul config change detection
+
 ## 0.2.6
 **:sparkles: Features**
 - Added `Updated` event to `IConfigSystem`

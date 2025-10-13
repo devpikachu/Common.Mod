@@ -6,14 +6,11 @@ public interface IConfigSystem
 {
     #region Event delegates
 
-    public delegate void UpdatedHandler();
-
-    public delegate void SynchronizedHandler();
+    public delegate void UpdatedHandler(RootConfigType type);
 
     #endregion Event delegates
 
     public event UpdatedHandler? Updated;
-    public event SynchronizedHandler? Synchronized;
 
     public void Register<TRootConfig>()
         where TRootConfig : class, IRootConfig, new();

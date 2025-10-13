@@ -13,7 +13,6 @@ namespace Common.Mod.Config;
 public class ConfigSystem : IConfigSystem
 {
     public event IConfigSystem.UpdatedHandler? Updated;
-    public event IConfigSystem.SynchronizedHandler? Synchronized;
 
     private readonly SystemSide _side;
     private readonly ILogger _logger;
@@ -232,12 +231,14 @@ public class ConfigSystem : IConfigSystem
                 {
                     commonConfig.Reset();
                     Save(RootConfigType.Common);
+                    Updated?.Invoke(RootConfigType.Common);
                 }
 
                 if (_configs.TryGetValue(RootConfigType.Server, out var serverConfig) && _side == SystemSide.Server)
                 {
                     serverConfig.Reset();
                     Save(RootConfigType.Server);
+                    Updated?.Invoke(RootConfigType.Server);
                 }
 
                 SendServerClientSync();
@@ -248,8 +249,6 @@ public class ConfigSystem : IConfigSystem
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        Synchronized?.Invoke();
     }
 
     public void Synchronize(IServerPlayer player) => SendServerClientSync(player);
@@ -348,7 +347,7 @@ public class ConfigSystem : IConfigSystem
         try
         {
             _configs[type] = JsonSerializer.Deserialize(json, _configTypes[type], _jsonOptions) as IRootConfig ?? throw new NullReferenceException();
-            Updated?.Invoke();
+            Updated?.Invoke(type);
         }
         catch (Exception ex)
         {
@@ -364,7 +363,6 @@ public class ConfigSystem : IConfigSystem
         {
             var json = JsonSerializer.Serialize(_configs[type], _configTypes[type], _jsonOptions);
             _fileSystem.WriteConfigFile(GetFileName(type), json);
-            Updated?.Invoke();
         }
         catch (Exception ex)
         {
@@ -487,6 +485,7 @@ public class ConfigSystem : IConfigSystem
             if (_isSinglePlayer)
             {
                 Save(RootConfigType.Common);
+                Updated?.Invoke(RootConfigType.Common);
             }
             else
             {
@@ -512,6 +511,7 @@ public class ConfigSystem : IConfigSystem
             {
                 _configs[RootConfigType.Common].Reset();
                 Save(RootConfigType.Common);
+                Updated?.Invoke(RootConfigType.Common);
             }
             else
             {
@@ -550,6 +550,7 @@ public class ConfigSystem : IConfigSystem
             if (_isSinglePlayer)
             {
                 Save(RootConfigType.Server);
+                Updated?.Invoke(RootConfigType.Server);
             }
             else
             {
@@ -575,6 +576,7 @@ public class ConfigSystem : IConfigSystem
             {
                 _configs[RootConfigType.Server].Reset();
                 Save(RootConfigType.Server);
+                Updated?.Invoke(RootConfigType.Server);
             }
             else
             {
@@ -601,6 +603,7 @@ public class ConfigSystem : IConfigSystem
         if (controlButtons.Save)
         {
             Save(RootConfigType.Client);
+            Updated?.Invoke(RootConfigType.Client);
         }
 
         if (controlButtons.Restore)
@@ -612,6 +615,7 @@ public class ConfigSystem : IConfigSystem
         {
             _configs[RootConfigType.Client].Reset();
             Save(RootConfigType.Client);
+            Updated?.Invoke(RootConfigType.Client);
         }
 
         return new ControlButtons
