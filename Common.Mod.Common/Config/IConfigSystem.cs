@@ -6,10 +6,13 @@ public interface IConfigSystem
 {
     #region Event delegates
 
+    public delegate void UpdatedHandler();
+
     public delegate void SynchronizedHandler();
 
     #endregion Event delegates
 
+    public event UpdatedHandler? Updated;
     public event SynchronizedHandler? Synchronized;
 
     public void Register<TRootConfig>()

@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace Common.Mod.Common.Core;
 
+[UsedImplicitly(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.Members)]
 public record LogEntry
 {
     public DateTime Timestamp { get; init; }

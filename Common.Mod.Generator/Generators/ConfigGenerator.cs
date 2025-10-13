@@ -46,7 +46,7 @@ public class ConfigGenerator : IIncrementalGenerator
             }
         }
 
-        if (spec!.Configs is not null)
+        if (spec.Configs is not null)
         {
             foreach (var configSpec in spec.Configs)
             {
@@ -75,12 +75,12 @@ public class ConfigGenerator : IIncrementalGenerator
 
         // IRootConfig implementation
         {
-            sourceBuilder.AppendLine("");
+            sourceBuilder.AppendLine();
             sourceBuilder.AppendLine("#region IRootConfig");
-            sourceBuilder.AppendLine("");
+            sourceBuilder.AppendLine();
             sourceBuilder.AppendLine($"public string Version() => \"{spec.Version}\";");
             sourceBuilder.AppendLine($"public RootConfigType Type() => RootConfigType.{spec.Type};");
-            sourceBuilder.AppendLine("");
+            sourceBuilder.AppendLine();
             sourceBuilder.AppendLine("#endregion IRootConfig");
         }
 
@@ -105,7 +105,7 @@ public class ConfigGenerator : IIncrementalGenerator
         // Defaults
         {
             sourceBuilder.AppendLine($"private static readonly {spec.ClassName} Defaults = new();");
-            sourceBuilder.AppendLine("");
+            sourceBuilder.AppendLine();
         }
 
         sourceBuilder.AppendLines(GenerateFields(spec.Entries));
@@ -113,14 +113,14 @@ public class ConfigGenerator : IIncrementalGenerator
 
         // IConfig implementation
         {
-            sourceBuilder.AppendLine("");
+            sourceBuilder.AppendLine();
             sourceBuilder.AppendLine("#region IConfig");
-            sourceBuilder.AppendLine("");
+            sourceBuilder.AppendLine();
 
             sourceBuilder.AppendLines(GenerateReset(spec.Entries));
             sourceBuilder.AppendLines(GenerateRender(spec.Entries));
 
-            sourceBuilder.AppendLine("");
+            sourceBuilder.AppendLine();
             sourceBuilder.AppendLine("#endregion IConfig");
         }
 
@@ -162,14 +162,7 @@ public class ConfigGenerator : IIncrementalGenerator
 
         for (var i = 0; i < spec.Values.Length; i++)
         {
-            if (i == spec.Values.Length - 1)
-            {
-                sourceBuilder.AppendLine(spec.Values[i]);
-            }
-            else
-            {
-                sourceBuilder.AppendLine($"{spec.Values[i]},");
-            }
+            sourceBuilder.AppendLine(i == spec.Values.Length - 1 ? spec.Values[i] : $"{spec.Values[i]},");
         }
 
         sourceBuilder.DecrementIndent();
@@ -260,7 +253,7 @@ public class ConfigGenerator : IIncrementalGenerator
 
             sourceBuilder.DecrementIndent();
             sourceBuilder.AppendLine("}");
-            sourceBuilder.AppendLine("");
+            sourceBuilder.AppendLine();
         }
 
         sourceBuilder.AppendLine("#endregion Properties");
@@ -291,7 +284,7 @@ public class ConfigGenerator : IIncrementalGenerator
     {
         var sourceBuilder = new IndentedStringBuilder();
 
-        sourceBuilder.AppendLine("");
+        sourceBuilder.AppendLine();
         sourceBuilder.AppendLine("public void Render()");
         sourceBuilder.AppendLine("{");
         sourceBuilder.IncrementIndent();
@@ -305,16 +298,10 @@ public class ConfigGenerator : IIncrementalGenerator
                 continue;
             }
 
-            if (spec.Description is null)
-            {
-                sourceBuilder.AppendLine(
-                    $"ConfigUI.{GetRenderer(spec)}(ref _{spec.Name.ToCamelCase()}, Defaults._{spec.Name.ToCamelCase()}, \"{spec.Name.ToCamelCase()}\", \"{spec.Label ?? spec.Name}\");");
-            }
-            else
-            {
-                sourceBuilder.AppendLine(
-                    $"ConfigUI.{GetRenderer(spec)}(ref _{spec.Name.ToCamelCase()}, Defaults._{spec.Name.ToCamelCase()}, \"{spec.Name.ToCamelCase()}\", \"{spec.Label ?? spec.Name}\", \"{spec.Description}\");");
-            }
+            sourceBuilder.AppendLine(
+                spec.Description is null
+                    ? $"ConfigUI.{GetRenderer(spec)}(ref _{spec.Name.ToCamelCase()}, Defaults._{spec.Name.ToCamelCase()}, \"{spec.Name.ToCamelCase()}\", \"{spec.Label ?? spec.Name}\");"
+                    : $"ConfigUI.{GetRenderer(spec)}(ref _{spec.Name.ToCamelCase()}, Defaults._{spec.Name.ToCamelCase()}, \"{spec.Name.ToCamelCase()}\", \"{spec.Label ?? spec.Name}\", \"{spec.Description}\");");
         }
 
         sourceBuilder.DecrementIndent();

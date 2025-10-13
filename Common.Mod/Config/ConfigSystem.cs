@@ -12,6 +12,7 @@ namespace Common.Mod.Config;
 
 public class ConfigSystem : IConfigSystem
 {
+    public event IConfigSystem.UpdatedHandler? Updated;
     public event IConfigSystem.SynchronizedHandler? Synchronized;
 
     private readonly SystemSide _side;
@@ -347,6 +348,7 @@ public class ConfigSystem : IConfigSystem
         try
         {
             _configs[type] = JsonSerializer.Deserialize(json, _configTypes[type], _jsonOptions) as IRootConfig ?? throw new NullReferenceException();
+            Updated?.Invoke();
         }
         catch (Exception ex)
         {
@@ -362,6 +364,7 @@ public class ConfigSystem : IConfigSystem
         {
             var json = JsonSerializer.Serialize(_configs[type], _configTypes[type], _jsonOptions);
             _fileSystem.WriteConfigFile(GetFileName(type), json);
+            Updated?.Invoke();
         }
         catch (Exception ex)
         {

@@ -1,3 +1,10 @@
+## 0.2.6
+**:sparkles: Features**
+- Added `Updated` event to `IConfigSystem`
+
+**:recycle: Refactors**
+- Minor refactors
+
 ## 0.2.5
 **:bug: Bug Fixes**
 - Fix `ConfigPacket` tags
