@@ -6,12 +6,12 @@ namespace Common.Mod.Core;
 public class Translations : ITranslations
 {
     private readonly string _modId;
-    private readonly string? _languageCode;
+    private readonly string _languageCode;
 
     public Translations(string modId)
     {
         _modId = modId;
-        _languageCode = null;
+        _languageCode = Lang.DefaultLocale;
     }
 
     public Translations(string modId, string languageCode)
@@ -32,5 +32,5 @@ public class Translations : ITranslations
         return translation;
     }
 
-    public string Get(string key, params object[] args) => GetL(_languageCode!, key, args);
+    public string Get(string key, params object[] args) => GetL(_languageCode, key, args);
 }

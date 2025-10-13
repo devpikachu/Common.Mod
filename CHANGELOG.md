@@ -1,3 +1,7 @@
+## 0.4.1
+**:bug: Bug Fixes**
+- Fix null `languageCode`
+
 ## 0.4.0
 **:sparkles: Features**
 - Add `ITranslations` and `Translations`
