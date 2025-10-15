@@ -1,3 +1,7 @@
+## 0.5.2
+**:bug: Bug Fixes**
+- Add guards to config mutators
+
 ## 0.5.1
 **:sparkles: Features**
 - Add `MutateCommon`, `MutateServer` and `MutateClient` to `IConfigSystem`

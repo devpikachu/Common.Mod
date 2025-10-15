@@ -102,23 +102,38 @@ public class ConfigSystem : IConfigSystem
 
     public void MutateCommon<TRootConfig>(System.Func<TRootConfig, TRootConfig> mutator) where TRootConfig : class, IRootConfig, new()
     {
+        if (_side is not EnumAppSide.Server)
+        {
+            throw new InvalidSideException(_side);
+        }
+
         _configs[RootConfigType.Common] = mutator.Invoke(GetCommon<TRootConfig>());
         Save(RootConfigType.Common);
-        SendClientServerSync();
+        SendServerClientSync();
     }
 
     public void MutateServer<TRootConfig>(System.Func<TRootConfig, TRootConfig> mutator) where TRootConfig : class, IRootConfig, new()
     {
+        if (_side is not EnumAppSide.Server)
+        {
+            throw new InvalidSideException(_side);
+        }
+
         _configs[RootConfigType.Server] = mutator.Invoke(GetServer<TRootConfig>());
         Save(RootConfigType.Server);
-        SendClientServerSync();
+        SendServerClientSync();
     }
 
     public void MutateClient<TRootConfig>(System.Func<TRootConfig, TRootConfig> mutator) where TRootConfig : class, IRootConfig, new()
     {
+        if (_side is not EnumAppSide.Client)
+        {
+            throw new InvalidSideException(_side);
+        }
+
         _configs[RootConfigType.Client] = mutator.Invoke(GetClient<TRootConfig>());
         Save(RootConfigType.Client);
-        SendClientServerSync();
+        Updated?.Invoke(RootConfigType.Client);
     }
 
     public void Load()
