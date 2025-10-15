@@ -522,8 +522,7 @@ public class ConfigSystem : IConfigSystem
 
         if (!_canEditServerConfig)
         {
-            _configUi.Label("You don't have permission to edit the common configuration.");
-            ImGui.NewLine();
+            _configUi.Label("You don't have permission to edit the common configuration");
         }
 
         _configs[RootConfigType.Common].Render(_configUi);
@@ -563,8 +562,7 @@ public class ConfigSystem : IConfigSystem
 
         if (!_canEditServerConfig)
         {
-            _configUi.Label("You don't have permission to edit the server configuration.");
-            ImGui.NewLine();
+            _configUi.Label("You don't have permission to edit the server configuration");
         }
 
         _configs[RootConfigType.Server].Render(_configUi);

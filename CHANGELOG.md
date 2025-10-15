@@ -1,3 +1,7 @@
+## 0.5.3
+**:question: Other**
+- Configuration UI tweaks
+
 ## 0.5.2
 **:bug: Bug Fixes**
 - Add guards to config mutators
