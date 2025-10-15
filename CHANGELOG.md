@@ -1,4 +1,4 @@
-## 0.4.22
+## 0.4.2
 **:sparkles: Features**
 - Add `InvalidSideException`
 
