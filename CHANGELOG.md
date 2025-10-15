@@ -1,3 +1,7 @@
+## 0.4.22
+**:sparkles: Features**
+- Add `InvalidSideException`
+
 ## 0.4.1
 **:bug: Bug Fixes**
 - Fix null `languageCode`
