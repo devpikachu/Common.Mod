@@ -100,6 +100,27 @@ public class ConfigSystem : IConfigSystem
     public TRootConfig GetClient<TRootConfig>()
         where TRootConfig : class, IRootConfig, new() => Get<TRootConfig>(RootConfigType.Client);
 
+    public void MutateCommon<TRootConfig>(System.Func<TRootConfig, TRootConfig> mutator) where TRootConfig : class, IRootConfig, new()
+    {
+        _configs[RootConfigType.Common] = mutator.Invoke(GetCommon<TRootConfig>());
+        Save(RootConfigType.Common);
+        SendClientServerSync();
+    }
+
+    public void MutateServer<TRootConfig>(System.Func<TRootConfig, TRootConfig> mutator) where TRootConfig : class, IRootConfig, new()
+    {
+        _configs[RootConfigType.Server] = mutator.Invoke(GetServer<TRootConfig>());
+        Save(RootConfigType.Server);
+        SendClientServerSync();
+    }
+
+    public void MutateClient<TRootConfig>(System.Func<TRootConfig, TRootConfig> mutator) where TRootConfig : class, IRootConfig, new()
+    {
+        _configs[RootConfigType.Client] = mutator.Invoke(GetClient<TRootConfig>());
+        Save(RootConfigType.Client);
+        SendClientServerSync();
+    }
+
     public void Load()
     {
         _logger.Verbose("Loading all available configuration types");

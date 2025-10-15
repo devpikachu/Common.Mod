@@ -27,6 +27,15 @@ public interface IConfigSystem
     public TRootConfig GetClient<TRootConfig>()
         where TRootConfig : class, IRootConfig, new();
 
+    public void MutateCommon<TRootConfig>(Func<TRootConfig, TRootConfig> mutator)
+        where TRootConfig : class, IRootConfig, new();
+
+    public void MutateServer<TRootConfig>(Func<TRootConfig, TRootConfig> mutator)
+        where TRootConfig : class, IRootConfig, new();
+
+    public void MutateClient<TRootConfig>(Func<TRootConfig, TRootConfig> mutator)
+        where TRootConfig : class, IRootConfig, new();
+
     public void Load();
     public void Save();
 

@@ -1,3 +1,7 @@
+## 0.5.1
+**:sparkles: Features**
+- Add `MutateCommon`, `MutateServer` and `MutateClient` to `IConfigSystem`
+
 ## 0.5.0
 **:recycle: Refactors**
 - Major cleanup
