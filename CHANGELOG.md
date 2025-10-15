@@ -1,3 +1,7 @@
+## 0.5.4
+**:bug: Bug Fixes**
+- Fix CTD due to a null `Privileges` array
+
 ## 0.5.3
 **:question: Other**
 - Configuration UI tweaks

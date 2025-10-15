@@ -189,7 +189,7 @@ public class ConfigSystem : IConfigSystem
     {
         _logger.Debug("Received configuration packet from player {0} (ID {1}, IP {2})", player.PlayerName, player.PlayerUID, player.IpAddress);
 
-        if (!player.HasPrivilege(Privilege.controlserver))
+        if (player.Privileges is null || player.Privileges.Length == 0 || !player.Privileges.Contains(Privilege.controlserver))
         {
             _logger.Warning(
                 "Player {0} (ID {1}, IP {2}) attempted to remotely change server config, but lacks permissions. This likely indicates that the player sent a manually crafted synchronization packet to the server",
@@ -358,8 +358,14 @@ public class ConfigSystem : IConfigSystem
 
     private void OnClientPlayerJoined(IClientPlayer player)
     {
-        _canEditServerConfig = player.HasPrivilege(Privilege.controlserver);
-        _logger.Verbose("Player {0} edit server configuration remotely", _canEditServerConfig ? "can" : "can't");
+        if (player.Privileges is null || player.Privileges.Length == 0 || !player.Privileges.Contains(Privilege.controlserver))
+        {
+            _logger.Verbose("Player can't edit server configuration remotely");
+            return;
+        }
+
+        _canEditServerConfig = true;
+        _logger.Verbose("Player can edit server configuration remotely");
     }
 
     private void Load(RootConfigType type)
