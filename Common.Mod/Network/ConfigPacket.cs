@@ -1,6 +1,6 @@
 using ProtoBuf;
 
-namespace Common.Mod.Config;
+namespace Common.Mod.Network;
 
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 public class ConfigPacket

@@ -1,4 +1,4 @@
-namespace Common.Mod.Config;
+namespace Common.Mod.Network;
 
 public enum ConfigPacketOperation
 {

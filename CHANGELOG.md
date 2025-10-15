@@ -1,3 +1,7 @@
+## 0.5.0
+**:recycle: Refactors**
+- Major cleanup
+
 ## 0.4.2
 **:sparkles: Features**
 - Update to VS 1.21.5

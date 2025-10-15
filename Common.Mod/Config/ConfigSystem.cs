@@ -1,7 +1,10 @@
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Common.Mod.Common.Config;
 using Common.Mod.Common.Core;
+using Common.Mod.Exceptions;
+using Common.Mod.Network;
 using ConfigLib;
 using ImGuiNET;
 using Vintagestory.API.Client;
@@ -15,37 +18,49 @@ public class ConfigSystem : IConfigSystem
 {
     public event IConfigSystem.UpdatedHandler? Updated;
 
+    private readonly ICoreAPI _api;
     private readonly EnumAppSide _side;
     private readonly ILogger _logger;
     private readonly ISystem _system;
     private readonly IFileSystem _fileSystem;
-    private readonly ConfigLibModSystem? _configLibSystem;
     private readonly IConfigUi _configUi;
 
+    private readonly IServerNetworkChannel? _serverChannel;
+    private readonly IClientNetworkChannel? _clientChannel;
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly Dictionary<RootConfigType, Type> _configTypes;
     private readonly Dictionary<RootConfigType, IRootConfig> _configs;
 
-    private bool _isSinglePlayer;
     private bool _canEditServerConfig;
-    private IServerNetworkChannel? _serverChannel;
-    private IClientNetworkChannel? _clientChannel;
 
     public ConfigSystem(
+        ICoreAPI api,
         EnumAppSide side,
         ILogger logger,
         ISystem system,
         IFileSystem fileSystem,
-        ConfigLibModSystem? configLibSystem,
+        INetworkChannel channel,
         IConfigUi configUi
     )
     {
+        _api = api;
         _side = side;
         _logger = logger.Named("ConfigSystem");
         _system = system;
         _fileSystem = fileSystem;
-        _configLibSystem = configLibSystem;
         _configUi = configUi;
+
+        if (channel is IServerNetworkChannel serverChannel)
+        {
+            _serverChannel = serverChannel;
+            _serverChannel.SetMessageHandler<ConfigPacket>(Synchronize);
+        }
+
+        if (channel is IClientNetworkChannel clientChannel)
+        {
+            _clientChannel = clientChannel;
+            _clientChannel.SetMessageHandler<ConfigPacket>(Synchronize);
+        }
 
         _jsonOptions = new JsonSerializerOptions
         {
@@ -57,9 +72,6 @@ public class ConfigSystem : IConfigSystem
         _configTypes = new Dictionary<RootConfigType, Type>();
         _configs = new Dictionary<RootConfigType, IRootConfig>();
 
-        _system.ClientStart += OnClientStart;
-        _system.ServerRegisterMessageTypes += OnServerRegisterMessageTypes;
-        _system.ClientRegisterMessageTypes += OnClientRegisterMessageTypes;
         _system.ClientPlayerJoined += OnClientPlayerJoined;
     }
 
@@ -90,6 +102,9 @@ public class ConfigSystem : IConfigSystem
 
     public void Load()
     {
+        _logger.Verbose("Loading all available configuration types");
+        var stopwatch = Stopwatch.StartNew();
+
         if (_configs.ContainsKey(RootConfigType.Common))
         {
             Load(RootConfigType.Common);
@@ -104,10 +119,16 @@ public class ConfigSystem : IConfigSystem
         {
             Load(RootConfigType.Client);
         }
+
+        stopwatch.Stop();
+        _logger.Verbose("Done loading all available configuration types in {0} ms", stopwatch.ElapsedMilliseconds);
     }
 
     public void Save()
     {
+        _logger.Verbose("Saving all available configuration types");
+        var stopwatch = Stopwatch.StartNew();
+
         if (_configs.ContainsKey(RootConfigType.Common))
         {
             Save(RootConfigType.Common);
@@ -122,15 +143,20 @@ public class ConfigSystem : IConfigSystem
         {
             Save(RootConfigType.Client);
         }
+
+        stopwatch.Stop();
+        _logger.Verbose("Done saving all available configuration types in {0} ms", stopwatch.ElapsedMilliseconds);
     }
 
     public void Synchronize<TConfigPacket>(IServerPlayer player, TConfigPacket packet)
         where TConfigPacket : class, new()
     {
+        _logger.Debug("Received configuration packet from player {0} (ID {1}, IP {2})", player.PlayerName, player.PlayerUID, player.IpAddress);
+
         if (!player.HasPrivilege(Privilege.controlserver))
         {
             _logger.Warning(
-                "Player {0} (ID {1}, IP {2}) attempted to remotely change server config, but lacks permissions. This likely indicates that the player sent a manually crafted synchronization packet to the server.",
+                "Player {0} (ID {1}, IP {2}) attempted to remotely change server config, but lacks permissions. This likely indicates that the player sent a manually crafted synchronization packet to the server",
                 player.PlayerName, player.PlayerUID, player.IpAddress);
             return;
         }
@@ -156,7 +182,7 @@ public class ConfigSystem : IConfigSystem
 
                 if (_side is not EnumAppSide.Client)
                 {
-                    throw new InvalidOperationException("The server-to-client synchronization operation can only be received on the client");
+                    throw new InvalidSideException(_side);
                 }
 
                 if (configPacket.Common is not null)
@@ -178,7 +204,7 @@ public class ConfigSystem : IConfigSystem
 
                 if (_side is not EnumAppSide.Server)
                 {
-                    throw new InvalidOperationException("The client-to-server synchronization operation can only be received on the server");
+                    throw new InvalidSideException(_side);
                 }
 
                 if (configPacket.Common is not null)
@@ -204,7 +230,7 @@ public class ConfigSystem : IConfigSystem
 
                 if (_side is not EnumAppSide.Server)
                 {
-                    throw new InvalidOperationException("The server restore operation can only be received on the server");
+                    throw new InvalidSideException(_side);
                 }
 
                 if (_configs.ContainsKey(RootConfigType.Common))
@@ -228,7 +254,7 @@ public class ConfigSystem : IConfigSystem
 
                 if (_side is not EnumAppSide.Server)
                 {
-                    throw new InvalidOperationException("The server reset operation can only be received on the server");
+                    throw new InvalidSideException(_side);
                 }
 
                 if (_configs.TryGetValue(RootConfigType.Common, out var commonConfig))
@@ -259,21 +285,17 @@ public class ConfigSystem : IConfigSystem
 
     public void Render()
     {
-        if (_side == EnumAppSide.Server)
+        if (_side is not EnumAppSide.Client)
         {
-            return;
+            throw new InvalidSideException(_side);
         }
 
-        if (_configLibSystem is null)
-        {
-            _logger.Debug("ConfigLib not found, skipping config UI rendering");
-            return;
-        }
+        var configLibSystem = _api.ModLoader.GetModSystem<ConfigLibModSystem>();
 
         if (_configs.ContainsKey(RootConfigType.Common))
         {
-            _logger.Debug("Registering ConfigLib common renderer");
-            _configLibSystem!.RegisterCustomConfig(
+            _logger.Verbose("Registering ConfigLib common renderer");
+            configLibSystem!.RegisterCustomConfig(
                 domain: $"{_system.ModName()} (Common)",
                 drawDelegate: (_, controlButtons) => RenderCommon(controlButtons)
             );
@@ -281,8 +303,8 @@ public class ConfigSystem : IConfigSystem
 
         if (_configs.ContainsKey(RootConfigType.Server))
         {
-            _logger.Debug("Registering ConfigLib server renderer");
-            _configLibSystem!.RegisterCustomConfig(
+            _logger.Verbose("Registering ConfigLib server renderer");
+            configLibSystem!.RegisterCustomConfig(
                 domain: $"{_system.ModName()} (Server)",
                 drawDelegate: (_, controlButtons) => RenderServer(controlButtons)
             );
@@ -290,49 +312,29 @@ public class ConfigSystem : IConfigSystem
 
         if (_configs.ContainsKey(RootConfigType.Client))
         {
-            _logger.Debug("Registering ConfigLib client renderer");
-            _configLibSystem!.RegisterCustomConfig(
+            _logger.Verbose("Registering ConfigLib client renderer");
+            configLibSystem!.RegisterCustomConfig(
                 domain: $"{_system.ModName()} (Client)",
                 drawDelegate: (_, controlButtons) => RenderClient(controlButtons)
             );
         }
     }
 
-    private void OnClientStart(ICoreClientAPI api)
-    {
-        // _isSinglePlayer = api.IsSinglePlayer;
-        _isSinglePlayer = false;
-    }
-
-    private void OnServerRegisterMessageTypes(IServerNetworkChannel channel)
-    {
-        _serverChannel = channel;
-        channel
-            .RegisterMessageType<ConfigPacket>()
-            .SetMessageHandler<ConfigPacket>(Synchronize);
-    }
-
-    private void OnClientRegisterMessageTypes(IClientNetworkChannel channel)
-    {
-        _clientChannel = channel;
-        channel
-            .RegisterMessageType<ConfigPacket>()
-            .SetMessageHandler<ConfigPacket>(Synchronize);
-    }
-
     private void OnClientPlayerJoined(IClientPlayer player)
     {
         _canEditServerConfig = player.HasPrivilege(Privilege.controlserver);
+        _logger.Verbose("Player {0} edit server configuration remotely", _canEditServerConfig ? "can" : "can't");
     }
 
     private void Load(RootConfigType type)
     {
         _logger.Debug("Loading {0} configuration", type);
+        var stopwatch = Stopwatch.StartNew();
 
         var fileName = GetFileName(type);
         if (!_fileSystem.ConfigFileExists(fileName))
         {
-            _logger.Debug("Failed to load {0} configuration: file {1} does not exist", type, fileName);
+            _logger.Verbose("Failed to load {0} configuration: file {1} does not exist", type, fileName);
             return;
         }
 
@@ -345,6 +347,9 @@ public class ConfigSystem : IConfigSystem
         {
             _logger.Error(ex, "Failed to load {0} configuration", type);
         }
+
+        stopwatch.Stop();
+        _logger.Debug("Done loading {0} configuration in {1} ms", type, stopwatch.ElapsedMilliseconds);
     }
 
     private void Load(RootConfigType type, string json)
@@ -363,6 +368,7 @@ public class ConfigSystem : IConfigSystem
     private void Save(RootConfigType type)
     {
         _logger.Debug("Saving {0} configuration", type);
+        var stopwatch = Stopwatch.StartNew();
 
         try
         {
@@ -373,6 +379,9 @@ public class ConfigSystem : IConfigSystem
         {
             _logger.Error(ex, "Failed to save {0} configuration", type);
         }
+
+        stopwatch.Stop();
+        _logger.Debug("Done saving {0} configuration in {1} ms", type, stopwatch.ElapsedMilliseconds);
     }
 
     private void SendServerClientSync(IServerPlayer? player = null)
@@ -487,41 +496,17 @@ public class ConfigSystem : IConfigSystem
 
         if (controlButtons.Save && _canEditServerConfig)
         {
-            if (_isSinglePlayer)
-            {
-                Save(RootConfigType.Common);
-                Updated?.Invoke(RootConfigType.Common);
-            }
-            else
-            {
-                SendClientServerSync();
-            }
+            SendClientServerSync();
         }
 
         if (controlButtons.Restore && _canEditServerConfig)
         {
-            if (_isSinglePlayer)
-            {
-                Load(RootConfigType.Common);
-            }
-            else
-            {
-                SendServerRestore();
-            }
+            SendServerRestore();
         }
 
         if (controlButtons.Defaults && _canEditServerConfig)
         {
-            if (_isSinglePlayer)
-            {
-                _configs[RootConfigType.Common].Reset();
-                Save(RootConfigType.Common);
-                Updated?.Invoke(RootConfigType.Common);
-            }
-            else
-            {
-                SendServerReset();
-            }
+            SendServerReset();
         }
 
         return new ControlButtons
@@ -552,41 +537,17 @@ public class ConfigSystem : IConfigSystem
 
         if (controlButtons.Save && _canEditServerConfig)
         {
-            if (_isSinglePlayer)
-            {
-                Save(RootConfigType.Server);
-                Updated?.Invoke(RootConfigType.Server);
-            }
-            else
-            {
-                SendClientServerSync();
-            }
+            SendClientServerSync();
         }
 
         if (controlButtons.Restore && _canEditServerConfig)
         {
-            if (_isSinglePlayer)
-            {
-                Load(RootConfigType.Server);
-            }
-            else
-            {
-                SendServerRestore();
-            }
+            SendServerRestore();
         }
 
         if (controlButtons.Defaults && _canEditServerConfig)
         {
-            if (_isSinglePlayer)
-            {
-                _configs[RootConfigType.Server].Reset();
-                Save(RootConfigType.Server);
-                Updated?.Invoke(RootConfigType.Server);
-            }
-            else
-            {
-                SendServerReset();
-            }
+            SendServerReset();
         }
 
         return new ControlButtons

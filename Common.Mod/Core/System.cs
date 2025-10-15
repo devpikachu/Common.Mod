@@ -1,8 +1,7 @@
-using System.Diagnostics.CodeAnalysis;
 using Common.Mod.Common.Config;
 using Common.Mod.Common.Core;
 using Common.Mod.Config;
-using ConfigLib;
+using Common.Mod.Network;
 using DryIoc;
 using JetBrains.Annotations;
 using Vintagestory.API.Client;
@@ -17,10 +16,6 @@ namespace Common.Mod.Core;
 public abstract class System<TSystem> : ModSystem, ISystem
     where TSystem : System<TSystem>
 {
-    public event ISystem.ServerStartHandler? ServerStart;
-    public event ISystem.ClientStartHandler? ClientStart;
-    public event ISystem.ServerRegisterMessageTypesHandler? ServerRegisterMessageTypes;
-    public event ISystem.ClientRegisterMessageTypesHandler? ClientRegisterMessageTypes;
     public event ISystem.ServerPlayerJoinedHandler? ServerPlayerJoined;
     public event ISystem.ClientPlayerJoinedHandler? ClientPlayerJoined;
 
@@ -28,9 +23,6 @@ public abstract class System<TSystem> : ModSystem, ISystem
 
     [UsedImplicitly(ImplicitUseKindFlags.Access)]
     public static TSystem? Instance { get; private set; }
-
-    private static TSystem? _serverInstance;
-    private static TSystem? _clientInstance;
 
     [UsedImplicitly] public readonly IContainer Container = new Container();
 
@@ -45,33 +37,13 @@ public abstract class System<TSystem> : ModSystem, ISystem
 
     protected abstract void RegisterConfigs(IConfigSystem configSystem);
 
-    [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault")]
-    public static TSystem Get(EnumAppSide side)
-    {
-        return side switch
-        {
-            EnumAppSide.Server => _serverInstance!,
-            EnumAppSide.Client => _clientInstance!,
-            _ => throw new ArgumentOutOfRangeException(nameof(side), side, null)
-        };
-    }
-
     public override void StartPre(ICoreAPI api)
     {
-        if (api is ICoreServerAPI)
-        {
-            _serverInstance = this as TSystem;
-        }
-        else
-        {
-            _clientInstance = this as TSystem;
-        }
-
-        // Core API, side & network channel
+        // Core API, side, ISystem
         {
             Container.RegisterInstance(api);
             Container.RegisterInstance(api is ICoreServerAPI ? EnumAppSide.Server : EnumAppSide.Client);
-            Container.RegisterInstance(api.Network.RegisterChannel(ModId()));
+            Container.RegisterInstance<ISystem>(this);
         }
 
         // Logging
@@ -84,8 +56,27 @@ public abstract class System<TSystem> : ModSystem, ISystem
             logger.AddSink(ConsoleLogSink.Key, consoleSink);
         }
 
-        Container.RegisterInstance<ISystem>(this);
+        // File system
         Container.Register<IFileSystem, FileSystem>(Reuse.Singleton);
+
+        // Networking
+        {
+            if (api is ICoreServerAPI serverApi)
+            {
+                var channel = serverApi.Network.RegisterChannel(ModId());
+                Container.RegisterInstance(channel);
+                Container.RegisterMapping<INetworkChannel, IServerNetworkChannel>();
+                ServerRegisterNetworkMessages(channel);
+            }
+
+            if (api is ICoreClientAPI clientApi)
+            {
+                var channel = clientApi.Network.RegisterChannel(ModId());
+                Container.RegisterInstance(channel);
+                Container.RegisterMapping<INetworkChannel, IClientNetworkChannel>();
+                ClientRegisterNetworkMessages(channel);
+            }
+        }
 
         // Translations
         {
@@ -100,15 +91,6 @@ public abstract class System<TSystem> : ModSystem, ISystem
             }
         }
 
-        // ConfigLib
-        {
-            if (api.ModLoader.IsModEnabled(ConfigLibModId))
-            {
-                var configLibSystem = api.ModLoader.GetModSystem<ConfigLibModSystem>();
-                Container.RegisterInstance(configLibSystem);
-            }
-        }
-
         // Config
         {
             Container.Register<IConfigUi, ConfigUi>(Reuse.Singleton);
@@ -119,40 +101,35 @@ public abstract class System<TSystem> : ModSystem, ISystem
 
             configSystem.Load();
             configSystem.Save();
-            configSystem.Render();
+
+            if (api is ICoreClientAPI && api.ModLoader.IsModEnabled(ConfigLibModId))
+            {
+                configSystem.Render();
+            }
+        }
+
+        // Server/Client StartPre
+        {
+            if (api is ICoreServerAPI serverApi)
+            {
+                ServerStartPre(serverApi);
+            }
+
+            if (api is ICoreClientAPI clientApi)
+            {
+                ClientStartPre(clientApi);
+            }
         }
     }
 
     public override void StartServerSide(ICoreServerAPI api)
     {
-        // Networking
-        {
-            var channel = Container.Resolve<INetworkChannel>() as IServerNetworkChannel ?? throw new InvalidCastException();
-            ServerRegisterMessageTypes?.Invoke(channel);
-        }
-
-        // Events
-        {
-            api.Event.PlayerJoin += OnServerPlayerJoined;
-        }
-
-        ServerStart?.Invoke(api);
+        api.Event.PlayerJoin += OnServerPlayerJoined;
     }
 
     public override void StartClientSide(ICoreClientAPI api)
     {
-        // Networking
-        {
-            var channel = Container.Resolve<INetworkChannel>() as IClientNetworkChannel ?? throw new InvalidCastException();
-            ClientRegisterMessageTypes?.Invoke(channel);
-        }
-
-        // Events
-        {
-            api.Event.PlayerJoin += OnClientPlayerJoined;
-        }
-
-        ClientStart?.Invoke(api);
+        api.Event.PlayerJoin += OnClientPlayerJoined;
     }
 
     public override void Dispose()
@@ -169,6 +146,28 @@ public abstract class System<TSystem> : ModSystem, ISystem
         {
             clientApi.Event.PlayerJoin -= OnClientPlayerJoined;
         }
+    }
+
+    [UsedImplicitly]
+    protected virtual void ServerRegisterNetworkMessages(IServerNetworkChannel channel)
+    {
+        channel.RegisterMessageType<ConfigPacket>();
+    }
+
+    [UsedImplicitly]
+    protected virtual void ClientRegisterNetworkMessages(IClientNetworkChannel channel)
+    {
+        channel.RegisterMessageType<ConfigPacket>();
+    }
+
+    [UsedImplicitly]
+    protected virtual void ServerStartPre(ICoreServerAPI api)
+    {
+    }
+
+    [UsedImplicitly]
+    protected virtual void ClientStartPre(ICoreClientAPI api)
+    {
     }
 
     private void OnServerPlayerJoined(IServerPlayer player)

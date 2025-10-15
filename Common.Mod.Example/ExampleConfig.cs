@@ -1,6 +1,4 @@
 using Common.Mod.Common.Config;
-using Common.Mod.Config;
-using ImGuiNET;
 
 namespace Common.Mod.Example;
 
