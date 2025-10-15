@@ -1,5 +1,6 @@
 ## 0.4.2
 **:sparkles: Features**
+- Update to VS 1.21.5
 - Add `InvalidSideException`
 
 ## 0.4.1
