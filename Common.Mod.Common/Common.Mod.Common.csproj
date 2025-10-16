@@ -29,8 +29,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="buildConfig.json"/>
-  </ItemGroup>
-
 </Project>
