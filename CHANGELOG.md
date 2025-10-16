@@ -1,3 +1,7 @@
+## 0.5.6
+**:sparkles: Features**
+- Add events for `AssetsLoaded` and `AssetsFinalized` in `ISystem`
+
 ## 0.5.5
 **:sparkles: Features**
 - Add overrides for `AssetsLoaded` and `AssetsFinalized` in `System`

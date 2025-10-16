@@ -16,8 +16,10 @@ namespace Common.Mod.Core;
 public abstract class System<TSystem> : ModSystem, ISystem
     where TSystem : System<TSystem>
 {
-    public event ISystem.ServerPlayerJoinedHandler? ServerPlayerJoined;
-    public event ISystem.ClientPlayerJoinedHandler? ClientPlayerJoined;
+    public event ISystem.AssetsLoadedHandler? OnAssetsLoaded;
+    public event ISystem.AssetsFinalizedHandler? OnAssetsFinalized;
+    public event ISystem.ServerPlayerJoinedHandler? OnServerPlayerJoined;
+    public event ISystem.ClientPlayerJoinedHandler? OnClientPlayerJoined;
 
     private const string ConfigLibModId = "configlib";
 
@@ -124,20 +126,22 @@ public abstract class System<TSystem> : ModSystem, ISystem
 
     public override void AssetsLoaded(ICoreAPI api)
     {
+        OnAssetsLoaded?.Invoke();
     }
 
     public override void AssetsFinalize(ICoreAPI api)
     {
+        OnAssetsFinalized?.Invoke();
     }
 
     public override void StartServerSide(ICoreServerAPI api)
     {
-        api.Event.PlayerJoin += OnServerPlayerJoined;
+        api.Event.PlayerJoin += _OnServerPlayerJoined;
     }
 
     public override void StartClientSide(ICoreClientAPI api)
     {
-        api.Event.PlayerJoin += OnClientPlayerJoined;
+        api.Event.PlayerJoin += _OnClientPlayerJoined;
     }
 
     public override void Dispose()
@@ -146,13 +150,13 @@ public abstract class System<TSystem> : ModSystem, ISystem
 
         if (api is ICoreServerAPI serverApi)
         {
-            serverApi.Event.PlayerJoin -= OnServerPlayerJoined;
+            serverApi.Event.PlayerJoin -= _OnServerPlayerJoined;
             return;
         }
 
         if (api is ICoreClientAPI clientApi)
         {
-            clientApi.Event.PlayerJoin -= OnClientPlayerJoined;
+            clientApi.Event.PlayerJoin -= _OnClientPlayerJoined;
         }
     }
 
@@ -178,7 +182,7 @@ public abstract class System<TSystem> : ModSystem, ISystem
     {
     }
 
-    private void OnServerPlayerJoined(IServerPlayer player)
+    private void _OnServerPlayerJoined(IServerPlayer player)
     {
         // Config synchronization
         {
@@ -186,11 +190,11 @@ public abstract class System<TSystem> : ModSystem, ISystem
             configSystem.Synchronize(player);
         }
 
-        ServerPlayerJoined?.Invoke(player);
+        OnServerPlayerJoined?.Invoke(player);
     }
 
-    private void OnClientPlayerJoined(IClientPlayer player)
+    private void _OnClientPlayerJoined(IClientPlayer player)
     {
-        ClientPlayerJoined?.Invoke(player);
+        OnClientPlayerJoined?.Invoke(player);
     }
 }

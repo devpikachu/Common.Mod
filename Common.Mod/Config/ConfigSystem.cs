@@ -72,7 +72,7 @@ public class ConfigSystem : IConfigSystem
         _configTypes = new Dictionary<RootConfigType, Type>();
         _configs = new Dictionary<RootConfigType, IRootConfig>();
 
-        _system.ClientPlayerJoined += OnClientPlayerJoined;
+        _system.OnClientPlayerJoined += OnClientPlayerJoined;
     }
 
     public void Register<TRootConfig>()
