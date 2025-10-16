@@ -122,6 +122,14 @@ public abstract class System<TSystem> : ModSystem, ISystem
         }
     }
 
+    public override void AssetsLoaded(ICoreAPI api)
+    {
+    }
+
+    public override void AssetsFinalize(ICoreAPI api)
+    {
+    }
+
     public override void StartServerSide(ICoreServerAPI api)
     {
         api.Event.PlayerJoin += OnServerPlayerJoined;

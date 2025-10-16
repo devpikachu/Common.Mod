@@ -1,3 +1,7 @@
+## 0.5.5
+**:sparkles: Features**
+- Add overrides for `AssetsLoaded` and `AssetsFinalized` in `System`
+
 ## 0.5.4
 **:bug: Bug Fixes**
 - Fix CTD due to a null `Privileges` array
