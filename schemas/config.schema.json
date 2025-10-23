@@ -5,37 +5,249 @@
   "description": "Config specification for code generation",
   "type": "object",
   "required": [
-    "className",
-    "classNamespace",
-    "entries"
+    "rootConfigs"
   ],
   "properties": {
-    "className": {
-      "type": "string",
-      "description": "The name of the class",
-      "minLength": 1,
-      "pattern": "^[a-zA-Z]+[a-zA-Z0-9_]*$"
-    },
-    "classNamespace": {
-      "type": "string",
-      "description": "The namespace to generate the class in",
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_\\.]+$"
-    },
-    "description": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "description": "The description of the class",
-      "minLength": 1
-    },
-    "entries": {
+    "rootConfigs": {
       "type": "array",
-      "description": "The entries of the class",
+      "description": "The list of root configs, i.e. those that'll be registered with IConfigSystem",
       "minItems": 1,
       "items": {
-        "$ref": "/vintage-story-mods/common-mod/raw/branch/main/schemas/entry.schema.json"
+        "$ref": "#/$defs/rootConfig"
+      }
+    },
+    "configs": {
+      "type": "array",
+      "description": "The list of configs, i.e. those that'll be nested within other configs",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/config"
+      }
+    },
+    "enums": {
+      "type": "array",
+      "description": "The list of enums",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/enum"
+      }
+    }
+  },
+  "$defs": {
+    "rootConfig": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/config"
+        },
+        {
+          "type": "object",
+          "required": [
+            "version",
+            "type"
+          ],
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "The version of the root config spec",
+              "minLength": 1,
+              "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+            },
+            "type": {
+              "type": "string",
+              "description": "The type of the root config",
+              "enum": [
+                "Common",
+                "Server",
+                "Client"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "config": {
+      "type": "object",
+      "required": [
+        "className",
+        "classNamespace",
+        "entries"
+      ],
+      "properties": {
+        "className": {
+          "type": "string",
+          "description": "The name of the class",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z]+[a-zA-Z0-9_]*$"
+        },
+        "classNamespace": {
+          "type": "string",
+          "description": "The namespace to generate the class in",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_\\.]+$"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The description of the class",
+          "minLength": 1
+        },
+        "entries": {
+          "type": "array",
+          "description": "The entries of the class",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/entry"
+          }
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the entry",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_]+$"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the entry",
+          "enum": [
+            "Bool",
+            "Int32",
+            "Int64",
+            "UInt32",
+            "UInt64",
+            "Float",
+            "Double",
+            "String",
+            "Enum",
+            "Nested"
+          ]
+        },
+        "defaultValue": {
+          "type": [
+            "array",
+            "boolean",
+            "null",
+            "number",
+            "object",
+            "string"
+          ],
+          "description": "The default value of the entry"
+        },
+        "enum": {
+          "type": "string",
+          "description": "The enum to use when type is Enum",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z]+[a-zA-Z0-9_]*$"
+        },
+        "nested": {
+          "type": "string",
+          "description": "The nested config to use when type is Nested",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z]+[a-zA-Z0-9_]*$"
+        },
+        "label": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The translation key to use for the GUI label",
+          "minLength": 1,
+          "pattern": "^[a-z]+[a-z0-9\\-]*$"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The translation key to use for the GUI description",
+          "minLength": 1,
+          "pattern": "^[a-z]+[a-z0-9\\-]*$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "const": "Enum"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "enum"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "const": "Nested"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "nested"
+            ]
+          }
+        }
+      ]
+    },
+    "enum": {
+      "type": "object",
+      "required": [
+        "enumName",
+        "enumNamespace",
+        "values"
+      ],
+      "properties": {
+        "enumName": {
+          "type": "string",
+          "description": "The name of the enum",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z]+[a-zA-Z0-9_]*$"
+        },
+        "enumNamespace": {
+          "type": "string",
+          "description": "The namespace to generate the enum in",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_\\.]+$"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The description of the enum",
+          "minLength": 1
+        },
+        "values": {
+          "type": "array",
+          "description": "The values of the enum",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
       }
     }
   }
