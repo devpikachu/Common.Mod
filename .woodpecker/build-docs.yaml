@@ -1,0 +1,25 @@
+when:
+  - event: push
+    branch: main
+
+steps:
+  - name: bootstrap
+    image: git.omni.ms/omnilium/node:latest
+    pull: true
+    directory: docs
+    commands:
+      - pnpm install --frozen-lockfile
+
+  - name: lint
+    image: git.omni.ms/omnilium/node:latest
+    pull: true
+    directory: docs
+    commands:
+      - pnpm prettier --check .
+
+  - name: build
+    image: git.omni.ms/omnilium/node:latest
+    pull: true
+    directory: docs
+    commands:
+      - pnpm build

@@ -1,0 +1,30 @@
+when:
+  - event: tag
+
+steps:
+  - name: bootstrap
+    image: git.omni.ms/omnilium/node:latest
+    pull: true
+    directory: docs
+    commands:
+      - pnpm install --frozen-lockfile
+
+  - name: build
+    image: git.omni.ms/omnilium/node:latest
+    pull: true
+    directory: docs
+    commands:
+      - pnpm build
+
+  - name: publish
+    image: git.omni.ms/omnilium/toolbox:latest
+    pull: true
+    directory: docs/dist
+    environment:
+      STORAGE_ZONE_HOST: storage.bunnycdn.com
+      STORAGE_ZONE_USERNAME:
+        from_secret: storage_zone_username
+      STORAGE_ZONE_PASSWORD:
+        from_secret: storage_zone_password
+    commands:
+      - ncftpput -u $${STORAGE_ZONE_USERNAME} -p $${STORAGE_ZONE_PASSWORD} -m -v -R -F $${STORAGE_ZONE_HOST} /$${STORAGE_ZONE_USERNAME}/common-mod .
