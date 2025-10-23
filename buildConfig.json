@@ -1,4 +1,5 @@
 {
+  "$schema": "https://git.omni.ms/vintage-story-mods/common-build/raw/branch/main/schemas/solution.schema.json",
   "name": "CommonMod",
   "defaultProject": "Common.Mod"
 }

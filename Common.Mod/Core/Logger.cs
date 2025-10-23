@@ -1,17 +1,19 @@
-namespace Common.Mod.Common.Core;
+using Common.Mod.Common.Core;
+
+namespace Common.Mod.Core;
 
 public class Logger : ILogger
 {
     private readonly string? _name;
-    private readonly Dictionary<string, ILogSink> _sinks;
+    private readonly Dictionary<string, ILoggerSink> _sinks;
 
     public Logger()
     {
         _name = null;
-        _sinks = new Dictionary<string, ILogSink>();
+        _sinks = new Dictionary<string, ILoggerSink>();
     }
 
-    private Logger(string name, Dictionary<string, ILogSink> sinks)
+    private Logger(string name, Dictionary<string, ILoggerSink> sinks)
     {
         _name = name;
         _sinks = sinks;
@@ -19,7 +21,7 @@ public class Logger : ILogger
 
     public ILogger Named(string name) => new Logger(name, _sinks);
 
-    public void AddSink<TSink>(string key, TSink sink) where TSink : ILogSink => _sinks.Add(key, sink);
+    public void AddSink<TSink>(string key, TSink sink) where TSink : ILoggerSink => _sinks.Add(key, sink);
     public void RemoveSink(string key) => _sinks.Remove(key);
 
     public void Critical(string format, params object[] args) => Log(LogSeverity.Critical, format, args);

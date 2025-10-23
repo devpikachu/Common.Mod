@@ -6,7 +6,7 @@ public interface ILogger
 {
     public ILogger Named(string name);
 
-    public void AddSink<TSink>(string key, TSink sink) where TSink : ILogSink;
+    public void AddSink<TSink>(string key, TSink sink) where TSink : ILoggerSink;
     public void RemoveSink(string key);
 
     [StringFormatMethod("format")]

@@ -1,6 +1,7 @@
 using Common.Mod.Common.Config;
 using Common.Mod.Common.Core;
 using Common.Mod.Config;
+using Common.Mod.Core;
 using Common.Mod.Network;
 using DryIoc;
 using JetBrains.Annotations;
@@ -11,7 +12,7 @@ using Vintagestory.API.Server;
 using ILogger = Common.Mod.Common.Core.ILogger;
 using IServerPlayer = Vintagestory.API.Server.IServerPlayer;
 
-namespace Common.Mod.Core;
+namespace Common.Mod;
 
 public abstract class System<TSystem> : ModSystem, ISystem
     where TSystem : System<TSystem>
@@ -54,8 +55,8 @@ public abstract class System<TSystem> : ModSystem, ISystem
             var logger = Container.Resolve<ILogger>();
             var side = Container.Resolve<EnumAppSide>();
 
-            var consoleSink = new ConsoleLogSink(ModId(), side, api.Logger);
-            logger.AddSink(ConsoleLogSink.Key, consoleSink);
+            var consoleSink = new ConsoleLoggerSink(ModId(), side, api.Logger);
+            logger.AddSink(ConsoleLoggerSink.Key, consoleSink);
         }
 
         // File system

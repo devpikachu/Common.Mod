@@ -4,7 +4,7 @@ using ICoreLogger = Vintagestory.API.Common.ILogger;
 
 namespace Common.Mod.Core;
 
-public class ConsoleLogSink : ILogSink
+public class ConsoleLoggerSink : ILoggerSink
 {
     public const string Key = "CONSOLE";
 
@@ -12,7 +12,7 @@ public class ConsoleLogSink : ILogSink
     private readonly string _side;
     private readonly ICoreLogger _logger;
 
-    public ConsoleLogSink(string modId, EnumAppSide side, ICoreLogger logger)
+    public ConsoleLoggerSink(string modId, EnumAppSide side, ICoreLogger logger)
     {
         _modId = modId;
         _side = side is EnumAppSide.Server ? "Server" : "Client";

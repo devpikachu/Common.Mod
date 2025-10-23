@@ -1,6 +1,5 @@
 {
-  "name": null,
-  "outputSubdir": null,
+  "$schema": "https://git.omni.ms/vintage-story-mods/common-build/raw/branch/main/schemas/project.schema.json",
   "substitute": [
     "Common.Mod.csproj",
     "../Common.Mod.Common/Common.Mod.Common.csproj"

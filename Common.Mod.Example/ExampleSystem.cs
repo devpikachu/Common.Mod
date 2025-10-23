@@ -6,7 +6,7 @@ using Vintagestory.API.Common;
 namespace Common.Mod.Example;
 
 [UsedImplicitly]
-public class ExampleSystem : Core.System<ExampleSystem>
+public class ExampleSystem : System<ExampleSystem>
 {
     public override string ModId() => "example";
     public override string ModVersion() => "12.34.56";
