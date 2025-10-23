@@ -52,8 +52,4 @@
     <ProjectReference Include="../Common.Mod.Common/Common.Mod.Common.csproj"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="buildConfig.json"/>
-  </ItemGroup>
-
 </Project>

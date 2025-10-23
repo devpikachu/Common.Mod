@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://git.omni.ms/vintage-story-mods/common-mod/raw/branch/main/schemas/entry.schema.json",
+  "title": "Entry Specification",
+  "description": "Entry specification for code generation",
+  "type": "object",
+  "required": [
+    "name",
+    "type"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the entry",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_]+$"
+    },
+    "type": {
+      "type": "string",
+      "description": "The type of the entry",
+      "enum": [
+        "Bool",
+        "Int32",
+        "Int64",
+        "UInt32",
+        "UInt64",
+        "Float",
+        "Double",
+        "String",
+        "Enum",
+        "Nested"
+      ]
+    },
+    "defaultValue": {
+      "type": [
+        "array",
+        "boolean",
+        "null",
+        "number",
+        "object",
+        "string"
+      ],
+      "description": "The default value of the entry"
+    },
+    "enum": {
+      "type": "string",
+      "description": "The enum to use when type is Enum",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z]+[a-zA-Z0-9_]*$"
+    },
+    "nested": {
+      "type": "string",
+      "description": "The nested config to use when type is Nested",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z]+[a-zA-Z0-9_]*$"
+    },
+    "label": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The translation key to use for the GUI label",
+      "minLength": 1,
+      "pattern": "^[a-z]+[a-z0-9\\-]*$"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The translation key to use for the GUI description",
+      "minLength": 1,
+      "pattern": "^[a-z]+[a-z0-9\\-]*$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "const": "Enum"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "enum"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "const": "Nested"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "nested"
+        ]
+      }
+    }
+  ]
+}

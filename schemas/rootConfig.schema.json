@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://git.omni.ms/vintage-story-mods/common-mod/raw/branch/main/schemas/rootConfig.schema.json",
+  "title": "Root Config Specification",
+  "description": "Root config specification for code generation",
+  "allOf": [
+    { "$ref": "/vintage-story-mods/common-mod/raw/branch/main/schemas/config.schema.json" },
+    {
+      "type": "object",
+      "required": [
+        "version",
+        "type"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "The version of the root config spec",
+          "minLength": 1,
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the root config",
+          "enum": [
+            "Common",
+            "Server",
+            "Client"
+          ]
+        }
+      }
+    }
+  ]
+}
