@@ -5,7 +5,7 @@ import starlight from "@astrojs/starlight";
 // https://astro.build/config
 export default defineConfig({
   site: "https://docs.detpikachu.dev",
-  base: import.meta.env.MODE === "production" ? "/common-mod" : "/",
+  base: process.env.NODE_ENV === "production" ? "/common-mod" : "/",
   integrations: [
     starlight({
       title: "Common Mod",
