@@ -4,7 +4,7 @@ set -e
 
 vsVersion="1.21.5"
 vsImGuiVersion="1.1.14"
-configLibVersion="1.10.6"
+configLibVersion="1.10.8"
 autoConfigLibVersion="2.0.9"
 
 # Create directories

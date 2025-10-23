@@ -1,3 +1,5 @@
+## 0.6.0
+
 ## 0.5.6
 **:sparkles: Features**
 - Add events for `AssetsLoaded` and `AssetsFinalized` in `ISystem`
