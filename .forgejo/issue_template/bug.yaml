@@ -4,6 +4,9 @@ title: '[:bug:] '
 labels:
   - Kind/Bug
   - Status/New
+assignees:
+  - andrei
+ref: main
 body:
   - type: markdown
     attributes:

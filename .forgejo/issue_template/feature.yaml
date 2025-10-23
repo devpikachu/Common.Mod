@@ -4,6 +4,9 @@ title: '[:sparkles:] '
 labels:
   - Kind/Feature
   - Status/New
+assignees:
+  - andrei
+ref: main
 body:
   - type: markdown
     attributes:
