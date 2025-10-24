@@ -9,6 +9,7 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Server;
+using GamePaths = Common.Mod.Core.GamePaths;
 using ILogger = Common.Mod.Common.Core.ILogger;
 using IServerPlayer = Vintagestory.API.Server.IServerPlayer;
 
@@ -60,7 +61,10 @@ public abstract class System<TSystem> : ModSystem, ISystem
         }
 
         // File system
-        Container.Register<IFileSystem, FileSystem>(Reuse.Singleton);
+        {
+            Container.Register<IGamePaths, GamePaths>(Reuse.Singleton);
+            Container.Register<IFileSystem, FileSystem>(Reuse.Singleton);
+        }
 
         // Networking
         {

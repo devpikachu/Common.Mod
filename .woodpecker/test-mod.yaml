@@ -1,0 +1,21 @@
+when:
+  - event: push
+    branch: main
+
+steps:
+  - name: bootstrap
+    image: git.omni.ms/omnilium/toolbox:latest
+    pull: true
+    environment:
+      REMOTE_USERNAME:
+        from_secret: copyparty_user
+      REMOTE_PASSWORD:
+        from_secret: copyparty_password
+    commands:
+      - bash bootstrap.sh remote
+
+  - name: test
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    pull: true
+    commands:
+      - bash build.sh --target Test --general-project Common.Mod.Test

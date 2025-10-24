@@ -13,14 +13,14 @@ public class FileSystem : IFileSystem
     private readonly string _relativeDataDirPath;
     private readonly string _absoluteDataDirPath;
 
-    public FileSystem(ISystem system, ICoreAPI api)
+    public FileSystem(ICoreAPI api, ISystem system, IGamePaths gamePaths)
     {
         _api = api;
 
         _relativeConfigDirPath = Path.Combine("ModConfig", system.ModId());
-        _absoluteConfigDirPath = Path.Combine(GamePaths.DataPath, _relativeConfigDirPath);
+        _absoluteConfigDirPath = Path.Combine(gamePaths.Data(), _relativeConfigDirPath);
         _relativeDataDirPath = Path.Combine("ModData", system.ModId());
-        _absoluteDataDirPath = Path.Combine(GamePaths.DataPath, _relativeDataDirPath);
+        _absoluteDataDirPath = Path.Combine(gamePaths.Data(), _relativeDataDirPath);
     }
 
     public string GetConfigDirPath()

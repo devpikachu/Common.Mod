@@ -1,0 +1,5 @@
+{
+  "$schema": "https://git.omni.ms/vintage-story-mods/common-build/raw/branch/main/schemas/project.schema.json",
+  "name": "Test",
+  "substitute": []
+}

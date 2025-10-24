@@ -14,8 +14,8 @@
 
 **:arrow_up: Dependencies**
 - Upgraded to `Cake.Frosting@5.1.0`
-- Upgraded to `Common.Build@0.5.0`
-- Upgraded to `Common.Build.Generator@0.5.0`
+- Upgraded to `Common.Build@0.5.1`
+- Upgraded to `Common.Build.Generator@0.5.1`
 - Upgraded to `System.Collections.Immutable@9.0.10`
 - Upgraded to `System.Text.Json@9.0.10`
 

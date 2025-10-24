@@ -1,6 +1,10 @@
 when:
   - event: tag
 
+depends_on:
+  - build-mod
+  - test-mod
+
 matrix:
   PROJECT:
     - Common.Mod
