@@ -1,6 +1,9 @@
 # Common Mod
 
-[![GNU GPLv3](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) ![.NET Version](https://img.shields.io/badge/dotnet-8.0-%236F419A) [![CI Status](https://ci.omni.ms/api/badges/2/status.svg)](https://ci.omni.ms/repos/2) ![Latest Release](https://img.shields.io/gitea/v/release/vintage-story-mods/common-mod?gitea_url=https%3A%2F%2Fgit.omni.ms&sort=semver&display_name=release&style=flat)
+[![GNU GPLv3](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+![.NET Version](https://img.shields.io/badge/dotnet-8.0%20%26%209.0-%236F419A)
+[![CI Status](https://ci.omni.ms/api/badges/2/status.svg)](https://ci.omni.ms/repos/2)
+![Latest Release](https://img.shields.io/gitea/v/release/vintage-story-mods/common-mod?gitea_url=https%3A%2F%2Fgit.omni.ms&sort=semver&display_name=release&style=flat)
 
 Common library used to simplify mod creation across various projects.
 
