@@ -1,13 +1,19 @@
-# Common Mod
-
-[![GNU GPLv3](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
-![Vintage Story Version](https://img.shields.io/badge/vintage--story-1.21.5-%2391A357)
-![.NET Version](https://img.shields.io/badge/dotnet-8.0%20%26%209.0-%236F419A)
-[![CI Status](https://ci.omni.ms/api/badges/2/status.svg)](https://ci.omni.ms/repos/2)
-![Latest Release](https://img.shields.io/gitea/v/release/vintage-story-mods/common-mod?gitea_url=https%3A%2F%2Fgit.omni.ms&sort=semver&display_name=release&style=flat)
-
-Common library used to simplify mod creation across various projects.
-
+<div align="center">
+    <img alt="Banner" src="images/banner.png" />
+    <br /><br />
+    <a title="GPL-3.0" target="_blank" href="https://www.gnu.org/licenses/gpl-3.0.en.html">
+        <img alt="License Badge" src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg" />
+    </a>
+    <img alt="Vintage Story Version Badge" src="https://img.shields.io/badge/vintage--story-1.21.5-%2391A357" />
+    <img alt=".NET Version Badge" src="https://img.shields.io/badge/dotnet-8.0%20%26%209.0-%236F419A" />
+    <a title="CI Pipeline" target="_blank" href="https://ci.omni.ms/repos/2">
+        <img alt="CI Status Badge" src="https://ci.omni.ms/api/badges/2/status.svg" />
+    </a>
+    <a title="Latest Release" target="_blank" href="https://git.omni.ms/vintage-story-mods/common-mod/releases/latest">
+        <img alt="Latest Release Badge" src="https://img.shields.io/gitea/v/release/vintage-story-mods/common-mod?gitea_url=https%3A%2F%2Fgit.omni.ms&sort=semver&display_name=release&style=flat" />
+    </a>
+    <h3>Common library used to simplify mod creation across various projects.</h3>
+</div>
 
 ## License
 
