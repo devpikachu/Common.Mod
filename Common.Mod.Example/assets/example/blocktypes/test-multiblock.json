@@ -1,0 +1,16 @@
+{
+  "code": "test-multiblock",
+  "class": "BlockGeneric",
+  "creativeInventory": {
+    "general": [
+      "*"
+    ],
+    "example": [
+      "*"
+    ]
+  },
+  "drawType": "JSON",
+  "shape": {
+    "base": "example:block/test-multiblock"
+  }
+}
