@@ -5,6 +5,7 @@ using Common.Mod.Core;
 using Common.Mod.Test.Shims;
 using DryIoc.ImTools;
 using JetBrains.Annotations;
+using NSubstitute.Routing.Handlers;
 using Vintagestory.API.Common;
 
 namespace Common.Mod.Test.Core;
@@ -145,10 +146,10 @@ public class FileSystemTests : IDisposable
         var fileName = StringUtils.Random();
 
         // Act
-        string Action() => _fileSystem.ReadConfigFile(fileName);
+        var exception = Record.Exception(() => _fileSystem.ReadConfigFile(fileName));
 
         // Assert
-        Assert.Throws<FileNotFoundException>(Action);
+        Assert.IsType<FileNotFoundException>(exception);
     }
 
     [Fact]
@@ -175,10 +176,10 @@ public class FileSystemTests : IDisposable
         var fileName = StringUtils.Random();
 
         // Act
-        string Action() => _fileSystem.ReadDataFile(fileName);
+        var exception = Record.Exception(() => _fileSystem.ReadDataFile(fileName));
 
         // Assert
-        Assert.Throws<FileNotFoundException>(Action);
+        Assert.IsType<FileNotFoundException>(exception);
     }
 
     [Fact]
