@@ -1,0 +1,8 @@
+<Project>
+    <ItemGroup>
+        <Assets Include="$(MSBuildThisFileDirectory)/../assets/**/*"/>
+    </ItemGroup>
+    <Target Name="CopyAssets" BeforeTargets="Build">
+        <Copy SourceFiles="@(Assets)" DestinationFolder="$(TargetDir)assets/$(ModId)/%(RecursiveDir)"/>
+    </Target>
+</Project>

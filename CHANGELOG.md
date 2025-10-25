@@ -5,6 +5,7 @@
 **:sparkles: Features**
 - Added `System.RegisterClasses` virtual method ([#5](https://git.omni.ms/vintage-story-mods/common-mod/issues/5))
 - Added registry helper methods ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added custom `BlockMultiblock` implementation that respects particle collision boxes ([#3](https://git.omni.ms/vintage-story-mods/common-mod/issues/3))
 
 **:hammer: Refactors**
 - Cleanup pass ([#1](https://git.omni.ms/vintage-story-mods/common-mod/issues/1))

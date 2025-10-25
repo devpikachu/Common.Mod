@@ -51,5 +51,17 @@
   <ItemGroup>
     <ProjectReference Include="../Common.Mod.Common/Common.Mod.Common.csproj"/>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="build/Common.Mod.targets">
+      <PackagePath>build/Common.Mod.targets</PackagePath>
+    </Content>
+    <Content Include="assets/**/*">
+      <PackagePath>assets</PackagePath>
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
 </Project>
