@@ -24,6 +24,7 @@
     <None Include="../build.sh"/>
     <None Include="../buildConfig.json"/>
     <None Include="../CHANGELOG.md"/>
+    <None Include="../GITMOJI.md"/>
     <None Include="../README.md"/>
   </ItemGroup>
 

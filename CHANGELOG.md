@@ -1,6 +1,7 @@
 ## 0.6.0
 **:hammer: Refactors**
 - Cleanup pass ([#1](https://git.omni.ms/vintage-story-mods/common-mod/issues/1))
+- Made `System.ShouldLoad` abstract ([#6](https://git.omni.ms/vintage-story-mods/common-mod/issues/6))
 
 **:books: Documentation**
 - Created skeleton documentation
@@ -8,6 +9,11 @@
 
 **:bulb: Source Code Documentation**
 - Added `schemas/config.schema.json` ([#13](https://git.omni.ms/vintage-story-mods/common-mod/issues/13))
+
+**:rotating_light: Tests**
+- Added `ConsoleLoggerSinkTests`
+- Added `FileSystemTests`
+- Added `LoggerTests`
 
 **:green_heart: CI/CD**
 - Added `pull: true` to all steps

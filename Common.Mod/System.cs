@@ -39,6 +39,8 @@ public abstract class System<TSystem> : ModSystem, ISystem
     public abstract string ModVersion();
     public abstract string ModName();
 
+    public abstract override bool ShouldLoad(EnumAppSide forSide);
+
     protected abstract void RegisterConfigs(IConfigSystem configSystem);
 
     public override void StartPre(ICoreAPI api)
