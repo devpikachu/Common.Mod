@@ -3,6 +3,7 @@ using Common.Mod.Common.Core;
 using Common.Mod.Common.Utils;
 using Common.Mod.Core;
 using Common.Mod.Test.Shims;
+using DryIoc.ImTools;
 using JetBrains.Annotations;
 using Vintagestory.API.Common;
 
@@ -12,9 +13,6 @@ namespace Common.Mod.Test.Core;
 [SuppressMessage("ReSharper", "MoveLocalFunctionAfterJumpStatement")]
 public class FileSystemTests : IDisposable
 {
-    private const string TestFileName = "test.txt";
-    private const string TestFileContents = "TEST";
-
     private readonly string _tempPath;
     private readonly string _configPath;
     private readonly string _dataPath;
@@ -67,11 +65,14 @@ public class FileSystemTests : IDisposable
     public void ConfigFileExists_ExistingFile_ReturnsTrue()
     {
         // Arrange
+        var fileName = StringUtils.Random();
+        var fileContents = StringUtils.Random();
+
         Directory.CreateDirectory(Path.Combine(_configPath));
-        File.WriteAllText(Path.Combine(_configPath, TestFileName), TestFileContents);
+        File.WriteAllText(Path.Combine(_configPath, fileName), fileContents);
 
         // Act
-        var result = _fileSystem.ConfigFileExists(TestFileName);
+        var result = _fileSystem.ConfigFileExists(fileName);
 
         // Assert
         Assert.True(result);
@@ -80,8 +81,11 @@ public class FileSystemTests : IDisposable
     [Fact]
     public void ConfigFileExists_MissingFile_ReturnsFalse()
     {
+        // Arrange
+        var fileName = StringUtils.Random();
+
         // Act
-        var result = _fileSystem.ConfigFileExists(TestFileName);
+        var result = _fileSystem.ConfigFileExists(fileName);
 
         // Assert
         Assert.False(result);
@@ -91,11 +95,14 @@ public class FileSystemTests : IDisposable
     public void DataFileExists_ExistingFile_ReturnsTrue()
     {
         // Arrange
+        var fileName = StringUtils.Random();
+        var fileContents = StringUtils.Random();
+
         Directory.CreateDirectory(Path.Combine(_dataPath));
-        File.WriteAllText(Path.Combine(_dataPath, TestFileName), TestFileContents);
+        File.WriteAllText(Path.Combine(_dataPath, fileName), fileContents);
 
         // Act
-        var result = _fileSystem.DataFileExists(TestFileName);
+        var result = _fileSystem.DataFileExists(fileName);
 
         // Assert
         Assert.True(result);
@@ -104,8 +111,11 @@ public class FileSystemTests : IDisposable
     [Fact]
     public void DataFileExists_MissingFile_ReturnsFalse()
     {
+        // Arrange
+        var fileName = StringUtils.Random();
+
         // Act
-        var result = _fileSystem.DataFileExists(TestFileName);
+        var result = _fileSystem.DataFileExists(fileName);
 
         // Assert
         Assert.False(result);
@@ -115,21 +125,27 @@ public class FileSystemTests : IDisposable
     public void ReadConfigFile_ExistingFile_ReturnsContents()
     {
         // Arrange
+        var fileName = StringUtils.Random();
+        var fileContents = StringUtils.Random();
+
         Directory.CreateDirectory(Path.Combine(_configPath));
-        File.WriteAllText(Path.Combine(_configPath, TestFileName), TestFileContents);
+        File.WriteAllText(Path.Combine(_configPath, fileName), fileContents);
 
         // Act
-        var contents = _fileSystem.ReadConfigFile(TestFileName);
+        var contents = _fileSystem.ReadConfigFile(fileName);
 
         // Assert
-        Assert.Equal(TestFileContents, contents);
+        Assert.Equal(fileContents, contents);
     }
 
     [Fact]
     public void ReadConfigFile_MissingFile_Throws()
     {
+        // Arrange
+        var fileName = StringUtils.Random();
+
         // Act
-        string Action() => _fileSystem.ReadConfigFile(TestFileName);
+        string Action() => _fileSystem.ReadConfigFile(fileName);
 
         // Assert
         Assert.Throws<FileNotFoundException>(Action);
@@ -139,21 +155,27 @@ public class FileSystemTests : IDisposable
     public void ReadDataFile_ExistingFile_ReturnsContents()
     {
         // Arrange
+        var fileName = StringUtils.Random();
+        var fileContents = StringUtils.Random();
+
         Directory.CreateDirectory(Path.Combine(_dataPath));
-        File.WriteAllText(Path.Combine(_dataPath, TestFileName), TestFileContents);
+        File.WriteAllText(Path.Combine(_dataPath, fileName), fileContents);
 
         // Act
-        var contents = _fileSystem.ReadDataFile(TestFileName);
+        var contents = _fileSystem.ReadDataFile(fileName);
 
         // Assert
-        Assert.Equal(TestFileContents, contents);
+        Assert.Equal(fileContents, contents);
     }
 
     [Fact]
     public void ReadDataFile_MissingFile_Throws()
     {
+        // Arrange
+        var fileName = StringUtils.Random();
+
         // Act
-        string Action() => _fileSystem.ReadDataFile(TestFileName);
+        string Action() => _fileSystem.ReadDataFile(fileName);
 
         // Assert
         Assert.Throws<FileNotFoundException>(Action);
@@ -162,60 +184,77 @@ public class FileSystemTests : IDisposable
     [Fact]
     public void WriteConfigFile_NewFile_WritesContents()
     {
+        // Arrange
+        var fileName = StringUtils.Random();
+        var fileContents = StringUtils.Random();
+
         // Act
-        _fileSystem.WriteConfigFile(TestFileName, TestFileContents);
-        var contents = File.ReadAllText(Path.Combine(_configPath, TestFileName));
+        _fileSystem.WriteConfigFile(fileName, fileContents);
+        var contents = File.ReadAllText(Path.Combine(_configPath, fileName));
 
         // Assert
-        Assert.Equal(TestFileContents, contents);
+        Assert.Equal(fileContents, contents);
     }
 
     [Fact]
     public void WriteConfigFile_ExistingFile_WritesContents()
     {
         // Arrange
+        var fileName = StringUtils.Random();
+        var fileContents = StringUtils.Random();
+
         Directory.CreateDirectory(Path.Combine(_configPath));
-        File.WriteAllText(Path.Combine(_configPath, TestFileName), StringUtils.Random());
+        File.WriteAllText(Path.Combine(_configPath, fileName), StringUtils.Random());
 
         // Act
-        _fileSystem.WriteConfigFile(TestFileName, TestFileContents);
-        var contents = File.ReadAllText(Path.Combine(_configPath, TestFileName));
+        _fileSystem.WriteConfigFile(fileName, fileContents);
+        var contents = File.ReadAllText(Path.Combine(_configPath, fileName));
 
         // Assert
-        Assert.Equal(TestFileContents, contents);
+        Assert.Equal(fileContents, contents);
     }
 
     [Fact]
     public void WriteDataFile_NewFile_WritesContents()
     {
+        // Arrange
+        var fileName = StringUtils.Random();
+        var fileContents = StringUtils.Random();
+
         // Act
-        _fileSystem.WriteDataFile(TestFileName, TestFileContents);
-        var contents = File.ReadAllText(Path.Combine(_dataPath, TestFileName));
+        _fileSystem.WriteDataFile(fileName, fileContents);
+        var contents = File.ReadAllText(Path.Combine(_dataPath, fileName));
 
         // Assert
-        Assert.Equal(TestFileContents, contents);
+        Assert.Equal(fileContents, contents);
     }
 
     [Fact]
     public void WriteDataFile_ExistingFile_WritesContents()
     {
         // Arrange
+        var fileName = StringUtils.Random();
+        var fileContents = StringUtils.Random();
+
         Directory.CreateDirectory(Path.Combine(_dataPath));
-        File.WriteAllText(Path.Combine(_dataPath, TestFileName), StringUtils.Random());
+        File.WriteAllText(Path.Combine(_dataPath, fileName), StringUtils.Random());
 
         // Act
-        _fileSystem.WriteDataFile(TestFileName, TestFileContents);
-        var contents = File.ReadAllText(Path.Combine(_dataPath, TestFileName));
+        _fileSystem.WriteDataFile(fileName, fileContents);
+        var contents = File.ReadAllText(Path.Combine(_dataPath, fileName));
 
         // Assert
-        Assert.Equal(TestFileContents, contents);
+        Assert.Equal(fileContents, contents);
     }
 
     [Fact]
     public void OpenConfigFile_NewFileDefaultParams_CreatesFile()
     {
+        // Arrange
+        var fileName = StringUtils.Random();
+
         // Act
-        var stream = _fileSystem.OpenConfigFile(TestFileName);
+        var stream = _fileSystem.OpenConfigFile(fileName);
 
         // Assert
         Assert.Equal(0, stream.Length);
@@ -225,21 +264,27 @@ public class FileSystemTests : IDisposable
     public void OpenConfigFile_ExistingFileDefaultParams_OpensFile()
     {
         // Arrange
+        var fileName = StringUtils.Random();
+        var fileContents = StringUtils.Random();
+
         Directory.CreateDirectory(Path.Combine(_configPath));
-        File.WriteAllText(Path.Combine(_configPath, TestFileName), TestFileContents);
+        File.WriteAllText(Path.Combine(_configPath, fileName), fileContents);
 
         // Act
-        var stream = _fileSystem.OpenConfigFile(TestFileName);
+        var stream = _fileSystem.OpenConfigFile(fileName);
 
         // Assert
-        Assert.Equal(TestFileContents.Length, stream.Length);
+        Assert.Equal(fileContents.Length, stream.Length);
     }
 
     [Fact]
     public void OpenDataFile_NewFileDefaultParams_CreatesFile()
     {
+        // Arrange
+        var fileName = StringUtils.Random();
+
         // Act
-        var stream = _fileSystem.OpenDataFile(TestFileName);
+        var stream = _fileSystem.OpenDataFile(fileName);
 
         // Assert
         Assert.Equal(0, stream.Length);
@@ -249,13 +294,16 @@ public class FileSystemTests : IDisposable
     public void OpenDataFile_ExistingFileDefaultParams_OpensFile()
     {
         // Arrange
+        var fileName = StringUtils.Random();
+        var fileContents = StringUtils.Random();
+
         Directory.CreateDirectory(Path.Combine(_dataPath));
-        File.WriteAllText(Path.Combine(_dataPath, TestFileName), TestFileContents);
+        File.WriteAllText(Path.Combine(_dataPath, fileName), fileContents);
 
         // Act
-        var stream = _fileSystem.OpenDataFile(TestFileName);
+        var stream = _fileSystem.OpenDataFile(fileName);
 
         // Assert
-        Assert.Equal(TestFileContents.Length, stream.Length);
+        Assert.Equal(fileContents.Length, stream.Length);
     }
 }

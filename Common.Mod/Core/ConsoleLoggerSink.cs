@@ -22,7 +22,7 @@ public class ConsoleLoggerSink : ILoggerSink
     public void Ingest(LogEntry entry)
     {
         var message = string.IsNullOrWhiteSpace(entry.Emitter)
-            ? entry.Message
+            ? string.Format("[{0}] [{1}] {2}", _modId, _side, entry.Message)
             : string.Format("[{0}] [{1}] [{2}] {3}", _modId, _side, entry.Emitter, entry.Message);
 
         switch (entry.Severity)
