@@ -4,11 +4,6 @@
   "handbook": {
     "exclude": true
   },
-  "creativeInventory": {
-    "common": [
-      "*"
-    ]
-  },
   "variantGroups": [
     {
       "code": "type",

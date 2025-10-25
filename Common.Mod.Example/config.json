@@ -2,7 +2,7 @@
   "$schema": "../schemas/config.schema.json",
   "rootConfigs": [
     {
-      "className": "ExampleCommonConfigGen",
+      "className": "ExampleCommonConfig",
       "classNamespace": "Common.Mod.Example",
       "version": "0.0.0",
       "type": "Common",
@@ -11,76 +11,76 @@
         {
           "name": "BoolValue",
           "type": "Bool",
-          "label": "Bool",
-          "description": "This is a boolean"
+          "label": "config--label--bool",
+          "description": "config--description--bool"
         },
         {
           "name": "Int32Value",
           "type": "Int32",
           "defaultValue": -123,
-          "label": "Int32",
-          "description": "This is a 32-bit integer"
+          "label": "config--label--int32",
+          "description": "config--description--int32"
         },
         {
           "name": "Int64Value",
           "type": "Int64",
           "defaultValue": -123,
-          "label": "Int64",
-          "description": "This is a 64-bit integer"
+          "label": "config--label--int64",
+          "description": "config--description--int64"
         },
         {
           "name": "UInt32Value",
           "type": "UInt32",
           "defaultValue": 456,
-          "label": "UInt32",
-          "description": "This is an unsigned 32-bit integer"
+          "label": "config--label--uint32",
+          "description": "config--description--uint32"
         },
         {
           "name": "UInt64Value",
           "type": "UInt64",
           "defaultValue": 456,
-          "label": "UInt64",
-          "description": "This is an unsigned 64-bit integer"
+          "label": "config--label--uint64",
+          "description": "config--description--uint64"
         },
         {
           "name": "FloatValue",
           "type": "Float",
           "defaultValue": 78.9,
-          "label": "Float",
-          "description": "This is a float"
+          "label": "config--label--float",
+          "description": "config--description--float"
         },
         {
           "name": "DoubleValue",
           "type": "Double",
           "defaultValue": 78.9,
-          "label": "Double",
-          "description": "This is a double"
+          "label": "config--label--double",
+          "description": "config--description--double"
         },
         {
           "name": "StringValue",
           "type": "String",
           "defaultValue": "string",
-          "label": "String",
-          "description": "This is a string"
+          "label": "config--label--string",
+          "description": "config--description--string"
         },
         {
           "name": "EnumValue",
           "type": "Enum",
-          "enum": "ExampleEnumGen",
+          "enum": "ExampleEnum",
           "defaultValue": "Value1",
-          "label": "Enum",
-          "description": "This is an enum"
+          "label": "config--label--enum",
+          "description": "config--description--enum"
         },
         {
           "name": "NestedValue",
           "type": "Nested",
-          "nested": "ExampleNestedConfigGen",
-          "label": "Nested"
+          "nested": "ExampleNestedConfig",
+          "label": "config--label--nested"
         }
       ]
     },
     {
-      "className": "ExampleServerConfigGen",
+      "className": "ExampleServerConfig",
       "classNamespace": "Common.Mod.Example",
       "version": "0.0.0",
       "type": "Server",
@@ -89,76 +89,76 @@
         {
           "name": "BoolValue",
           "type": "Bool",
-          "label": "Bool",
-          "description": "This is a boolean"
+          "label": "config--label--bool",
+          "description": "config--description--bool"
         },
         {
           "name": "Int32Value",
           "type": "Int32",
           "defaultValue": -123,
-          "label": "Int32",
-          "description": "This is a 32-bit integer"
+          "label": "config--label--int32",
+          "description": "config--description--int32"
         },
         {
           "name": "Int64Value",
           "type": "Int64",
           "defaultValue": -123,
-          "label": "Int64",
-          "description": "This is a 64-bit integer"
+          "label": "config--label--int64",
+          "description": "config--description--int64"
         },
         {
           "name": "UInt32Value",
           "type": "UInt32",
           "defaultValue": 456,
-          "label": "UInt32",
-          "description": "This is an unsigned 32-bit integer"
+          "label": "config--label--uint32",
+          "description": "config--description--uint32"
         },
         {
           "name": "UInt64Value",
           "type": "UInt64",
           "defaultValue": 456,
-          "label": "UInt64",
-          "description": "This is an unsigned 64-bit integer"
+          "label": "config--label--uint64",
+          "description": "config--description--uint64"
         },
         {
           "name": "FloatValue",
           "type": "Float",
           "defaultValue": 78.9,
-          "label": "Float",
-          "description": "This is a float"
+          "label": "config--label--float",
+          "description": "config--description--float"
         },
         {
           "name": "DoubleValue",
           "type": "Double",
           "defaultValue": 78.9,
-          "label": "Double",
-          "description": "This is a double"
+          "label": "config--label--double",
+          "description": "config--description--double"
         },
         {
           "name": "StringValue",
           "type": "String",
           "defaultValue": "string",
-          "label": "String",
-          "description": "This is a string"
+          "label": "config--label--string",
+          "description": "config--description--string"
         },
         {
           "name": "EnumValue",
           "type": "Enum",
-          "enum": "ExampleEnumGen",
+          "enum": "ExampleEnum",
           "defaultValue": "Value1",
-          "label": "Enum",
-          "description": "This is an enum"
+          "label": "config--label--enum",
+          "description": "config--description--enum"
         },
         {
           "name": "NestedValue",
           "type": "Nested",
-          "nested": "ExampleNestedConfigGen",
-          "label": "Nested"
+          "nested": "ExampleNestedConfig",
+          "label": "config--label--nested"
         }
       ]
     },
     {
-      "className": "ExampleClientConfigGen",
+      "className": "ExampleClientConfig",
       "classNamespace": "Common.Mod.Example",
       "version": "0.0.0",
       "type": "Client",
@@ -167,78 +167,78 @@
         {
           "name": "BoolValue",
           "type": "Bool",
-          "label": "Bool",
-          "description": "This is a boolean"
+          "label": "config--label--bool",
+          "description": "config--description--bool"
         },
         {
           "name": "Int32Value",
           "type": "Int32",
           "defaultValue": -123,
-          "label": "Int32",
-          "description": "This is a 32-bit integer"
+          "label": "config--label--int32",
+          "description": "config--description--int32"
         },
         {
           "name": "Int64Value",
           "type": "Int64",
           "defaultValue": -123,
-          "label": "Int64",
-          "description": "This is a 64-bit integer"
+          "label": "config--label--int64",
+          "description": "config--description--int64"
         },
         {
           "name": "UInt32Value",
           "type": "UInt32",
           "defaultValue": 456,
-          "label": "UInt32",
-          "description": "This is an unsigned 32-bit integer"
+          "label": "config--label--uint32",
+          "description": "config--description--uint32"
         },
         {
           "name": "UInt64Value",
           "type": "UInt64",
           "defaultValue": 456,
-          "label": "UInt64",
-          "description": "This is an unsigned 64-bit integer"
+          "label": "config--label--uint64",
+          "description": "config--description--uint64"
         },
         {
           "name": "FloatValue",
           "type": "Float",
           "defaultValue": 78.9,
-          "label": "Float",
-          "description": "This is a float"
+          "label": "config--label--float",
+          "description": "config--description--float"
         },
         {
           "name": "DoubleValue",
           "type": "Double",
           "defaultValue": 78.9,
-          "label": "Double",
-          "description": "This is a double"
+          "label": "config--label--double",
+          "description": "config--description--double"
         },
         {
           "name": "StringValue",
           "type": "String",
           "defaultValue": "string",
-          "label": "String",
-          "description": "This is a string"
+          "label": "config--label--string",
+          "description": "config--description--string"
         },
         {
           "name": "EnumValue",
           "type": "Enum",
-          "enum": "ExampleEnumGen",
+          "enum": "ExampleEnum",
           "defaultValue": "Value1",
-          "label": "Enum",
-          "description": "This is an enum"
+          "label": "config--label--enum",
+          "description": "config--description--enum"
         },
         {
           "name": "NestedValue",
           "type": "Nested",
-          "nested": "ExampleNestedConfigGen",
-          "label": "Nested"
+          "nested": "ExampleNestedConfig",
+          "label": "config--label--nested"
         }
       ]
     }
   ],
   "configs": [
     {
-      "className": "ExampleNestedConfigGen",
+      "className": "ExampleNestedConfig",
       "classNamespace": "Common.Mod.Example",
       "version": "0.0.0",
       "description": "This, too, is a description",
@@ -246,72 +246,72 @@
         {
           "name": "BoolValue",
           "type": "Bool",
-          "label": "Bool",
-          "description": "This is a boolean"
+          "label": "config--label--bool",
+          "description": "config--description--bool"
         },
         {
           "name": "Int32Value",
           "type": "Int32",
           "defaultValue": -123,
-          "label": "Int32",
-          "description": "This is a 32-bit integer"
+          "label": "config--label--int32",
+          "description": "config--description--int32"
         },
         {
           "name": "Int64Value",
           "type": "Int64",
           "defaultValue": -123,
-          "label": "Int64",
-          "description": "This is a 64-bit integer"
+          "label": "config--label--int64",
+          "description": "config--description--int64"
         },
         {
           "name": "UInt32Value",
           "type": "UInt32",
           "defaultValue": 456,
-          "label": "UInt32",
-          "description": "This is an unsigned 32-bit integer"
+          "label": "config--label--uint32",
+          "description": "config--description--uint32"
         },
         {
           "name": "UInt64Value",
           "type": "UInt64",
           "defaultValue": 456,
-          "label": "UInt64",
-          "description": "This is an unsigned 64-bit integer"
+          "label": "config--label--uint64",
+          "description": "config--description--uint64"
         },
         {
           "name": "FloatValue",
           "type": "Float",
           "defaultValue": 78.9,
-          "label": "Float",
-          "description": "This is a float"
+          "label": "config--label--float",
+          "description": "config--description--float"
         },
         {
           "name": "DoubleValue",
           "type": "Double",
           "defaultValue": 78.9,
-          "label": "Double",
-          "description": "This is a double"
+          "label": "config--label--double",
+          "description": "config--description--double"
         },
         {
           "name": "StringValue",
           "type": "String",
           "defaultValue": "string",
-          "label": "String",
-          "description": "This is a string"
+          "label": "config--label--string",
+          "description": "config--description--string"
         },
         {
           "name": "EnumValue",
           "type": "Enum",
-          "enum": "ExampleEnumGen",
+          "enum": "ExampleEnum",
           "defaultValue": "Value1",
-          "label": "Enum",
-          "description": "This is an enum"
+          "label": "config--label--enum",
+          "description": "config--description--enum"
         }
       ]
     }
   ],
   "enums": [
     {
-      "enumName": "ExampleEnumGen",
+      "enumName": "ExampleEnum",
       "enumNamespace": "Common.Mod.Example",
       "description": "This, too, is a description",
       "values": [

@@ -521,7 +521,7 @@ public class ConfigSystem : IConfigSystem
 
     private ControlButtons RenderCommon(ControlButtons controlButtons)
     {
-        _configUi.Label($"{_system.ModName()} Common Configuration");
+        _configUi.Label($"config--header--common");
         ImGui.Separator();
 
         ImGui.BeginDisabled(!_canEditServerConfig);
@@ -561,7 +561,7 @@ public class ConfigSystem : IConfigSystem
 
     private ControlButtons RenderServer(ControlButtons controlButtons)
     {
-        _configUi.Label($"{_system.ModName()} Server Configuration");
+        _configUi.Label($"config--header--server");
         ImGui.Separator();
 
         ImGui.BeginDisabled(!_canEditServerConfig);
@@ -601,7 +601,7 @@ public class ConfigSystem : IConfigSystem
 
     private ControlButtons RenderClient(ControlButtons controlButtons)
     {
-        _configUi.Label($"{_system.ModName()} Client Configuration");
+        _configUi.Label($"config--header--client");
         ImGui.Separator();
 
         _configs[RootConfigType.Client].Render(_configUi);

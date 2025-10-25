@@ -1,5 +1,31 @@
 {
-  "config--button--reset": "Test translation: {0}",
-  "config--label--density-mode": "Density Test",
-  "config--description--ordering-enabled": "Test test test"
+  "Value1": "Value1",
+  "Value2": "Value2",
+  "Value3": "Value3",
+
+  "config--header--common": "Example Mod Common Configuration",
+  "config--header--server": "Example Mod Server Configuration",
+  "config--header--client": "Example Mod Client Configuration",
+
+  "config--button--reset": "Reset to default: {0}",
+
+  "config--label--bool": "Bool",
+  "config--description--bool": "I am a bool",
+  "config--label--int32": "Int32",
+  "config--description--int32": "I am an int32",
+  "config--label--int64": "Int64",
+  "config--description--int64": "I am an int64",
+  "config--label--uint32": "UInt32",
+  "config--description--uint32": "I am an uint32",
+  "config--label--uint64": "UInt64",
+  "config--description--uint64": "I am an uint64",
+  "config--label--float": "Float",
+  "config--description--float": "I am a float",
+  "config--label--double": "Double",
+  "config--description--double": "I am a double",
+  "config--label--string": "String",
+  "config--description--string": "I am a string",
+  "config--label--enum": "Enum",
+  "config--description--enum": "I am an enum",
+  "config--label--nested": "Nested"
 }
