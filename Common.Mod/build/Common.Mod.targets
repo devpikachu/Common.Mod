@@ -1,8 +1,10 @@
 <Project>
     <ItemGroup>
-        <Assets Include="$(MSBuildThisFileDirectory)/../assets/**/*"/>
+        <LocalAssets Include="$(MSBuildThisFileDirectory)/../assets/common/**/*"/>
+        <RemoteAssets Include="$(MSBuildThisFileDirectory)/../assets/**/*" Exclude="$(MSBuildThisFileDirectory)/../assets/common/**/*"/>
     </ItemGroup>
     <Target Name="CopyAssets" BeforeTargets="Build">
-        <Copy SourceFiles="@(Assets)" DestinationFolder="$(TargetDir)assets/$(ModId)/%(RecursiveDir)"/>
+        <Copy SourceFiles="@(LocalAssets)" DestinationFolder="$(TargetDir)assets/common/%(RecursiveDir)"/>
+        <Copy SourceFiles="@(RemoteAssets)" DestinationFolder="$(TargetDir)assets/$(ModId)/%(RecursiveDir)"/>
     </Target>
 </Project>

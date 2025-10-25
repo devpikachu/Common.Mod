@@ -1,10 +1,15 @@
 {
   "code": "multiblock",
-  "class": "VFBlockMultiblock",
+  "class": "common:MultiblockBlock",
   "handbook": {
     "exclude": true
   },
-  "variantgroups": [
+  "creativeInventory": {
+    "common": [
+      "*"
+    ]
+  },
+  "variantGroups": [
     {
       "code": "type",
       "states": [
@@ -46,14 +51,14 @@
   "shape": {
     "base": "game:block/basic/nothing"
   },
-  "drawtype": "json",
-  "sidesolid": {
+  "drawType": "json",
+  "sideSolid": {
     "all": false
   },
-  "sideopaque": {
+  "sideOpaque": {
     "all": false
   },
-  "blockmaterial": "Wood",
+  "blockMaterial": "Wood",
   "replaceable": 160,
   "resistance": 4,
   "lightAbsorption": 0,

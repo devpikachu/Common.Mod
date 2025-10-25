@@ -36,14 +36,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="Common.Mod" Version="12.34.56"/>-->
+    <PackageReference Include="Common.Mod" Version="12.34.56"/>
     <PackageReference Include="JetBrains.Annotations" Version="2025.2.2">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Common.Mod/Common.Mod.csproj"/>
+    <!--<ProjectReference Include="../Common.Mod/Common.Mod.csproj"/>-->
     <ProjectReference Include="../Common.Mod.Generator/Common.Mod.Generator.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Analyzer</OutputItemType>
