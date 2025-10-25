@@ -10,7 +10,6 @@ namespace Common.Mod.Test.Core;
 [UsedImplicitly]
 public class ConsoleLoggerSinkTests
 {
-    private readonly string _modId = StringUtils.Random();
     private readonly ICoreLogger _coreLogger = Substitute.For<ICoreLogger>();
 
     public static TheoryData<LogSeverity, EnumAppSide> Data = new MatrixTheoryData<LogSeverity, EnumAppSide>(
@@ -23,11 +22,11 @@ public class ConsoleLoggerSinkTests
     public void Ingest_WithoutEmitter_LogsCorrectly(LogSeverity severity, EnumAppSide appSide)
     {
         // Arrange
-        var loggerSink = new ConsoleLoggerSink(_modId, appSide, _coreLogger);
+        var modId = StringUtils.Random();
+        var loggerSink = new ConsoleLoggerSink(modId, appSide, _coreLogger);
 
         var timestamp = DateTime.UtcNow;
         var message = StringUtils.Random();
-
         var logEntry = new LogEntry
         {
             Timestamp = timestamp,
@@ -36,7 +35,7 @@ public class ConsoleLoggerSinkTests
             Message = message
         };
 
-        var expectedMessage = string.Format("[{0}] [{1}] {2}", _modId, appSide, message);
+        var expectedMessage = string.Format("[{0}] [{1}] {2}", modId, appSide, message);
 
         // Act
         loggerSink.Ingest(logEntry);
@@ -78,12 +77,12 @@ public class ConsoleLoggerSinkTests
     public void Ingest_WithEmitter_LogsCorrectly(LogSeverity severity, EnumAppSide appSide)
     {
         // Arrange
-        var loggerSink = new ConsoleLoggerSink(_modId, appSide, _coreLogger);
+        var modId = StringUtils.Random();
+        var loggerSink = new ConsoleLoggerSink(modId, appSide, _coreLogger);
 
         var timestamp = DateTime.UtcNow;
         var emitter = StringUtils.Random();
         var message = StringUtils.Random();
-
         var logEntry = new LogEntry
         {
             Timestamp = timestamp,
@@ -92,7 +91,7 @@ public class ConsoleLoggerSinkTests
             Message = message
         };
 
-        var expectedMessage = string.Format("[{0}] [{1}] [{2}] {3}", _modId, appSide, emitter, message);
+        var expectedMessage = string.Format("[{0}] [{1}] [{2}] {3}", modId, appSide, emitter, message);
 
         // Act
         loggerSink.Ingest(logEntry);
