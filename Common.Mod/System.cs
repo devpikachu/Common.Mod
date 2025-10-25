@@ -7,6 +7,7 @@ using DryIoc;
 using JetBrains.Annotations;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
 using Vintagestory.API.Server;
 using GamePaths = Common.Mod.Core.GamePaths;
@@ -18,10 +19,14 @@ namespace Common.Mod;
 public abstract class System<TSystem> : ModSystem, ISystem
     where TSystem : System<TSystem>
 {
+    #region Events
+
     public event ISystem.AssetsLoadedHandler? OnAssetsLoaded;
     public event ISystem.AssetsFinalizedHandler? OnAssetsFinalized;
     public event ISystem.ServerPlayerJoinedHandler? OnServerPlayerJoined;
     public event ISystem.ClientPlayerJoinedHandler? OnClientPlayerJoined;
+
+    #endregion Events
 
     private const string ConfigLibModId = "configlib";
 
@@ -35,6 +40,8 @@ public abstract class System<TSystem> : ModSystem, ISystem
         Instance = this as TSystem ?? throw new NullReferenceException();
     }
 
+    #region Abstracts
+
     public abstract string ModId();
     public abstract string ModVersion();
     public abstract string ModName();
@@ -42,6 +49,10 @@ public abstract class System<TSystem> : ModSystem, ISystem
     public abstract override bool ShouldLoad(EnumAppSide forSide);
 
     protected abstract void RegisterConfigs(IConfigSystem configSystem);
+
+    #endregion Abstracts
+
+    #region StartPre
 
     public override void StartPre(ICoreAPI api)
     {
@@ -141,6 +152,10 @@ public abstract class System<TSystem> : ModSystem, ISystem
         OnAssetsFinalized?.Invoke();
     }
 
+    #endregion StartPre
+
+    #region Start
+
     public override void Start(ICoreAPI api)
     {
         RegisterClasses(api);
@@ -155,6 +170,8 @@ public abstract class System<TSystem> : ModSystem, ISystem
     {
         api.Event.PlayerJoin += _OnClientPlayerJoined;
     }
+
+    #endregion Start
 
     public override void Dispose()
     {
@@ -171,6 +188,8 @@ public abstract class System<TSystem> : ModSystem, ISystem
             clientApi.Event.PlayerJoin -= _OnClientPlayerJoined;
         }
     }
+
+    #region Virtuals
 
     [UsedImplicitly]
     protected virtual void ServerRegisterNetworkMessages(IServerNetworkChannel channel)
@@ -199,6 +218,87 @@ public abstract class System<TSystem> : ModSystem, ISystem
     {
     }
 
+    #endregion Virtuals
+
+    #region Registry Helpers
+
+    [UsedImplicitly]
+    protected void RegisterEntity<TEntity>(ICoreAPI api, string className)
+        where TEntity : Entity
+    {
+        api.RegisterEntity(PrefixName(className), typeof(TEntity));
+    }
+
+    [UsedImplicitly]
+    protected void RegisterEntityClass(ICoreAPI api, string className, EntityProperties properties)
+    {
+        api.RegisterEntityClass(PrefixName(className), properties);
+    }
+
+    [UsedImplicitly]
+    protected void RegisterEntityBehaviorClass<TEntityBehavior>(ICoreAPI api, string className)
+        where TEntityBehavior : EntityBehavior
+    {
+        api.RegisterEntityBehaviorClass(PrefixName(className), typeof(TEntityBehavior));
+    }
+
+    [UsedImplicitly]
+    protected void RegisterBlockClass<TBlock>(ICoreAPI api, string className)
+        where TBlock : Block
+    {
+        api.RegisterBlockClass(PrefixName(className), typeof(TBlock));
+    }
+
+    [UsedImplicitly]
+    protected void RegisterBlockBehaviorClass<TBlockBehavior>(ICoreAPI api, string className)
+        where TBlockBehavior : BlockBehavior
+    {
+        api.RegisterBlockBehaviorClass(PrefixName(className), typeof(TBlockBehavior));
+    }
+
+    [UsedImplicitly]
+    protected void RegisterBlockEntityClass<TBlockEntity>(ICoreAPI api, string className)
+        where TBlockEntity : BlockEntity
+    {
+        api.RegisterBlockEntityClass(PrefixName(className), typeof(TBlockEntity));
+    }
+
+    [UsedImplicitly]
+    protected void RegisterBlockEntityBehaviorClass<TBlockEntityBehavior>(ICoreAPI api, string className)
+        where TBlockEntityBehavior : BlockEntityBehavior
+    {
+        api.RegisterBlockEntityBehaviorClass(PrefixName(className), typeof(TBlockEntityBehavior));
+    }
+
+    [UsedImplicitly]
+    protected void RegisterCropBehavior<TCropBehavior>(ICoreAPI api, string className)
+        where TCropBehavior : CropBehavior
+    {
+        api.RegisterCropBehavior(PrefixName(className), typeof(TCropBehavior));
+    }
+
+    [UsedImplicitly]
+    protected void RegisterItemClass<TItem>(ICoreAPI api, string className)
+        where TItem : Item
+    {
+        api.RegisterItemClass(PrefixName(className), typeof(TItem));
+    }
+
+    [UsedImplicitly]
+    protected void RegisterCollectibleBehaviorClass<TCollectibleBehavior>(ICoreAPI api, string className)
+        where TCollectibleBehavior : CollectibleBehavior
+    {
+        api.RegisterCollectibleBehaviorClass(PrefixName(className), typeof(TCollectibleBehavior));
+    }
+
+    [UsedImplicitly]
+    protected void RegisterMountable(ICoreAPI api, string className, GetMountableDelegate mountableInstantiator)
+    {
+        api.RegisterMountable(PrefixName(className), mountableInstantiator);
+    }
+
+    #endregion Registry Helpers
+
     private void _OnServerPlayerJoined(IServerPlayer player)
     {
         // Config synchronization
@@ -214,4 +314,6 @@ public abstract class System<TSystem> : ModSystem, ISystem
     {
         OnClientPlayerJoined?.Invoke(player);
     }
+
+    private string PrefixName(string name) => $"{ModId()}:{name}";
 }
