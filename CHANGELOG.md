@@ -1,7 +1,12 @@
 ## 0.6.0
+**:boom: Breaking Changes**
+- Made `System.ShouldLoad` abstract ([#6](https://git.omni.ms/vintage-story-mods/common-mod/issues/6))
+
+**:sparkles: Features**
+- Added `System.RegisterClasses` virtual method ([#5](https://git.omni.ms/vintage-story-mods/common-mod/issues/5))
+
 **:hammer: Refactors**
 - Cleanup pass ([#1](https://git.omni.ms/vintage-story-mods/common-mod/issues/1))
-- Made `System.ShouldLoad` abstract ([#6](https://git.omni.ms/vintage-story-mods/common-mod/issues/6))
 
 **:books: Documentation**
 - Created skeleton documentation

@@ -141,6 +141,11 @@ public abstract class System<TSystem> : ModSystem, ISystem
         OnAssetsFinalized?.Invoke();
     }
 
+    public override void Start(ICoreAPI api)
+    {
+        RegisterClasses(api);
+    }
+
     public override void StartServerSide(ICoreServerAPI api)
     {
         api.Event.PlayerJoin += _OnServerPlayerJoined;
@@ -186,6 +191,11 @@ public abstract class System<TSystem> : ModSystem, ISystem
 
     [UsedImplicitly]
     protected virtual void ClientStartPre(ICoreClientAPI api)
+    {
+    }
+
+    [UsedImplicitly]
+    protected virtual void RegisterClasses(ICoreAPI api)
     {
     }
 
