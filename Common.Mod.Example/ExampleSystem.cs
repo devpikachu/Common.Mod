@@ -1,4 +1,5 @@
 using Common.Mod.Common.Config;
+using Common.Mod.Example.BlockBehaviors;
 using JetBrains.Annotations;
 using Vintagestory.API.Common;
 
@@ -18,5 +19,11 @@ public class ExampleSystem : System<ExampleSystem>
         configSystem.Register<ExampleCommonConfig>();
         configSystem.Register<ExampleServerConfig>();
         configSystem.Register<ExampleClientConfig>();
+    }
+
+    protected override void RegisterClasses(ICoreAPI api)
+    {
+        base.RegisterClasses(api);
+        RegisterBlockBehaviorClass<TestMultiblockBlockBehavior>(api, TestMultiblockBlockBehavior.RegistryId);
     }
 }
