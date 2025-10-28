@@ -4,8 +4,23 @@
 
 **:sparkles: Features**
 - Added `System.RegisterClasses` virtual method ([#5](https://git.omni.ms/vintage-story-mods/common-mod/issues/5))
-- Added registry helper methods ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterEntity<TEntity>` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterEntityClass` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterEntityBehaviorClass<TEntityBehavior>` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterBlockClass<TBlock>` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterBlockBehaviorClass<TBlockBehavior>` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterBlockEntityClass<TBlockEntity>` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterBlockEntityBehaviorClass<TBlockEntityBehavior>` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterCropBehavior<TCropBehavior>` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterItemClass<TItem>` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterCollectibleBehaviorClass<TCollectibleBehavior>` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
+- Added `System.RegisterMountable` helper method ([#2](https://git.omni.ms/vintage-story-mods/common-mod/issues/2))
 - Added custom `BlockMultiblock` implementation that respects particle collision boxes ([#3](https://git.omni.ms/vintage-story-mods/common-mod/issues/3))
+- Added `IBlockAccessor.LoadChunksToCache` extension method ([#9](https://git.omni.ms/vintage-story-mods/common-mod/issues/9))
+- Added `IWorldAccessor.WalkBlocksCuboid` extension method ([#9](https://git.omni.ms/vintage-story-mods/common-mod/issues/9))
+- Added `IWorldAccessor.WalkBlocksCube` extension method ([#9](https://git.omni.ms/vintage-story-mods/common-mod/issues/9))
+- Added `IWorldAccessor.WalkBlocksCylinder` extension method ([#9](https://git.omni.ms/vintage-story-mods/common-mod/issues/9))
+- Added `IWorldAccessor.WalkBlocksSphere` extension method ([#9](https://git.omni.ms/vintage-story-mods/common-mod/issues/9))
 
 **:hammer: Refactors**
 - Cleanup pass ([#1](https://git.omni.ms/vintage-story-mods/common-mod/issues/1))
