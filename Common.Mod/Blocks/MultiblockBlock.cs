@@ -34,7 +34,7 @@ public class MultiblockBlock : BlockMultiblock
     )
         where TK : class
     {
-        var block = blockAccessor.GetBlock((new Vec3i(x, y, z)).ToBlockPos());
+        var block = blockAccessor.GetBlock((new Vec3i(x, y, z)).AsBlockPos);
         var blockInf = block as TK ?? block.GetBehavior(typeof(TK), true) as TK;
 
         if (blockInf != null)

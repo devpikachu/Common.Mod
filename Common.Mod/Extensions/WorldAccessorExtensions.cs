@@ -38,7 +38,7 @@ public static class WorldAccessorExtensions
         var maxPos = centerPos.AddCopy(radius, 0, radius);
         maxPos.Y = maxYPos;
 
-        bool Predicate(int x, int y, int z) => IsInCircle(centerPos.ToVec3i(), radius, x, z);
+        bool Predicate(int x, int y, int z) => IsInCircle(centerPos.AsVec3i, radius, x, z);
         worldAccessor.WalkBlocks(minPos, maxPos, Predicate, onBlock);
     }
 
@@ -65,7 +65,7 @@ public static class WorldAccessorExtensions
         var minPos = centerPos.SubCopy(radius, radius, radius);
         var maxPos = centerPos.AddCopy(radius, radius, radius);
 
-        bool Predicate(int x, int y, int z) => IsInSphere(centerPos.ToVec3i(), radius, x, y, z);
+        bool Predicate(int x, int y, int z) => IsInSphere(centerPos.AsVec3i, radius, x, y, z);
         worldAccessor.WalkBlocks(minPos, maxPos, Predicate, onBlock);
     }
 
@@ -145,17 +145,7 @@ public static class WorldAccessorExtensions
         var dX = Math.Abs(x - center.X);
         var dZ = Math.Abs(z - center.Z);
 
-        if (dX + dZ <= radius)
-        {
-            return true;
-        }
-
-        if (dX > radius || dZ > radius)
-        {
-            return false;
-        }
-
-        return Math.Pow(dX, 2) + Math.Pow(dX, 2) <= Math.Pow(radius, 2);
+        return Math.Pow(dX, 2) + Math.Pow(dZ, 2) <= Math.Pow(radius, 2);
     }
 
     private static bool IsInSphere(Vec3i center, int radius, int x, int y, int z)
@@ -164,16 +154,6 @@ public static class WorldAccessorExtensions
         var dY = Math.Abs(y - center.Y);
         var dZ = Math.Abs(z - center.Z);
 
-        if (dX + dY + dZ <= radius)
-        {
-            return true;
-        }
-
-        if (dX > radius || dY > radius || dZ > radius)
-        {
-            return false;
-        }
-
-        return Math.Pow(dX, 2) + Math.Pow(dY, 2) + Math.Pow(dX, 2) <= Math.Pow(radius, 2);
+        return Math.Pow(dX, 2) + Math.Pow(dY, 2) + Math.Pow(dZ, 2) <= Math.Pow(radius, 2);
     }
 }
