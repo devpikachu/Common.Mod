@@ -21,6 +21,10 @@
       <HintPath>../vendor/VintagestoryAPI.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="VintagestoryLib">
+      <HintPath>../vendor/VintagestoryLib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="VSEssentials">
       <HintPath>../vendor/VSEssentials.dll</HintPath>
       <Private>false</Private>

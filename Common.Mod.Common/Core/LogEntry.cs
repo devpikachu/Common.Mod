@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 
 namespace Common.Mod.Common.Core;
 
-[UsedImplicitly(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.Members)]
+[UsedImplicitly(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Members)]
 public record LogEntry
 {
     public DateTime Timestamp { get; init; }

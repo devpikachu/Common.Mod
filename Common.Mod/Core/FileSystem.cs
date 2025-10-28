@@ -1,6 +1,5 @@
 using Common.Mod.Common.Core;
 using Vintagestory.API.Common;
-using Vintagestory.API.Config;
 
 namespace Common.Mod.Core;
 

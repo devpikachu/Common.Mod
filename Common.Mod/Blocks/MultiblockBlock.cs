@@ -22,7 +22,7 @@ public class MultiblockBlock : BlockMultiblock
         );
     }
 
-    // This is copy-pasted from the `BlockMultiblock` class where it is private
+    // This is more or less copy-pasted from the `BlockMultiblock` class where it is private
     private static T Handle<T, TK>(
         IBlockAccessor blockAccessor,
         int x,
@@ -35,24 +35,13 @@ public class MultiblockBlock : BlockMultiblock
         where TK : class
     {
         var block = blockAccessor.GetBlock((new Vec3i(x, y, z)).ToBlockPos());
-        var blockInf = block as TK;
-
-        if (blockInf == null)
-        {
-            blockInf = block.GetBehavior(typeof(TK), true) as TK;
-        }
+        var blockInf = block as TK ?? block.GetBehavior(typeof(TK), true) as TK;
 
         if (blockInf != null)
         {
             return onImplementsInterface(blockInf);
         }
 
-        // This is to prevent endless recursion in situations where blocks become incorrectly arranged
-        if (block is BlockMultiblock)
-        {
-            return onIsMultiblock(block);
-        }
-
-        return onOtherwise(block);
+        return block is BlockMultiblock ? onIsMultiblock(block) : onOtherwise(block);
     }
 }

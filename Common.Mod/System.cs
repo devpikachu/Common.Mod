@@ -31,7 +31,7 @@ public abstract class System<TSystem> : ModSystem, ISystem
 
     private const string ConfigLibModId = "configlib";
 
-    [UsedImplicitly(ImplicitUseKindFlags.Access)]
+    [UsedImplicitly]
     public static TSystem? Instance { get; private set; }
 
     [UsedImplicitly] public readonly IContainer Container = new Container();

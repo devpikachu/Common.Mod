@@ -23,6 +23,7 @@ vsFiles=(
     "Lib/protobuf-net.dll"
     "Mods/VSEssentials.dll"
     "VintagestoryAPI.dll"
+    "VintagestoryLib.dll"
 )
 for vsFile in "${vsFiles[@]}"; do
     baseVsFile=$(basename "$vsFile")

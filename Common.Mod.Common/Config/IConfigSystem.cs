@@ -1,7 +1,9 @@
+using JetBrains.Annotations;
 using Vintagestory.API.Server;
 
 namespace Common.Mod.Common.Config;
 
+[UsedImplicitly(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Members)]
 public interface IConfigSystem
 {
     #region Event delegates

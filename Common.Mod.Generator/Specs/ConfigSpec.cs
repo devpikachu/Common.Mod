@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace Common.Mod.Generator.Specs;
 
-[UsedImplicitly(ImplicitUseKindFlags.Assign, ImplicitUseTargetFlags.Members)]
+[UsedImplicitly(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Members)]
 public record ConfigSpec
 {
     public string ClassName { get; set; } = null!;
