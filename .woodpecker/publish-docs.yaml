@@ -1,6 +1,9 @@
 when:
   - event: tag
 
+depends_on:
+  - build-docs
+
 steps:
   - name: bootstrap
     image: git.omni.ms/omnilium/node:latest
