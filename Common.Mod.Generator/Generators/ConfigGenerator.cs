@@ -78,7 +78,8 @@ public class ConfigGenerator : IIncrementalGenerator
             sourceBuilder.AppendLine();
             sourceBuilder.AppendLine("#region IRootConfig");
             sourceBuilder.AppendLine();
-            sourceBuilder.AppendLine($"public string Version() => \"{spec.Version}\";");
+            sourceBuilder.AppendLine($"public string Version {{ get; }} = \"{spec.Version}\";");
+            sourceBuilder.AppendLine();
             sourceBuilder.AppendLine($"public RootConfigType Type() => RootConfigType.{spec.Type};");
             sourceBuilder.AppendLine();
             sourceBuilder.AppendLine("#endregion IRootConfig");

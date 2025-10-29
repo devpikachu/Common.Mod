@@ -1,6 +1,7 @@
 ## 0.6.0
 **:boom: Breaking Changes**
 - Made `System.ShouldLoad` abstract ([#6](https://git.omni.ms/vintage-story-mods/common-mod/issues/6))
+- Changed `IRootConfig.Version` from a method to a property ([#19](https://git.omni.ms/vintage-story-mods/common-mod/issues/19))
 
 **:sparkles: Features**
 - Added `System.RegisterClasses` virtual method ([#5](https://git.omni.ms/vintage-story-mods/common-mod/issues/5))
@@ -21,6 +22,9 @@
 - Added `IWorldAccessor.WalkBlocksCube` extension method ([#9](https://git.omni.ms/vintage-story-mods/common-mod/issues/9))
 - Added `IWorldAccessor.WalkBlocksCylinder` extension method ([#9](https://git.omni.ms/vintage-story-mods/common-mod/issues/9))
 - Added `IWorldAccessor.WalkBlocksSphere` extension method ([#9](https://git.omni.ms/vintage-story-mods/common-mod/issues/9))
+
+**:bug: Bug Fixes**
+- Correctly persist configuration version to disk ([#19](https://git.omni.ms/vintage-story-mods/common-mod/issues/19))
 
 **:hammer: Refactors**
 - Cleanup pass ([#1](https://git.omni.ms/vintage-story-mods/common-mod/issues/1))
