@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <OutputType>exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <!-- Vendor References -->

@@ -1,6 +1,10 @@
 ## 0.7.0
+**Features**
+- Vintage Story 1.22 support
+- Remove custom multiblock obsoleted by 1.22 updates
+
 **Other**
-- Upgrade `Common.Build` to `0.7.0`
+- Upgrade `Common.Build` to `0.7.2`
 
 ## 0.6.1
 **Other**

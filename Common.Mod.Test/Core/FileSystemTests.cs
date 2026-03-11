@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Common.Mod.Common.Core;
 using Common.Mod.Common.Utils;
 using Common.Mod.Core;
-using Common.Mod.Test.Shims;
+using Common.Mod.Test.Stubs;
 using DryIoc.ImTools;
 using JetBrains.Annotations;
 using NSubstitute.Routing.Handlers;

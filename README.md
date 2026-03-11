@@ -4,10 +4,10 @@
     <a title="GPL-3.0" target="_blank" href="https://www.gnu.org/licenses/gpl-3.0.en.html">
         <img alt="License Badge" src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg" />
     </a>
-    <img alt="Vintage Story Version Badge" src="https://img.shields.io/badge/vintage--story-1.21.6-%2391A357" />
-    <img alt=".NET Version Badge" src="https://img.shields.io/badge/dotnet-9.0-%236F419A" />
+    <img alt="Vintage Story Version Badge" src="https://img.shields.io/badge/vintage--story-1.22.0-%2391A357" />
+    <img alt=".NET Version Badge" src="https://img.shields.io/badge/dotnet-10.0-%236F419A" />
     <a title="Common.Build" target="_blank" href="https://github.com/devpikachu/Common.Build">
-        <img alt="Common.Build Badge" src="https://img.shields.io/badge/Common.Build-0.7.0-blue" />
+        <img alt="Common.Build Badge" src="https://img.shields.io/badge/Common.Build-0.7.2-blue" />
     </a>
     <a title="CI Pipeline" target="_blank" href="https://github.com/devpikachu/Common.Mod/actions">
         <img alt="CI Status Badge" src="https://img.shields.io/github/check-runs/devpikachu/Common.Mod/main" />

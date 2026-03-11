@@ -3,7 +3,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Datastructures;
 
-namespace Common.Mod.Test.Shims;
+namespace Common.Mod.Test.Stubs;
 
 [UsedImplicitly(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Members)]
 public class CoreApiStub : ICoreAPI
@@ -21,7 +21,8 @@ public class CoreApiStub : ICoreAPI
     public INetworkAPI Network { get; }
     public IAssetManager Assets { get; }
     public IModLoader ModLoader { get; }
-    public ITagRegistry TagRegistry { get; }
+    public ITagRegistry<TagSet> CollectibleTagRegistry { get; }
+    public ITagRegistry<TagSetFast> EntityTagRegistry { get; }
     public Dictionary<string, object> ObjectCache { get; }
     public string DataBasePath { get; }
 

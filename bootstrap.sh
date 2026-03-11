@@ -2,10 +2,15 @@
 
 set -e
 
-vsVersion="1.21.6"
-vsImGuiVersion="1.1.14"
-configLibVersion="1.10.8"
-autoConfigLibVersion="2.0.9"
+# vsChannel="stable"
+vsChannel="unstable"
+vsVersion="1.22.0-rc.2"
+vsImGuiId="76347"
+vsImGuiVersion="1.2.0"
+configLibId="76348"
+configLibVersion="1.11.0"
+autoConfigLibId="79793"
+autoConfigLibVersion="2.0.10"
 
 directories=(
     "Common.Mod.Example/run/Mods"
@@ -48,7 +53,7 @@ done
 
 # Download Vintage Story
 if [[ ! -f "vendor/vs.tar.gz" ]]; then
-    curl -L "https://cdn.vintagestory.at/gamefiles/stable/vs_client_linux-x64_${vsVersion}.tar.gz" -o "vendor/vs.tar.gz"
+    curl -L "https://cdn.vintagestory.at/gamefiles/${vsChannel}/vs_client_linux-x64_${vsVersion}.tar.gz" -o "vendor/vs.tar.gz"
 fi
 
 # Extract Vintage Story
@@ -58,6 +63,6 @@ if [[ ! -d "vendor/vs" ]]; then
 fi
 
 # Download, copy and extract 3rd party mods
-download_and_extract_mod "vsimgui" "58527/vsimgui_${vsImGuiVersion}.zip"
-download_and_extract_mod "configlib" "57734/configlib_${configLibVersion}.zip"
-download_and_extract_mod "autoconfiglib" "54531/autoconfiglib_${autoConfigLibVersion}.zip"
+download_and_extract_mod "vsimgui" "${vsImGuiId}/vsimgui_${vsImGuiVersion}.zip"
+download_and_extract_mod "configlib" "${configLibId}/configlib_${configLibVersion}.zip"
+download_and_extract_mod "autoconfiglib" "${autoConfigLibId}/autoconfiglib_${autoConfigLibVersion}.zip"

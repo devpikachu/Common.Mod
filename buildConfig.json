@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/devpikachu/Common.Build/refs/tags/0.7.0/schemas/config.schema.json",
+  "$schema": "https://raw.githubusercontent.com/devpikachu/Common.Build/refs/tags/0.7.2/schemas/config.schema.json",
   "archiveName": "commonmod",
   "defaultProject": "Common.Mod",
   "projects": [

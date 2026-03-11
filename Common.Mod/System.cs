@@ -1,4 +1,3 @@
-using Common.Mod.Blocks;
 using Common.Mod.Common.Config;
 using Common.Mod.Common.Core;
 using Common.Mod.Config;
@@ -217,7 +216,6 @@ public abstract class System<TSystem> : ModSystem, ISystem
     [UsedImplicitly]
     protected virtual void RegisterClasses(ICoreAPI api)
     {
-        api.RegisterBlockClass($"common:{MultiblockBlock.RegistryId}", typeof(MultiblockBlock));
     }
 
     #endregion Virtuals
