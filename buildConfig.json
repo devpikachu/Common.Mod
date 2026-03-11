@@ -1,5 +1,31 @@
 {
-  "$schema": "https://git.omni.ms/vintage-story-mods/common-build/raw/branch/main/schemas/solution.schema.json",
-  "name": "CommonMod",
-  "defaultProject": "Common.Mod"
+  "$schema": "https://raw.githubusercontent.com/devpikachu/Common.Build/refs/tags/0.7.0/schemas/config.schema.json",
+  "archiveName": "commonmod",
+  "defaultProject": "Common.Mod",
+  "projects": [
+    {
+      "name": "Common.Mod",
+      "substitutionTargets": [
+        "Common.Mod.csproj",
+        "../Common.Mod.Common/Common.Mod.Common.csproj"
+      ]
+    },
+    {
+      "name": "Common.Mod.Common",
+      "archiveSuffix": "common",
+      "substitutionTargets": [
+        "Common.Mod.Common.csproj"
+      ]
+    },
+    {
+      "name": "Common.Mod.Generator",
+      "archiveSuffix": "generator",
+      "substitutionTargets": [
+        "Common.Mod.Generator.csproj"
+      ]
+    },
+    {
+      "name": "Common.Mod.Test"
+    }
+  ]
 }

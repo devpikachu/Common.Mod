@@ -1,3 +1,7 @@
+## 0.7.0
+**Other**
+- Upgrade `Common.Build` to `0.7.0`
+
 ## 0.6.1
 **Other**
 - Move to GitHub

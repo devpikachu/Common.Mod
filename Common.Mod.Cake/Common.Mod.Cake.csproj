@@ -10,7 +10,7 @@
 
   <!-- NuGet References -->
   <ItemGroup>
-    <PackageReference Include="Common.Build" Version="0.6.0"/>
+    <PackageReference Include="Common.Build" Version="0.7.0" />
     <PackageReference Include="Common.Build.Generator" Version="0.6.0"/>
   </ItemGroup>
 

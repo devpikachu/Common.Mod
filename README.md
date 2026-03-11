@@ -7,7 +7,7 @@
     <img alt="Vintage Story Version Badge" src="https://img.shields.io/badge/vintage--story-1.21.6-%2391A357" />
     <img alt=".NET Version Badge" src="https://img.shields.io/badge/dotnet-9.0-%236F419A" />
     <a title="Common.Build" target="_blank" href="https://github.com/devpikachu/Common.Build">
-        <img alt="Common.Build Badge" src="https://img.shields.io/badge/Common.Build-0.6.0-blue" />
+        <img alt="Common.Build Badge" src="https://img.shields.io/badge/Common.Build-0.7.0-blue" />
     </a>
     <a title="CI Pipeline" target="_blank" href="https://github.com/devpikachu/Common.Mod/actions">
         <img alt="CI Status Badge" src="https://img.shields.io/github/check-runs/devpikachu/Common.Mod/main" />
