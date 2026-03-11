@@ -3,11 +3,12 @@ root = true
 [*]
 charset = utf-8
 end_of_line = lf
-tab_width = 4
+ij_visual_guides = 180
 indent_size = 4
 indent_style = space
-max_line_length = 160
 insert_final_newline = true
+max_line_length = 180
+tab_width = 4
 trim_trailing_whitespace = true
 
 [*.{csproj,json,yaml}]
