@@ -1,52 +1,55 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <OutputPath>bin/$(Configuration)/example</OutputPath>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <ImplicitUsings>enable</ImplicitUsings>
     <ModId>example</ModId>
+    <Nullable>enable</Nullable>
+    <OutputPath>bin/$(Configuration)/example</OutputPath>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
+  <!-- Vendor References -->
   <ItemGroup>
     <Reference Include="VintagestoryAPI">
-      <HintPath>../vendor/VintagestoryAPI.dll</HintPath>
+      <HintPath>../vendor/vs/VintagestoryAPI.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="VSEssentials">
-      <HintPath>../vendor/VSEssentials.dll</HintPath>
+      <HintPath>../vendor/vs/Mods/VSEssentials.dll</HintPath>
       <Private>false</Private>
     </Reference>
 
     <Reference Include="protobuf-net">
-      <HintPath>../vendor/protobuf-net.dll</HintPath>
+      <HintPath>../vendor/vs/Lib/protobuf-net.dll</HintPath>
       <Private>false</Private>
     </Reference>
 
     <Reference Include="configlib">
-      <HintPath>../vendor/configlib.dll</HintPath>
+      <HintPath>../vendor/configlib/configlib.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="ImGui.NET">
-      <HintPath>../vendor/ImGui.NET.dll</HintPath>
+      <HintPath>../vendor/vsimgui/ImGui.NET.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="VSImGui">
-      <HintPath>../vendor/VSImGui.dll</HintPath>
+      <HintPath>../vendor/vsimgui/VSImGui.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
 
+  <!-- NuGet References -->
   <ItemGroup>
     <PackageReference Include="Common.Mod" Version="12.34.56"/>
     <PackageReference Include="Common.Mod.Generator" Version="12.34.56"/>
-    <PackageReference Include="JetBrains.Annotations" Version="2025.2.2">
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.4">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
 
+  <!-- Project References -->
   <!--
   <ItemGroup>
     <ProjectReference Include="../Common.Mod.Generator/Common.Mod.Generator.csproj">
@@ -56,6 +59,7 @@
   </ItemGroup>
   -->
 
+  <!-- Additional Files -->
   <ItemGroup>
     <Content Include="assets/**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -66,10 +70,7 @@
     <Content Include="modicon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="config.json" />
+    <AdditionalFiles Include="config.json"/>
   </ItemGroup>
 
 </Project>

@@ -3,4 +3,5 @@ bin/
 obj/
 run/
 vendor/
+
 *.sln.DotSettings.user

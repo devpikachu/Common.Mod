@@ -1,0 +1,41 @@
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_VERSION: '10.0.x'
+
+jobs:
+  build:
+    name: Build & Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup .NET SDK 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore dependencies from cache
+        uses: actions/cache@v5
+        with:
+          key: deps-${{ hashFiles('bootstrap.sh') }}
+          path: |
+            vendor/vs.tar.gz
+            vendor/*.zip
+      - name: Bootstrap
+        run: bash bootstrap.sh
+      - name: Build
+        run: |
+          bash build.sh --target Archive --general-project Common.Mod --general-version $GITHUB_REF_NAME
+          bash build.sh --target Archive --general-project Common.Mod.Common --general-version $GITHUB_REF_NAME
+          bash build.sh --target Archive --general-project Common.Mod.Generator --general-version $GITHUB_REF_NAME
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          files: out/*.zip

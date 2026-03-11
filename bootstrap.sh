@@ -2,75 +2,62 @@
 
 set -e
 
-vsVersion="1.21.5"
+vsVersion="1.21.6"
 vsImGuiVersion="1.1.14"
 configLibVersion="1.10.8"
 autoConfigLibVersion="2.0.9"
 
-# Create directories
 directories=(
     "Common.Mod.Example/run/Mods"
     "vendor"
 )
+
+download_and_extract_mod() {
+    # Download 3rd party mod
+    if [[ ! -f "vendor/$1.zip" ]]; then
+        curl -L "https://mods.vintagestory.at/download/$2" -o "vendor/$1.zip"
+    fi
+
+    # Copy 3rd party mod to example runtime
+    if [[ ! -f "Common.Mod.Example/run/Mods/$1.zip" ]]; then
+        cp "vendor/$1.zip" "Common.Mod.Example/run/Mods/$1.zip"
+    fi
+
+    # Extract 3rd party mod
+    if [[ ! -d "vendor/$1" ]]; then
+        mkdir "vendor/$1"
+        unzip "vendor/$1.zip" -d "vendor/$1"
+    fi
+}
+
+# Delete directories
+if [[ "$1" == "force" ]]; then
+    for directory in "${directories[@]}"; do
+        if [[ -d "$directory" ]]; then
+            rm -rf "$directory"
+        fi
+    done
+fi
+
+# Create directories
 for directory in "${directories[@]}"; do
     if [[ ! -d "$directory" ]]; then
         mkdir -p "$directory"
     fi
 done
 
-# Fetch Vintage Story files
-vsFiles=(
-    "Lib/protobuf-net.dll"
-    "Mods/VSEssentials.dll"
-    "VintagestoryAPI.dll"
-    "VintagestoryLib.dll"
-)
-for vsFile in "${vsFiles[@]}"; do
-    baseVsFile=$(basename "$vsFile")
-    if [[ ! -f "vendor/$baseVsFile" ]]; then
-        if [[ "$1" == "remote" ]]; then
-            curl -L "https://files.omni.ms/protected/woodpecker/vintagestory/${vsVersion}/${vsFile}?raw" -o "vendor/${baseVsFile}" -u "${REMOTE_USERNAME}:${REMOTE_PASSWORD}"
-        else
-            cp "${VINTAGE_STORY}/${vsFile}" "vendor/${baseVsFile}"
-        fi
-    fi
-done
+# Download Vintage Story
+if [[ ! -f "vendor/vs.tar.gz" ]]; then
+    curl -L "https://cdn.vintagestory.at/gamefiles/stable/vs_client_linux-x64_${vsVersion}.tar.gz" -o "vendor/vs.tar.gz"
+fi
 
-# 3rd party mods
-vsImGuiName="58527/vsimgui_${vsImGuiVersion}.zip"
-vsImGuiFiles=("ImGui.NET.dll" "VSImGui.dll")
+# Extract Vintage Story
+if [[ ! -d "vendor/vs" ]]; then
+    mkdir vendor/vs
+    tar xfz vendor/vs.tar.gz --strip-components=1 -C vendor/vs
+fi
 
-configLibName="57734/configlib_${configLibVersion}.zip"
-configLibFiles=("configlib.dll")
-
-autoConfigLibName="54531/autoconfiglib_${autoConfigLibVersion}.zip"
-autoConfigLibFiles=()
-
-mods=(
-    "vsImGui"
-    "configLib"
-    "autoConfigLib"
-)
-
-for mod in "${mods[@]}"; do
-    declare -n modName="${mod}Name"
-    declare -n modFiles="${mod}Files"
-    baseMod=$(basename "$modName")
-    if [[ ! -f "vendor/${baseMod}" ]]; then
-        # Download mod
-        curl -L "https://mods.vintagestory.at/download/${modName}" -o "vendor/${baseMod}"
-        cp "vendor/${baseMod}" "Common.Mod.Example/run/Mods/${baseMod}"
-
-        # Extract to temporary path
-        tempDir=$(mktemp -d)
-        unzip "vendor/${baseMod}" -d "$tempDir"
-
-        # Copy contents
-        for file in "${modFiles[@]}"; do
-            cp "${tempDir}/${file}" "vendor/${file}"
-        done
-
-        # Clean up
-        rm -rf "$tempDir"
-    fi
-done
+# Download, copy and extract 3rd party mods
+download_and_extract_mod "vsimgui" "58527/vsimgui_${vsImGuiVersion}.zip"
+download_and_extract_mod "configlib" "57734/configlib_${configLibVersion}.zip"
+download_and_extract_mod "autoconfiglib" "54531/autoconfiglib_${autoConfigLibVersion}.zip"

@@ -1,30 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DefineConstants>JETBRAINS_ANNOTATIONS</DefineConstants>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Common.Mod.Common</PackageId>
-    <Version>12.34.56</Version>
     <Authors>Andrei "DetPikachu" Hava</Authors>
     <Company>Andrei "DetPikachu" Hava</Company>
+    <PackageId>Common.Mod.Common</PackageId>
     <Product>Common.Mod.Common</Product>
+    <Version>12.34.56</Version>
   </PropertyGroup>
 
+  <!-- Vendor References -->
   <ItemGroup>
     <Reference Include="VintagestoryAPI">
-      <HintPath>../vendor/VintagestoryAPI.dll</HintPath>
+      <HintPath>../vendor/vs/VintagestoryAPI.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
 
+  <!-- NuGet References -->
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2025.2.2">
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.4">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>

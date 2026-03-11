@@ -1,3 +1,8 @@
+## 0.6.1
+**Other**
+- Move to GitHub
+- Upgrade `Common.Build` to `0.6.0`
+
 ## 0.6.0
 **:boom: Breaking Changes**
 - Made `System.ShouldLoad` abstract ([#6](https://git.omni.ms/vintage-story-mods/common-mod/issues/6))

@@ -2,9 +2,9 @@
 
 set -e
 
-./build.sh --target Package --general-project Common.Mod --general-skipSubstitution true
-./build.sh --target Package --general-project Common.Mod.Common --general-skipSubstitution true
-./build.sh --target Package --general-project Common.Mod.Generator --general-skipSubstitution true
+bash build.sh --target Package --general-project Common.Mod --general-skipSubstitution true
+bash build.sh --target Package --general-project Common.Mod.Common --general-skipSubstitution true
+bash build.sh --target Package --general-project Common.Mod.Generator --general-skipSubstitution true
 
 mkdir -p out/Common.Mod/12.34.56
 mkdir -p out/Common.Mod.Common/12.34.56

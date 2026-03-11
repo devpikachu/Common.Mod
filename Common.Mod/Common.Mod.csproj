@@ -1,65 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Common.Mod</PackageId>
-    <Version>12.34.56</Version>
     <Authors>Andrei "DetPikachu" Hava</Authors>
     <Company>Andrei "DetPikachu" Hava</Company>
+    <PackageId>Common.Mod</PackageId>
     <Product>Common.Mod</Product>
+    <Version>12.34.56</Version>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="VintagestoryAPI">
-      <HintPath>../vendor/VintagestoryAPI.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="VintagestoryLib">
-      <HintPath>../vendor/VintagestoryLib.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="VSEssentials">
-      <HintPath>../vendor/VSEssentials.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-
-    <Reference Include="protobuf-net">
-      <HintPath>../vendor/protobuf-net.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-
-    <Reference Include="configlib">
-      <HintPath>../vendor/configlib.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="ImGui.NET">
-      <HintPath>../vendor/ImGui.NET.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="VSImGui">
-      <HintPath>../vendor/VSImGui.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="DryIoc.dll" Version="5.4.3"/>
-    <PackageReference Include="JetBrains.Annotations" Version="2025.2.2">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../Common.Mod.Common/Common.Mod.Common.csproj"/>
-  </ItemGroup>
-  
   <ItemGroup>
     <Content Include="build/Common.Mod.targets">
       <PackagePath>build/Common.Mod.targets</PackagePath>
@@ -70,6 +26,53 @@
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <!-- Vendor References -->
+  <ItemGroup>
+    <Reference Include="VintagestoryAPI">
+      <HintPath>../vendor/vs/VintagestoryAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="VintagestoryLib">
+      <HintPath>../vendor/vs/VintagestoryLib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="VSEssentials">
+      <HintPath>../vendor/vs/Mods/VSEssentials.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="protobuf-net">
+      <HintPath>../vendor/vs/Lib/protobuf-net.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="configlib">
+      <HintPath>../vendor/configlib/configlib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="ImGui.NET">
+      <HintPath>../vendor/vsimgui/ImGui.NET.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="VSImGui">
+      <HintPath>../vendor/vsimgui/VSImGui.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- NuGet References -->
+  <ItemGroup>
+    <PackageReference Include="DryIoc.dll" Version="5.4.3"/>
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.4">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- Project References -->
+  <ItemGroup>
+    <ProjectReference Include="../Common.Mod.Common/Common.Mod.Common.csproj"/>
   </ItemGroup>
 
 </Project>

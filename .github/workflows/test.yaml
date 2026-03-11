@@ -1,0 +1,34 @@
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+env:
+  DOTNET_VERSION: '10.0.x'
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup .NET SDK 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore dependencies from cache
+        uses: actions/cache@v5
+        with:
+          key: deps-${{ hashFiles('bootstrap.sh') }}
+          path: |
+            vendor/vs.tar.gz
+            vendor/*.zip
+      - name: Bootstrap
+        run: bash bootstrap.sh
+      - name: Test
+        run: bash build.sh --target Test --general-project Common.Mod.Test
